@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { LoadingSpinnerProvider } from '../loadingSpinner/LoadingSpinnerContext';
 import { SessionProvider } from '../session/SessionContext';
+import { ReportsProvider } from '../reports/ReportsContext';
 
 interface IAppProvidersProps {
   children: React.ReactNode
@@ -15,7 +16,9 @@ export default function AppProviders(props: IAppProvidersProps): JSX.Element | n
   return (
     <LoadingSpinnerProvider>
       <SessionProvider>
-        {props.children}
+        <ReportsProvider>
+          {props.children}
+        </ReportsProvider>
       </SessionProvider>
     </LoadingSpinnerProvider>
   );

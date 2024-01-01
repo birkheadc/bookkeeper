@@ -21,17 +21,18 @@ interface ILoginPageProps {
 export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
 
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
-  const { setLoading } = React.useContext(LoadingSpinnerContext);
+  const { useLoading } = React.useContext(LoadingSpinnerContext);
   const { session, login } = React.useContext(SessionContext);
 
   const submit = async (request: LoginCredentials) => {
-    setLoading(true);
-    const result = await api.auth.login(request);
-    setRecentResult(result);
-    if (result.wasSuccess) {
-      login(result.body);
-    }
-    setLoading(false);
+    useLoading(async () => {
+      const result = await api.auth.login(request);
+      setRecentResult(result);
+      if (result.wasSuccess) {
+        login(result.body);
+      }
+    })
+    
   }
 
   return (

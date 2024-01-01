@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode
 }
 
-type State = {
+type SessionState = {
   session: Session,
   login: (token: string | undefined) => void,
   logout: () => void,
@@ -17,11 +17,11 @@ type State = {
 
 const LOCAL_STORAGE_TOKEN_KEY = "token";
 
-export const SessionContext = React.createContext<State>({ session: DEFAULT_SESSION, login: () => {}, logout: () => {}, expire: () => {} });
+export const SessionContext = React.createContext<SessionState>({ session: DEFAULT_SESSION, login: () => {}, logout: () => {}, expire: () => {} });
 export const SessionProvider = ({ children }: Props) => {
 
   const [ session, setSession ] = React.useState<Session>(DEFAULT_SESSION);
-  const { setLoading } = React.useContext(LoadingSpinnerContext);
+  const { useLoading } = React.useContext(LoadingSpinnerContext);
 
   const nav = useNavigate();
 
@@ -32,14 +32,15 @@ export const SessionProvider = ({ children }: Props) => {
         setSession({ status: SessionStatus.LOGGED_OUT });
         return;
       };
-      setLoading(true);
-      const result = await api.auth.verifyToken(token);
-      setLoading(false);
-      if (result.wasSuccess) {
-        login(token);
-      } else {
-        expire();
-      }
+      useLoading(async () => {
+        const result = await api.auth.verifyToken(token);
+        console.log('verified token');
+        if (result.wasSuccess) {
+          login(token);
+        } else {
+          expire();
+        }
+      })
     })();
   }, []);
 

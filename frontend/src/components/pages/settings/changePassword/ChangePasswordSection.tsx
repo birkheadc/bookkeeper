@@ -19,7 +19,7 @@ interface IChangePasswordSectionProps {
 export default function ChangePasswordSection(props: IChangePasswordSectionProps): JSX.Element | null {
 
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
-  const { setLoading } = React.useContext(LoadingSpinnerContext);
+  const { useLoading } = React.useContext(LoadingSpinnerContext);
   const { session, expire } = React.useContext(SessionContext);
 
   const submit = async (request: ChangePasswordRequest) => {
@@ -27,11 +27,11 @@ export default function ChangePasswordSection(props: IChangePasswordSectionProps
       expire();
       return;
     }
-    setLoading(true);
-    const result = await api.users.changePassword(session.token, request);
-    setRecentResult(result);
-    setLoading(false);
-    if (result.errors.some(e => e.statusCode === 401)) expire();
+    useLoading(async () => {
+      const result = await api.users.changePassword(session.token!, request);
+      setRecentResult(result);
+      if (result.errors.some(e => e.statusCode === 401)) expire();
+    });
   }
 
   return (
