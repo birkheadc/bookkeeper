@@ -13,7 +13,7 @@ body {
 main {
   background-color: var(--clr-white);
   min-width: min(600px, 90%);
-  max-width: min(980px, 90%);
+  max-width: 90%;
   margin: 30px auto;
   padding: 20px;
 
@@ -27,6 +27,11 @@ h1 {
   font-size: 1.7em;
   font-weight: 700;
   padding: 20px;
+  text-transform: capitalize;
+}
+
+h2 {
+  text-transform: capitalize;
 }
 
 span.center {

@@ -36,7 +36,7 @@ export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
 
   return (
     <main className='login-page-wrapper'>
-      <h1>Login</h1>
+      <h1>login</h1>
       {session.status === SessionStatus.EXPIRED && <span className='login-expired-message'>Your session has expired. Please log in again.</span>}
       <ResultDisplay result={recentResult} />
       <LoginForm submit={submit} />

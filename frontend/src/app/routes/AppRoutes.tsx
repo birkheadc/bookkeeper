@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import HomePage from '../../components/pages/home/HomePage';
 import { SessionContext } from '../contexts/session/SessionContext';
 import { SessionStatus } from '../../types/session/session';
 import LogoutPage from '../../components/pages/logout/LogoutPage';
 import LoginPage from '../../components/pages/login/LoginPage';
 import SettingsPage from '../../components/pages/settings/SettingsPage';
 import LoadingPage from '../../components/pages/loading/LoadingPage';
+import BrowsePage from '../../components/pages/browse/BrowsePage';
+import CreatePage from '../../components/pages/create/CreatePage';
+import DetailPage from '../../components/pages/detail/DetailPage';
 
 interface IAppRoutesProps {
 
@@ -41,20 +43,24 @@ export default function AppRoutes(props: IAppRoutesProps): JSX.Element | null {
 
 const LoggedInRoutes = (
   <>
+    <Route path='/browse' element={<BrowsePage />} />
+    <Route path='/create' element={<CreatePage />} />
+    <Route path='/detail' element={<DetailPage />} />
     <Route path='/settings' element={<SettingsPage />} />
     <Route path='/logout' element={<LogoutPage />} />
+    <Route path='*' element={<Navigate replace to='/browse' />} />
   </>
 );
 
 const LoggedOutRoutes = (
   <>
     <Route path='/login' element={<LoginPage />} />
+    <Route path='*' element={<Navigate replace to='/login' />} />
   </>
 );
 
 const CommonRoutes = (
   <>
-    <Route path='/' element={<HomePage />} />
-    <Route path='*' element={<Navigate replace={true} to='/' />} />
+    <Route path='*' element={<Navigate replace to='/' />} />
   </>
 );
