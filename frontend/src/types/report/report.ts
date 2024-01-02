@@ -16,3 +16,7 @@ export type Expense = {
   isIncludeInCash: boolean,
   note?: string | undefined
 }
+
+export type ReportDictionary = {
+  [ key: string ]: Report
+}

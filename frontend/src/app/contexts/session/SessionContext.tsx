@@ -32,9 +32,8 @@ export const SessionProvider = ({ children }: Props) => {
         setSession({ status: SessionStatus.LOGGED_OUT });
         return;
       };
-      useLoading(async () => {
+      await useLoading(async () => {
         const result = await api.auth.verifyToken(token);
-        console.log('verified token');
         if (result.wasSuccess) {
           login(token);
         } else {

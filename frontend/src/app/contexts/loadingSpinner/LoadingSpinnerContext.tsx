@@ -1,30 +1,36 @@
 import * as React from 'react';
 import ReactModal from 'react-modal';
 import LoadingSpinner from './LoadingSpinner';
-import { randomUUID } from 'crypto';
 
 type Props = {
   children: React.ReactNode
 }
 
-type State = {
+type LoadingSpinnerType = {
   isLoading: boolean,
-  useLoading: (action: Function) => void
+  useLoading<T>(action: () => Promise<T>): Promise<T>
 }
 
-export const LoadingSpinnerContext = React.createContext<State>({ isLoading: false, useLoading: () => {} });
+const DEFAULT_LOADING_SPINNER_TYPE: LoadingSpinnerType = {
+  isLoading: false,
+  useLoading: function <T>(action: () => Promise<T>): Promise<T> {
+    throw new Error('Function not implemented.');
+  }
+}
+
+export const LoadingSpinnerContext = React.createContext<LoadingSpinnerType>(DEFAULT_LOADING_SPINNER_TYPE);
 export const LoadingSpinnerProvider = ({ children }: Props) => {
   const [ numLoading, setNumLoading ] = React.useState<number>(0);
   const isLoading = numLoading > 0;
 
-  const useLoading = async (action: Function) => {
+  async function useLoading<T>(action: () => Promise<T>): Promise<T> {
     setNumLoading(n => n + 1);
     try {
-      await action();
-    } catch {
-
+      return await action();
+    } catch (err) {
+      throw err;
     } finally {
-      setNumLoading(n => n - 1);
+      setNumLoading(n => (Math.max(0, n - 1)));
     }
   }
   

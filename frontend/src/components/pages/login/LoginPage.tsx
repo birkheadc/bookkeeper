@@ -25,7 +25,7 @@ export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
   const { session, login } = React.useContext(SessionContext);
 
   const submit = async (request: LoginCredentials) => {
-    useLoading(async () => {
+    await useLoading(async () => {
       const result = await api.auth.login(request);
       setRecentResult(result);
       if (result.wasSuccess) {
