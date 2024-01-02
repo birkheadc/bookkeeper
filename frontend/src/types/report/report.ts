@@ -1,5 +1,7 @@
+import { ExtendedDate } from "../date/extendedDate"
+
 export type Report = {
-  date: Date,
+  date: ExtendedDate,
   earnings: Earning[],
   expenses: Expense[]
 }

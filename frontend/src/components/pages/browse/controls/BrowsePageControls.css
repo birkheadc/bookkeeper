@@ -1,0 +1,45 @@
+div.browse-page-controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 auto;
+
+  width: fit-content;
+}
+
+div.browse-view-mode-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+div.browse-view-mode-buttons>button {
+  flex: 1;
+  text-align: center;
+}
+
+div.browse-view-mode-buttons>button.active {
+  background-color: var(--clr-accent-dark);
+  color: var(--clr-white);
+  pointer-events: none;
+}
+
+div.browse-date-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+}
+
+div.browse-date-controls button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

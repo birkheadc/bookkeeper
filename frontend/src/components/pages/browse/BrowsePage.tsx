@@ -4,6 +4,11 @@ import { ReportDictionary } from '../../../types/report/report';
 import { ReportsContext } from '../../../app/contexts/reports/ReportsContext';
 import ResultDisplay from '../../resultDisplay/ResultDisplay';
 import { Result } from '../../../types/result/result';
+import { BrowseOptions } from '../../../types/browse/browseOptions';
+import BrowsePageDisplay from './display/BrowsePageDisplay';
+import { useSearchParams } from 'react-router-dom';
+import BrowsePageControls from './controls/BrowsePageControls';
+import { ExtendedDate } from '../../../types/date/extendedDate';
 
 interface IBrowsePageProps {
 
@@ -15,33 +20,47 @@ interface IBrowsePageProps {
 */
 export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null {
 
-  const [ dates, setDates ] = React.useState<Date[]>([ new Date() ]);
-  const [ reports, setReports ] = React.useState<ReportDictionary | undefined>(undefined);
-  const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
+  const [ reports, setReports ] = React.useState<ReportDictionary>();
+  const [ recentResult, setRecentResult ] = React.useState<Result>();
 
   const { getReports } = React.useContext(ReportsContext);
 
+  const [ searchParams, setSearchParams ] = useSearchParams();
+  const [ browseOptions, setBrowseOptions ] = React.useState<BrowseOptions>(BrowseOptions.fromSearchParams(searchParams));
+
+  React.useEffect(function setDefaultSearchParamsIfMissing() {
+    if (!searchParams.has('date')) {
+      searchParams.append('date', new ExtendedDate().toSimpleString());
+    }
+    if (!searchParams.has('mode')) {
+      searchParams.append('mode', DEFAULT_MODE);
+    }
+    setSearchParams(searchParams);
+  }, [ searchParams ]);
+
+  React.useEffect(function updateBrowseOptionsOnSearchParamsChange() {
+    setBrowseOptions(BrowseOptions.fromSearchParams(searchParams));
+  }, [ searchParams ]);
+
   React.useEffect(() => {
     (async function getReportsOnDateChange() {
-      const result = await getReports(dates);
+      const result = await getReports(browseOptions.getDates());
       setRecentResult(result);
       if (result.wasSuccess && result.body != null) {
         setReports(result.body);
       } 
     })();
-  }, [ dates ]);
+  }, [ browseOptions ]);
 
   return (
     <main className='browse-page-wrapper'>
       <h1>browse</h1>
       <ResultDisplay result={recentResult} />
-      { reports && Object.keys(reports).map(
-        date =>
-        <div key={`report-key-${date}`}>
-          {reports[date].date.toString()}
-          {reports[date].earnings[0].category } : {reports[date].earnings[0].amount}
-        </div>
-      )}
+      <BrowsePageControls />
+      <BrowsePageDisplay reports={reports} />
     </main>
   );
 }
+
+// Todo: This needs to come from settings.
+const DEFAULT_MODE = 'day';

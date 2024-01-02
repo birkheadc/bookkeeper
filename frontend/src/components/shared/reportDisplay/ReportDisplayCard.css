@@ -1,0 +1,4 @@
+div.report-display-card-wrapper {
+  border: var(--border-pri);
+  padding: 5px;
+}

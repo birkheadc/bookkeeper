@@ -5,7 +5,7 @@ export default async function getRangeReports(dates: Date[]): Promise<Result<Rep
   await new Promise((res, rej) => {
     setTimeout(() => {
       res('');
-    }, 2222);
+    }, 500);
   })
   const reports: Report[] = dates.map(d => generateDummyReport(d));
   return Result.Succeed().WithBody(reports);

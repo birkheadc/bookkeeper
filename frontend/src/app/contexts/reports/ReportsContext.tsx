@@ -68,7 +68,7 @@ export const ReportsProvider = ({ children }: Props) => {
         } else {
           datesToFetch.push(date);
         }
-      });
+      }); 
 
       const result = await api.reports.getRangeReports(datesToFetch);
       if (!result.wasSuccess || result.body == null) {
