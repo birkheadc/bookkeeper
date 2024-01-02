@@ -1,10 +1,24 @@
-div.browse-page-display-wrapper {
+div.browse-page-display-reports-wrapper {
   display: grid;
-  grid-template-columns: repeat(7, min-content);
+  grid-template-columns: repeat(7, max-content);
   width: fit-content;
   margin: 0 auto;
 }
 
 div.browse-page-display-card-outer-wrapper {
   padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+div.browse-page-display-card-outer-wrapper>* {
+  flex: 1;
+}
+
+@media (max-width: 1320px) {
+  div.browse-page-display-reports-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 }

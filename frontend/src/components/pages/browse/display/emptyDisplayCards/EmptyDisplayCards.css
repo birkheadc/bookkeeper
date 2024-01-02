@@ -1,0 +1,12 @@
+div.empty-display-card-wrapper {
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  border: var(--border-pri);
+  box-shadow: inset var(--box-shadow-normal);
+}
+
+@media (max-width: 1320px) {
+  div.empty-display-card-wrapper {
+    display: none;
+  }
+}

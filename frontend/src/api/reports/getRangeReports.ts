@@ -1,7 +1,8 @@
+import { ExtendedDate } from "../../types/date/extendedDate";
 import { Earning, Expense, Report } from "../../types/report/report";
 import { Result } from "../../types/result/result";
 
-export default async function getRangeReports(dates: Date[]): Promise<Result<Report[]>> {
+export default async function getRangeReports(dates: ExtendedDate[]): Promise<Result<Report[]>> {
   await new Promise((res, rej) => {
     setTimeout(() => {
       res('');
@@ -11,20 +12,47 @@ export default async function getRangeReports(dates: Date[]): Promise<Result<Rep
   return Result.Succeed().WithBody(reports);
 }
 
-function generateDummyReport(date: Date): Report {
-  const earning: Earning = {
-    category: "cash",
-    amount: 500
-  };
-  const expense: Expense = {
-    category: "taco bell",
-    amount: 16,
-    isIncludeInCash: false
-  };
-  const report: Report = {
-    date: date,
-    earnings: [ earning ],
-    expenses: [ expense ]
-  };
+function generateDummyReport(date: ExtendedDate): Report {
+  const report = new Report();
+  report.date = date;
+  report.earnings = generateRandomEarnings();
+  report.expenses = generateRandomExpenses();
+
   return report;
 }
+
+function generateRandomEarnings(): Earning[] {
+  const num = Math.ceil(Math.random() * 3);
+
+  const earnings: Earning[] = [];
+
+  for (let i = 0; i < num; i++) {
+    const earning: Earning = {
+      category: EARNING_CATEGORIES[i],
+      amount: (Math.floor(Math.random() * 1_000_000)) + 500_000
+    }
+    earnings.push(earning);
+  }
+
+  return earnings;
+}
+
+function generateRandomExpenses(): Expense[] {
+  const num = Math.ceil(Math.random() * 3);
+
+  const earnings: Expense[] = [];
+
+  for (let i = 0; i < num; i++) {
+    const expense: Expense = {
+      category: EXPENSE_CATEGORIES[i],
+      amount: (Math.floor(Math.random() * 1000000)) + 500000,
+      isIncludeInCash: Math.round(Math.random()) === 1
+    }
+    earnings.push(expense);
+  }
+
+  return earnings;
+}
+
+const EARNING_CATEGORIES = ['cash', 'card', 'coupon'];
+const EXPENSE_CATEGORIES = ['delivery', 'small change', 'lunch'];

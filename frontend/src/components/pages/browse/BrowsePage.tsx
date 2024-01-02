@@ -9,6 +9,7 @@ import BrowsePageDisplay from './display/BrowsePageDisplay';
 import { useSearchParams } from 'react-router-dom';
 import BrowsePageControls from './controls/BrowsePageControls';
 import { ExtendedDate } from '../../../types/date/extendedDate';
+import BrowseSummary from './summary/BrowseSummary';
 
 interface IBrowsePageProps {
 
@@ -43,6 +44,7 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
   }, [ searchParams ]);
 
   React.useEffect(() => {
+    setReports(undefined);
     (async function getReportsOnDateChange() {
       const result = await getReports(browseOptions.getDates());
       setRecentResult(result);
@@ -57,7 +59,8 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
       <h1>browse</h1>
       <ResultDisplay result={recentResult} />
       <BrowsePageControls />
-      <BrowsePageDisplay reports={reports} />
+      <BrowseSummary reports={reports} />
+      <BrowsePageDisplay reports={reports} viewMode={browseOptions.viewMode} />
     </main>
   );
 }
