@@ -2,6 +2,8 @@ nav.primary-nav-wrapper {
   margin-top: 10px;
   background-color: var(--clr-black);
   color: var(--clr-white);
+  border: var(--border-nav);
+  border-width: 2px 0;
 }
 
 div.primary-nav-inner-wrapper {
@@ -21,6 +23,7 @@ nav.primary-nav-wrapper ul {
   flex-direction: row;
   gap: 30px;
   height: 100%;
+  position: relative;
 }
 
 nav.primary-nav-wrapper a {
@@ -31,37 +34,56 @@ nav.primary-nav-wrapper a {
 div.nav-link-wrapper {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 span.nav-link-label {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
-  padding: 5px;
   font-weight: 700;
-  height: 30px;
-}
-
-div.nav-link-wrapper>span {
-  padding-bottom: 5px;
+  height: 40px;
+  padding: 10px;
+  z-index: 3;
 }
 
 div.nav-link-wrapper::before, div.nav-link-wrapper::after {
   content: '';
-  height: 5px;
+  height: 10px;
+  width: 100%;
+  position:absolute;
+  z-index: 2;
+  border: var(--border-nav);
+  border-color: transparent;
 }
 
 div.nav-link-wrapper::before {
-  border-radius: 0 0 10px 10px;
+  border-radius: 5px 5px 0 0;
+  border-width: 2px 0 0 0;
+  top: -5px;
 }
 
 div.nav-link-wrapper::after {
-  border-radius: 10px 10px 0 0;
+  border-radius: 5px 5px 0 0;
+  border-width: 2px 0 0 0;
+  bottom: -5px;
 }
 
-nav.primary-nav-wrapper a.active>div.nav-link-wrapper::before, nav.primary-nav-wrapper a.active>div.nav-link-wrapper::after {
+nav.primary-nav-wrapper a.active>div.nav-link-wrapper::before {
+  background-color: var(--clr-black);
+  border-color: var(--clr-accent-light);
+}
+
+nav.primary-nav-wrapper a.active>div.nav-link-wrapper::after {
   background: var(--bg-gradient);
   background-attachment: fixed;
+  border-color: var(--clr-accent-light);
+}
+
+nav.primary-nav-wrapper a.active span.nav-link-label {
+  translate: 0 -4px;
 }
 
 nav.primary-nav-wrapper a:hover, nav.primary-nav-wrapper a:focus {

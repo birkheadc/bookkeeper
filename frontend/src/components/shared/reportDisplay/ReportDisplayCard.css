@@ -59,6 +59,14 @@ div.report-display-card-breakdown-row:last-child {
   border: none;
 }
 
+.earning-color {
+  color: var(--clr-test-1);
+}
+
+.expense-color {
+  color: var(--clr-test-2);
+}
+
 @media (max-width: 1320px) {  
   div.report-display-card-wrapper:hover {
     scale: 1.0;

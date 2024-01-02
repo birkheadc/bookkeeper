@@ -22,7 +22,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         {
           report.earnings.map(
             earning =>
-            <div key={`report-display-card-earnings-key-${earning.category}`} className='report-display-card-breakdown-row success'>
+            <div key={`report-display-card-earnings-key-${earning.category}`} className='report-display-card-breakdown-row earning-color'>
               <span>{earning.category}</span>
               <span>{earning.amount.toLocaleString()}</span>
             </div>
@@ -31,7 +31,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         {
           report.expenses.map(
             expense =>
-            <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row error'>
+            <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row expense-color'>
               <span>{expense.category}</span>
               <span>-{expense.amount.toLocaleString()}</span>
             </div>

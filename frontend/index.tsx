@@ -13,7 +13,8 @@ Modal.setAppElement('#react-root');
 Modal.defaultStyles.content = {};
 Modal.defaultStyles.overlay = {
   ...Modal.defaultStyles.overlay,
-  backgroundColor: 'rgba(0, 0, 0, 0.4)'
+  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  zIndex: 5
 };
 
 const container = document.getElementById('react-root');
