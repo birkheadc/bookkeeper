@@ -32,7 +32,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
           report.expenses.map(
             expense =>
             <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row expense-color'>
-              <span>{expense.category}</span>
+              <span>{expense.isIncludeInCash && '*'}{expense.category}</span>
               <span>-{expense.amount.toLocaleString()}</span>
             </div>
           )

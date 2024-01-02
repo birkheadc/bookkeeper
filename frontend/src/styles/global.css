@@ -51,14 +51,10 @@ span.center {
 }
 
 .left-align {
-  display: inline-block;
-  width: 100%;
   text-align: left;
 }
 
 .right-align {
-  display: inline-block;
-  width: 100%;
   text-align: right;
 }
 

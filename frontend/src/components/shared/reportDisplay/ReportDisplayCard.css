@@ -60,11 +60,11 @@ div.report-display-card-breakdown-row:last-child {
 }
 
 .earning-color {
-  color: var(--clr-test-1);
+  color: var(--clr-earning);
 }
 
 .expense-color {
-  color: var(--clr-test-2);
+  color: var(--clr-expense);
 }
 
 @media (max-width: 1320px) {  
