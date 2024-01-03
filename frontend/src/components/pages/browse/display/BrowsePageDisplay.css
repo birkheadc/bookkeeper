@@ -3,6 +3,7 @@ div.browse-page-display-reports-wrapper {
   grid-template-columns: repeat(7, max-content);
   width: fit-content;
   margin: 0 auto;
+  padding-bottom: 100px;
 }
 
 div.browse-page-display-card-outer-wrapper {
@@ -13,6 +14,19 @@ div.browse-page-display-card-outer-wrapper {
 
 div.browse-page-display-card-outer-wrapper>* {
   flex: 1;
+}
+
+div.days-page-display-days-of-the-week-cell {
+  padding: 10px;
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: 700;
+  font-size: 1.5em;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  box-shadow: inset var(--box-shadow-normal);
+  color: var(--clr-white);
+  border: var(--border-pri);
 }
 
 @media (max-width: 1320px) {

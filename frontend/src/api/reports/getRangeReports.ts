@@ -2,7 +2,9 @@ import { ExtendedDate } from "../../types/date/extendedDate";
 import { Earning, Expense, Report } from "../../types/report/report";
 import { Result } from "../../types/result/result";
 
-export default async function getRangeReports(dates: ExtendedDate[]): Promise<Result<Report[]>> {
+export default async function getRangeReports(token: string | undefined, dates: ExtendedDate[]): Promise<Result<Report[]>> {
+  if (token == null) return Result.Fail().WithMessage('Token invalid.');
+
   await new Promise((res, rej) => {
     setTimeout(() => {
       res('');

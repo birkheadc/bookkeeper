@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './SettingsPage.css'
-import ChangePasswordForm from './changePassword/form/ChangePasswordForm';
 import ChangePasswordSection from './changePassword/ChangePasswordSection';
+import UpdateSettingsForm from './form/UpdateSettingsForm';
 
 interface ISettingsPageProps {
 
@@ -15,7 +15,10 @@ export default function SettingsPage(props: ISettingsPageProps): JSX.Element | n
   return (
     <main className='settings-page-wrapper'>
       <h1>settings</h1>
-      <ChangePasswordSection />
+      <div className='settings-page-inner-wrapper'>
+        <UpdateSettingsForm />
+        <ChangePasswordSection />
+      </div>
     </main>
   );
 }

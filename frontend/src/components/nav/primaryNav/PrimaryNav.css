@@ -31,6 +31,10 @@ nav.primary-nav-wrapper a {
   user-select: none;
 }
 
+nav.primary-nav-wrapper a:active:hover span.nav-link-label {
+  scale: 0.9;
+}
+
 div.nav-link-wrapper {
   display: flex;
   flex-direction: column;

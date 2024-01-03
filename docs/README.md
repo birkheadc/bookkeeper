@@ -17,6 +17,7 @@ This is my current working template for creating full stack applications. It use
   - frontend/.env
 
 - Replace all instances of `nextjsreacttemplate` in all files with the name of the new project.
+  - Be sure to replace *all* instances. VSCode search skips files listed in .gitignore by default!
 
 - Initialize the git repo if using git: `git init`
 

@@ -19,7 +19,7 @@
 
   --border-pri: 1px solid var(--clr-black);
   --border-loading-spinner: solid 5px var(--clr-white);
-  --border-nav: 1px solid var(--clr-accent-light);
+  --border-nav: 2px solid var(--clr-accent-light);
 
   --box-shadow-large: 10px 10px 10px var(--clr-black);
   --box-shadow-normal: 2px 2px 2px var(--clr-black);

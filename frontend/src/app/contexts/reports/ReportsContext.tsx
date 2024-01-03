@@ -3,7 +3,8 @@ import * as React from 'react';
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import api from "../../../api";
 import { Result } from "../../../types/result/result";
-import { report } from "process";
+import { SessionContext } from "../session/SessionContext";
+import { ExtendedDate } from "../../../types/date/extendedDate";
 
 
 type Props = {
@@ -11,17 +12,17 @@ type Props = {
 }
 
 type Data = {
-  getReport: (date: Date) => Promise<Result<Report>>,
-  getReports: (dates: Date[]) => Promise<Result<ReportDictionary>>
+  getReport: (date: ExtendedDate) => Promise<Result<Report>>,
+  getReports: (dates: ExtendedDate[]) => Promise<Result<ReportDictionary>>
   addReport: (report: Report) => void,
   addReports: (reports: Report[]) => void
 }
 
 const DEFAULT_DATA: Data = {
-  getReport: function (date: Date): Promise<Result<Report>> {
+  getReport: function (date: ExtendedDate): Promise<Result<Report>> {
     throw new Error("Function not implemented.");
   },
-  getReports: function (dates: Date[]): Promise<Result<ReportDictionary>> {
+  getReports: function (dates: ExtendedDate[]): Promise<Result<ReportDictionary>> {
     throw new Error("Function not implemented.");
   },
   addReport: function (report: Report): void {
@@ -35,19 +36,20 @@ const DEFAULT_DATA: Data = {
 export const ReportsContext = React.createContext<Data>(DEFAULT_DATA);
 export const ReportsProvider = ({ children }: Props) => {
 
-  const [ reports, setReports ] = React.useState<{[key: string]: Report}>({});
+  const [ reports, setReports ] = React.useState<ReportDictionary>({});
   const { useLoading } = React.useContext(LoadingSpinnerContext);
 
-  const getReport = async (date: Date): Promise<Result<Report>> => {
-    return await useLoading(async () => {
-      const key = date.toString();
+  const { session } = React.useContext(SessionContext);
+
+  const getReport = async (date: ExtendedDate): Promise<Result<Report>> => {
+    const key = date.toString();
       if (reports.hasOwnProperty(key)) {
         return Result.Succeed().WithBody(reports[key]);
       }
-      
-      const result = await api.reports.getRangeReports([ date ]);
+    return await useLoading(async () => {      
+      const result = await api.reports.getRangeReports( session.token, [ date ]);
       if (!result.wasSuccess || result.body == null) {
-        return Result.Fail().WithMessage('Failed to retrieve report.');
+        return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve report.');
       }
       const report = result.body[0];
 
@@ -56,29 +58,32 @@ export const ReportsProvider = ({ children }: Props) => {
     });
   }
 
-  const getReports = async (dates: Date[]): Promise<Result<ReportDictionary>> => {
-    return await useLoading(async () => {
-      const _reports: { [key: string]: Report } = {};
-      const datesToFetch: Date[] = [];
-
-      dates.forEach(date => {
-        const key = date.toString();
-        if (reports.hasOwnProperty(key)) {
-          _reports[key] = (reports[key]);
-        } else {
-          datesToFetch.push(date);
-        }
-      }); 
-
-      const result = await api.reports.getRangeReports(datesToFetch);
+  const getReports = async (dates: ExtendedDate[]): Promise<Result<ReportDictionary>> => {
+    const _reports: { [key: string]: Report } = {};
+    const datesToFetch: ExtendedDate[] = [];
+    
+    dates.forEach(date => {
+      const key = date.toSimpleString();
+      if (reports.hasOwnProperty(key)) {
+        _reports[key] = (reports[key]);
+      } else {
+        datesToFetch.push(date);
+      }
+    });
+    if (datesToFetch.length < 1) {
+      return Result.Succeed().WithBody(_reports);
+    }
+    return await useLoading(async () => {  
+      const result = await api.reports.getRangeReports(session.token, datesToFetch);
       if (!result.wasSuccess || result.body == null) {
-        return Result.Fail().WithMessage('Failed to retrieve reports.');
+        return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve reports.');
       }
 
       result.body.forEach(report => {
-        _reports[report.date.toString()] = report;
+        _reports[report.date.toSimpleString()] = report;
       });
 
+      setReports(r => ({...r, ..._reports}));
       return Result.Succeed().WithBody(_reports);
     })
   }

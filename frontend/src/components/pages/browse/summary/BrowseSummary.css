@@ -29,7 +29,7 @@ table.browse-summary-table {
   width: 100%;
 }
 
-table.browse-summary-table>tr {
+table.browse-summary-table tr {
   border-bottom: var(--border-pri);
 }
 

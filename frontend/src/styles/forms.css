@@ -16,17 +16,18 @@ form.standard-form {
 div.standard-form-row {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
 }
 
-input.standard-input {
+.standard-input {
   border: var(--border-pri);
   padding: 5px 10px;
 }
 
-input.standard-input:hover, input.standard-input:focus {
+.standard-input:hover, .standard-input:focus {
   color: var(--clr-accent-dark);
   box-shadow: var(--box-shadow-normal);
 }
@@ -44,7 +45,7 @@ input.standard-input:hover, input.standard-input:focus {
   color: var(--clr-accent-dark);
 }
 
-.standard-button:active {
+.standard-button:active:hover {
   scale: 0.95;
   box-shadow: var(--box-shadow-small);
 }
