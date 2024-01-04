@@ -15,10 +15,7 @@ export default function SettingsPage(props: ISettingsPageProps): JSX.Element | n
   return (
     <main className='settings-page-wrapper'>
       <h1>settings</h1>
-      <div className='settings-page-inner-wrapper'>
-        <UpdateSettingsForm />
-        <ChangePasswordSection />
-      </div>
+      <UpdateSettingsForm />
     </main>
   );
 }

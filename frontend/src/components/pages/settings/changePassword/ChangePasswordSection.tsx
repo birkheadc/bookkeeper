@@ -7,6 +7,7 @@ import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import { ChangePasswordRequest } from '../../../../types/settings/changePassword';
 import api from '../../../../api';
 import { SessionContext } from '../../../../app/contexts/session/SessionContext';
+import { UsersContext } from '../../../../app/contexts/users/UsersContext';
 
 interface IChangePasswordSectionProps {
 
@@ -19,19 +20,11 @@ interface IChangePasswordSectionProps {
 export default function ChangePasswordSection(props: IChangePasswordSectionProps): JSX.Element | null {
 
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
-  const { useLoading } = React.useContext(LoadingSpinnerContext);
-  const { session, expire } = React.useContext(SessionContext);
+  const { changePassword } = React.useContext(UsersContext);
 
   const submit = async (request: ChangePasswordRequest) => {
-    if (session.token == null) {
-      expire();
-      return;
-    }
-    await useLoading(async () => {
-      const result = await api.users.changePassword(session.token!, request);
-      setRecentResult(result);
-      if (result.errors.some(e => e.statusCode === 401)) expire();
-    });
+    const result = await changePassword(request);
+    setRecentResult(result);
   }
 
   return (

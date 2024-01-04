@@ -10,19 +10,18 @@ export class BrowseOptions {
     this.viewMode = BrowseViewMode.DAY;
   }
 
-  static fromSearchParams(searchParams: URLSearchParams): BrowseOptions {
+  static fromSearchParams(searchParams: URLSearchParams): BrowseOptions | undefined {
     const options = new BrowseOptions();
 
     const dateString = searchParams.get('date');
-    if (dateString) {
-      options.date = new ExtendedDate(dateString);
-    } 
-
     const viewModeString = searchParams.get('mode');
-    if (viewModeString) {
-      options.viewMode = <BrowseViewMode> viewModeString;
+    
+    if (!dateString || !viewModeString) {
+      return undefined;
     }
 
+    options.viewMode = <BrowseViewMode> viewModeString;
+    options.date = new ExtendedDate(dateString);
     return options;
   }
 

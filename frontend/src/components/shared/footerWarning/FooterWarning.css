@@ -3,9 +3,9 @@ footer.footer-warning-wrapper {
   bottom: 0;
   left: 0;
   right: 0;
-  color: var(--clr-error);
+  color: var(--clr-white);
   text-align: center;
-  background-color: var(--clr-white);
+  background-color: var(--clr-translucent-medium);
   padding: 10px;
   font-weight: 700;
 }

@@ -39,11 +39,14 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
   }
 
   const seek = (n: number) => {
+    if (browseOptions == null) return;
     const newDate = new ExtendedDate(browseOptions.date);
     newDate.addBrowseViewMode(browseOptions.viewMode, n);
     searchParams.set('date', newDate.toSimpleString());
     setSearchParams(searchParams);
   }
+
+  if (browseOptions == null) return null;
 
   return (
     <div className='browse-page-controls-wrapper'>

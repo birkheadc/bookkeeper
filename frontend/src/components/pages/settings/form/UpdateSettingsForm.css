@@ -1,0 +1,5 @@
+form.update-settings-form-wrapper {
+  border: var(--border-pri);
+  border-width: 2px;
+  width: 100%;
+}

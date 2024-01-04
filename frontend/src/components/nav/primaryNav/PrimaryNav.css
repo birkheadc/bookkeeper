@@ -1,10 +1,14 @@
 nav.primary-nav-wrapper {
-  margin-top: 10px;
   background-color: var(--clr-black);
   color: var(--clr-white);
   border: var(--border-nav);
   border-width: 3px 0;
+  position: relative;
 } 
+
+div.primary-nav-outer-wrapper {
+  padding-top: 10px;
+}
 
 div.primary-nav-inner-wrapper {
   max-width: 90%;

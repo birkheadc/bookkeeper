@@ -9,10 +9,17 @@ export default async function getSettings(token: any): Promise<Result<UserSettin
     }, 500);
   });
 
-  return Result.Succeed().WithBody(DUMMY_SETTINGS);
+  const settingsString = window.localStorage.getItem('LOCAL_SETTINGS');
+  if (settingsString == null) return Result.Succeed().WithBody(DEFAULT_SETTINGS);
+  try {
+    const settings: UserSettings = JSON.parse(settingsString);
+    return Result.Succeed().WithBody(settings);
+  } catch {
+    return Result.Succeed().WithBody(DEFAULT_SETTINGS);
+  }
 }
 
-const DUMMY_SETTINGS: UserSettings = {
+const DEFAULT_SETTINGS: UserSettings = {
   general: {
     defaultViewMode: BrowseViewMode.MONTH
   },

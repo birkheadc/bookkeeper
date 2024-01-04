@@ -44,7 +44,7 @@ export default function ChangePasswordForm(props: IChangePasswordFormProps): JSX
         <StandardFormLabeledInput validation={validationResult} label={'password'} name={'password'} type='password' value={request.password} handleChange={handleChange} />
         <StandardFormLabeledInput validation={validationResult} label={'confirm'} name={'confirm'} type='password' value={request.confirm} handleChange={handleChange} />
       </div>
-      <button disabled={!validationResult.wasSuccess} className='standard-button' type='submit'>Submit</button>
+      <button disabled={!validationResult.wasSuccess} className='standard-button' type='submit'>submit</button>
     </form>
   );
 }

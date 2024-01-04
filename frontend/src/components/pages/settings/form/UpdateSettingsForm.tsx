@@ -2,11 +2,12 @@ import * as React from 'react';
 import './UpdateSettingsForm.css';
 import { SettingsContext } from '../../../../app/contexts/settings/SettingsContext';
 import { Result } from '../../../../types/result/result';
-import { GeneralSettings, TransactionCategorySettings, UserSettings } from '../../../../types/settings/userSettings';
+import { DenominationSettings, GeneralSettings, TransactionCategorySettings, UserSettings } from '../../../../types/settings/userSettings';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import DenominationsSection from './denominations/DenominationsSection';
 import GeneralSettingsSection from './generalSettings/GeneralSettingsSection';
 import TransactionCategoriesSection from './transactionCategories/TransactionCategoriesSection';
+import ChangePasswordSection from '../changePassword/ChangePasswordSection';
 
 interface IUpdateSettingsFormProps {
 
@@ -18,45 +19,53 @@ interface IUpdateSettingsFormProps {
  */
 export default function UpdateSettingsForm(props: IUpdateSettingsFormProps): JSX.Element | null {
 
-  const [ settings, setSettings ] = React.useState<UserSettings>();
   const [ recentResult, setRecentResult ] = React.useState<Result>();
 
-  const { getSettings, updateSettings } = React.useContext(SettingsContext);
+  const { settings, updateSettings } = React.useContext(SettingsContext);
+  const [ newSettings, setNewSettings ] = React.useState<UserSettings | undefined>(settings);
 
-  React.useEffect(() => {
-    (async function getSettingsOnMount() {
-      const result = await getSettings();
-      setRecentResult(result);
-      if (result.wasSuccess && result.body != null) {
-        setSettings(result.body);
-      }
-    })();
-  }, []);
+  React.useEffect(function populateNewSettingsWithCurrentSettings() {
+    setNewSettings(settings);
+  }, [ settings ]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (settings != null) updateSettings(settings);
+    if (newSettings != null) {
+      const result = await updateSettings(newSettings);
+      setRecentResult(result);
+    }
   }
 
   const updateGeneralSettings = (generalSettings: GeneralSettings) => {
-    setSettings(s => {
+    setNewSettings(s => {
       return s ? { ...s, general: generalSettings } : undefined;
     });
   }
 
   const updateTransactionCategorySettings = (transactionCategorySettings: TransactionCategorySettings) => {
-    setSettings(s => {
+    setNewSettings(s => {
       return s ? { ...s, categories: transactionCategorySettings} : undefined;
     });
   }
 
+  const updateDenominationSettings = (denominationSettings: DenominationSettings) => {
+    setNewSettings(s => {
+      return s ? { ...s, denominations: denominationSettings } : undefined
+    });
+  }
+
+  if (newSettings == null) return null;
+
   return (
-    <form className='update-settings-form-wrapper standard-form'>
+    <div className='settings-page-inner-wrapper'>
+    <form className='update-settings-form-wrapper standard-form settings-section' onSubmit={handleSubmit}>
       <ResultDisplay result={recentResult} />
-      <GeneralSettingsSection generalSettings={settings?.general} updateGeneralSettings={updateGeneralSettings}/>
-      <TransactionCategoriesSection transactionCategorySettings={settings?.categories} updateTransactionCategorySettings={updateTransactionCategorySettings}/>
-      <DenominationsSection />
+      <GeneralSettingsSection generalSettings={newSettings.general} updateGeneralSettings={updateGeneralSettings}/>
+      <TransactionCategoriesSection transactionCategorySettings={newSettings.categories} updateTransactionCategorySettings={updateTransactionCategorySettings}/>
+      <DenominationsSection denominationSettings={newSettings.denominations} updateDenominations={updateDenominationSettings} />
       <button className='standard-button' type='submit'>submit</button>
     </form>
+    <ChangePasswordSection />
+    </div>
   );
 }

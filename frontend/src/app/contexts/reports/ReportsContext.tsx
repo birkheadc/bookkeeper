@@ -55,13 +55,13 @@ export const ReportsProvider = ({ children }: Props) => {
       }
     return await useLoading(async () => {
       const result = await _api.reports.getRangeReports( session.token, [ date ]);
-      if (!result.wasSuccess || result.body == null) {
-        return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve report.');
-      }
-      const report = result.body[0];
+      if (result.wasSuccess && result.body != null) {
+        const report = result.body[0];
 
-      setReports(r => ({ ...r, key: report }));
-      return Result.Succeed().WithBody(report);
+        setReports(r => ({ ...r, key: report }));
+        return Result.Succeed().WithBody(report);
+      }
+      return result.OfType();      
     });
   }
 
@@ -82,16 +82,15 @@ export const ReportsProvider = ({ children }: Props) => {
     }
     return await useLoading(async () => {
       const result = await _api.reports.getRangeReports(session.token, datesToFetch);
-      if (!result.wasSuccess || result.body == null) {
-        return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve reports.');
+      if (result.wasSuccess && result.body != null) {
+        result.body.forEach(report => {
+          _reports[report.date.toSimpleString()] = report;
+        });
+  
+        setReports(r => ({...r, ..._reports}));
+        return Result.Succeed().WithBody(_reports);
       }
-
-      result.body.forEach(report => {
-        _reports[report.date.toSimpleString()] = report;
-      });
-
-      setReports(r => ({...r, ..._reports}));
-      return Result.Succeed().WithBody(_reports);
+      return result.OfType();
     })
   }
 

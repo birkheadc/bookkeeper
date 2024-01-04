@@ -5,23 +5,35 @@ import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import { SessionContext } from '../session/SessionContext';
 import api from '../../../api';
 import { SessionStatus } from '../../../types/session/session';
+import { BrowseViewMode } from '../../../types/browse/browseViewMode';
 
 type Props = {
   children: React.ReactNode
 }
 
 type Data = {
-  getSettings: () => Promise<Result<UserSettings>>,
+  settings: UserSettings | undefined,
   updateSettings: (settings: UserSettings) => Promise<Result>
 }
 
-const DEFAULT_DATA: Data = {
-  getSettings: function (): Promise<Result<UserSettings>> {
-    throw new Error("Function not implemented.")
+const DEFAULT_SETTINGS: UserSettings = {
+  general: {
+    defaultViewMode: BrowseViewMode.DAY
   },
-  updateSettings: function (settings: UserSettings): Promise<Result<any>> {
-    throw new Error("Function not implemented.")
+  categories: {
+    earningCategories: [],
+    expenseCategories: []
+  },
+  denominations: {
+    denominations: []
   }
+}
+
+const DEFAULT_DATA: Data = {
+  updateSettings: function (settings: UserSettings): Promise<Result<any>> {
+    throw new Error("Function not implemented.");
+  },
+  settings: DEFAULT_SETTINGS
 }
 
 export const SettingsContext = React.createContext<Data>(DEFAULT_DATA);
@@ -34,32 +46,46 @@ export const SettingsProvider = ({ children }: Props) => {
 
   const _api = session.status === SessionStatus.LOCAL ? api.local : api;
 
-  React.useEffect(function clearCacheOnChangeInSession() {
-    setSettings(undefined);
+  React.useEffect(() => {
+    (async function fetchSettingsOnMount() {
+      if (session.status === SessionStatus.LOCAL || session.status === SessionStatus.LOGGED_IN) {
+        await useLoading(async () => {
+          const result = await _api.settings.getSettings(session.token);
+          if (result.wasSuccess && result.body != null) {
+            setSettings(result.body);
+          } else {
+            setSettings(DEFAULT_SETTINGS);
+          }
+        })
+      } else {
+        setSettings(undefined);
+      }
+    })();
   }, [ session ]);
 
-  const getSettings = async (): Promise<Result<UserSettings>> => {
+  // const getSettings = async (): Promise<Result<UserSettings>> => {
+  //   return await useLoading(async () => {
+  //     if (settings != null) return Result.Succeed().WithBody(settings);
+  //     const result = await _api.settings.getSettings(session.token);
+  //     if (result.wasSuccess && result.body != null) {
+  //       setSettings(result.body);
+  //     }
+  //     return result;
+  //   });
+  // }
+
+  const updateSettings = async (settings: UserSettings): Promise<Result> => {
     return await useLoading(async () => {
-      if (settings != null) return Result.Succeed().WithBody(settings);
-      const result = await _api.settings.getSettings(session.token);
-      if (!result.wasSuccess || result.body == null) {
-        return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve settings.')
+      const result = await _api.settings.updateSettings(session.token, settings);
+      if (result.wasSuccess) {
+        setSettings(settings);
       }
-      setSettings(result.body);
-      return Result.Succeed().WithBody(result.body);
+      return result;
     });
   }
 
-  const updateSettings = async (settings: UserSettings): Promise<Result> => {
-    return Result.Fail().WithMessage('Not yet implemented.');
-  }
-
-  const clearCache = () => {
-    
-  }
-
   return (
-    <SettingsContext.Provider value={{ getSettings, updateSettings }} >
+    <SettingsContext.Provider value={{ settings, updateSettings }} >
       { children }
     </SettingsContext.Provider>
   );

@@ -36,7 +36,7 @@ div.standard-form-row {
 .standard-button {
   border: var(--border-pri);
   padding: 4px 8px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   cursor:default;
   user-select: none;
 }
@@ -55,6 +55,14 @@ div.standard-form-row {
   color: var(--clr-accent-light);
   border-color: var(--clr-accent-light);
   pointer-events: none;
+}
+
+.icon-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
 .link-button {

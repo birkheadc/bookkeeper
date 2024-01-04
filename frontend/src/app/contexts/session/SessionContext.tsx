@@ -34,6 +34,10 @@ export const SessionProvider = ({ children }: Props) => {
         setSession({ status: SessionStatus.LOGGED_OUT });
         return;
       };
+      if (token === LOCAL_TOKEN_VALUE) {
+        loginLocal();
+        return;
+      }
       await useLoading(async () => {
         const result = await api.auth.verifyToken(token);
         if (result.wasSuccess) {
@@ -70,6 +74,7 @@ export const SessionProvider = ({ children }: Props) => {
   }
 
   const loginLocal = () => {
+    window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, LOCAL_TOKEN_VALUE);
     setSession({ status: SessionStatus.LOCAL, token: undefined });
   }
 
@@ -79,3 +84,5 @@ export const SessionProvider = ({ children }: Props) => {
     </SessionContext.Provider>
   );
 }
+
+const LOCAL_TOKEN_VALUE = 'LOCAL';

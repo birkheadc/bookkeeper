@@ -10,6 +10,9 @@ import { useSearchParams } from 'react-router-dom';
 import BrowsePageControls from './controls/BrowsePageControls';
 import { ExtendedDate } from '../../../types/date/extendedDate';
 import BrowseSummary from './summary/BrowseSummary';
+import { SettingsContext } from '../../../app/contexts/settings/SettingsContext';
+import { UserSettings } from '../../../types/settings/userSettings';
+import { BrowseViewMode } from '../../../types/browse/browseViewMode';
 
 interface IBrowsePageProps {
 
@@ -27,17 +30,20 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
   const { getReports } = React.useContext(ReportsContext);
 
   const [ searchParams, setSearchParams ] = useSearchParams();
-  const [ browseOptions, setBrowseOptions ] = React.useState<BrowseOptions>(BrowseOptions.fromSearchParams(searchParams));
+  const [ browseOptions, setBrowseOptions ] = React.useState<BrowseOptions | undefined>(BrowseOptions.fromSearchParams(searchParams));
+
+  const { settings } = React.useContext(SettingsContext);
 
   React.useEffect(function setDefaultSearchParamsIfMissing() {
+    if (settings == null) return;
     if (!searchParams.has('date')) {
       searchParams.append('date', new ExtendedDate().toSimpleString());
     }
     if (!searchParams.has('mode')) {
-      searchParams.append('mode', DEFAULT_MODE);
+      searchParams.append('mode', settings.general.defaultViewMode ?? BrowseViewMode.DAY);
     }
     setSearchParams(searchParams);
-  }, [ searchParams ]);
+  }, [ searchParams, settings ]);
 
   React.useEffect(function updateBrowseOptionsOnSearchParamsChange() {
     setBrowseOptions(BrowseOptions.fromSearchParams(searchParams));
@@ -45,6 +51,7 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
 
   React.useEffect(() => {
     setReports(undefined);
+    if (browseOptions == null) return;
     (async function getReportsOnDateChange() {
       const result = await getReports(browseOptions.getDates());
       setRecentResult(result);
@@ -53,6 +60,8 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
       } 
     })();
   }, [ browseOptions ]);
+
+  if (settings == null || browseOptions == null) return null;
 
   return (
     <main className='browse-page-wrapper'>
@@ -64,6 +73,3 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
     </main>
   );
 }
-
-// Todo: This needs to come from settings.
-const DEFAULT_MODE = 'day';

@@ -37,11 +37,18 @@ export class Result<T = any> {
     return this;
   }
 
-  WithBody<T>(body: T): Result<T> {
+  WithBody<T>(body?: T | undefined): Result<T> {
     const result = new Result<T>();
     result.wasSuccess = this.wasSuccess;
     result.errors = this.errors;
     result.body = body;
+    return result;
+  }
+
+  OfType<T>(): Result<T> {
+    const result = new Result<T>();
+    result.wasSuccess = this.wasSuccess;
+    result.errors = this.errors;
     return result;
   }
 }

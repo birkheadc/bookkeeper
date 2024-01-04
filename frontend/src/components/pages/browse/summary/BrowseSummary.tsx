@@ -18,10 +18,10 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
   return (
     <div className='browse-summary-wrapper'>
       <div className='browse-summary-row browse-summary-header'>
-        <span>Total</span><span>{CURRENCY_SYMBOL}{summary.total.toLocaleString()}</span>
+        <span>Total</span><span>{summary.total.toLocaleString()}</span>
       </div>
       <div className='browse-summary-row browse-summary-header'>
-        <span>Average</span><span>{CURRENCY_SYMBOL}{summary.average.toLocaleString()}</span>
+        <span>Average</span><span>{summary.average.toLocaleString()}</span>
       </div>
       <table className='browse-summary-table'>
         <thead>
@@ -53,6 +53,3 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
     </div>
   );
 }
-
-// Todo: Eventually maybe one day make this a setting.
-const CURRENCY_SYMBOL = '₩';

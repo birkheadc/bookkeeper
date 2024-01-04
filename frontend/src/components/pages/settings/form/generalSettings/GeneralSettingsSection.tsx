@@ -4,7 +4,7 @@ import { GeneralSettings } from '../../../../../types/settings/userSettings';
 import { BrowseViewMode } from '../../../../../types/browse/browseViewMode';
 
 interface IGeneralSettingsSectionProps {
-  generalSettings: GeneralSettings | undefined,
+  generalSettings: GeneralSettings,
   updateGeneralSettings: (settings: GeneralSettings) => void
 }
 
@@ -14,7 +14,6 @@ interface IGeneralSettingsSectionProps {
 */
 export default function GeneralSettingsSection(props: IGeneralSettingsSectionProps): JSX.Element | null {
   const settings = props.generalSettings;
-  if (settings == null) return null;
 
   const changeViewMode = (event: React.PointerEvent<HTMLButtonElement>) => {
     const name = event.currentTarget.name;
@@ -25,7 +24,7 @@ export default function GeneralSettingsSection(props: IGeneralSettingsSectionPro
   }
 
   return (
-    <section className='general-settings-section-wrapper settings-section'>
+    <section className='general-settings-section-wrapper settings-sub-section'>
       <h2>general</h2>
       <div className='standard-form-row default-view-mode-section'>
         <label>Default View Mode</label>

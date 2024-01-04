@@ -28,14 +28,16 @@ export default function PrimaryNav(props: IPrimaryNavProps): JSX.Element | null 
   }, [ location ]);
 
   return (
-    <nav className='primary-nav-wrapper'>
-      <div className='primary-nav-inner-wrapper'>
-        { session.status === SessionStatus.LOGGED_IN || session.status === SessionStatus.LOCAL
-        ? LoggedInLinks
-        : LoggedOutLinks
-        }
-      </div>
-    </nav>
+    <div className="primary-nav-outer-wrapper">
+      <nav className='primary-nav-wrapper'>
+        <div className='primary-nav-inner-wrapper'>
+          { session.status === SessionStatus.LOGGED_IN || session.status === SessionStatus.LOCAL
+          ? LoggedInLinks
+          : LoggedOutLinks
+          }
+        </div>
+      </nav>
+    </div>
   );
 }
 
