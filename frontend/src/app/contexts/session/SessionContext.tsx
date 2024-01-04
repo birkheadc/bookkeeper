@@ -12,16 +12,18 @@ type SessionState = {
   session: Session,
   login: (token: string | undefined) => void,
   logout: () => void,
-  expire: () => void
+  expire: () => void,
+  loginLocal: () => void
 }
 
 const LOCAL_STORAGE_TOKEN_KEY = "token";
 
-export const SessionContext = React.createContext<SessionState>({ session: DEFAULT_SESSION, login: () => {}, logout: () => {}, expire: () => {} });
+export const SessionContext = React.createContext<SessionState>({ session: DEFAULT_SESSION, login: () => {}, logout: () => {}, expire: () => {}, loginLocal: () => {} });
 export const SessionProvider = ({ children }: Props) => {
 
   const [ session, setSession ] = React.useState<Session>(DEFAULT_SESSION);
   const { useLoading } = React.useContext(LoadingSpinnerContext);
+  
 
   const nav = useNavigate();
 
@@ -66,8 +68,13 @@ export const SessionProvider = ({ children }: Props) => {
     });
     nav('/login');
   }
+
+  const loginLocal = () => {
+    setSession({ status: SessionStatus.LOCAL, token: undefined });
+  }
+
   return (
-    <SessionContext.Provider value={{ session, login, logout, expire }} >
+    <SessionContext.Provider value={{ session, login, logout, expire, loginLocal }} >
       { children }
     </SessionContext.Provider>
   );

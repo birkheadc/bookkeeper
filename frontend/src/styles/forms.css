@@ -55,3 +55,28 @@ div.standard-form-row {
   border-color: var(--clr-accent-light);
   pointer-events: none;
 }
+
+.link-button {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--clr-accent-dark);
+}
+
+.link-button:hover {
+  color: var(--clr-accent-light);
+}
+
+div.standard-form-labeled-checkbox-wrapper>input {
+  width: 20px;
+  height: 20px;
+  border: var(--border-pri);
+}
+
+div.standard-form-labeled-checkbox-wrapper>input:checked {
+  background-color: var(--clr-accent-light);
+}
+
+label {
+  cursor:default;
+  user-select: none;
+}

@@ -22,7 +22,7 @@ export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
 
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
   const { useLoading } = React.useContext(LoadingSpinnerContext);
-  const { session, login } = React.useContext(SessionContext);
+  const { session, login, loginLocal } = React.useContext(SessionContext);
 
   const submit = async (request: LoginCredentials) => {
     await useLoading(async () => {
@@ -32,7 +32,13 @@ export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
         login(result.body);
       }
     })
-    
+  }
+
+  const handleLoginLocal = () => {
+    const conf = confirm('This application is meant to be used only by the admin; local login is for demo purposes only.\n\nWhen logged in locally, all data is stored on your device, and might be lost at any time.\n\nPlease do not attempt to use this app for actual book-keeping.\n\nContinue in demo mode?');
+    if (conf) {
+      loginLocal();
+    }
   }
 
   return (
@@ -41,6 +47,7 @@ export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
       {session.status === SessionStatus.EXPIRED && <span className='login-expired-message'>Your session has expired. Please log in again.</span>}
       <ResultDisplay result={recentResult} />
       <LoginForm submit={submit} />
+      <span className='local-login-invitation'>Or, <button className='link-button' type='button' onClick={handleLoginLocal}>log in locally</button></span>
     </main>
   );
 }

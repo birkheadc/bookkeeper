@@ -1,0 +1,24 @@
+div.standard-form-labeled-checkbox-outer-wrapper {
+  width: 100%;
+  border: var(--border-pri);
+  padding: 10px;
+}
+
+div.standard-form-labeled-checkbox-outer-wrapper:hover, div.standard-form-labeled-checkbox-outer-wrapper:focus {
+  box-shadow: var(--box-shadow-normal);
+  color: var(--clr-accent-dark);
+}
+
+div.standard-form-labeled-checkbox-outer-wrapper:active:hover {
+  scale: 0.95;
+  box-shadow: var(--box-shadow-small);
+}
+
+div.standard-form-labeled-checkbox-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}

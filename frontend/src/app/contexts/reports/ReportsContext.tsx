@@ -1,10 +1,11 @@
 import { Report, ReportDictionary } from "../../../types/report/report";
 import * as React from 'react';
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
-import api from "../../../api";
 import { Result } from "../../../types/result/result";
 import { SessionContext } from "../session/SessionContext";
 import { ExtendedDate } from "../../../types/date/extendedDate";
+import { SessionStatus } from "../../../types/session/session";
+import api from "../../../api";
 
 
 type Props = {
@@ -41,13 +42,19 @@ export const ReportsProvider = ({ children }: Props) => {
 
   const { session } = React.useContext(SessionContext);
 
+  const _api = session.status === SessionStatus.LOCAL ? api.local : api;
+
+  React.useEffect(function clearCacheOnChangeInSession() {
+    setReports({});
+  }, [ session ]);
+
   const getReport = async (date: ExtendedDate): Promise<Result<Report>> => {
     const key = date.toString();
       if (reports.hasOwnProperty(key)) {
         return Result.Succeed().WithBody(reports[key]);
       }
-    return await useLoading(async () => {      
-      const result = await api.reports.getRangeReports( session.token, [ date ]);
+    return await useLoading(async () => {
+      const result = await _api.reports.getRangeReports( session.token, [ date ]);
       if (!result.wasSuccess || result.body == null) {
         return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve report.');
       }
@@ -73,8 +80,8 @@ export const ReportsProvider = ({ children }: Props) => {
     if (datesToFetch.length < 1) {
       return Result.Succeed().WithBody(_reports);
     }
-    return await useLoading(async () => {  
-      const result = await api.reports.getRangeReports(session.token, datesToFetch);
+    return await useLoading(async () => {
+      const result = await _api.reports.getRangeReports(session.token, datesToFetch);
       if (!result.wasSuccess || result.body == null) {
         return Result.Fail().WithErrors(result.errors).WithMessage('Failed to retrieve reports.');
       }

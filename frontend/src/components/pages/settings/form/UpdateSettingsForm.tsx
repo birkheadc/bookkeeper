@@ -2,7 +2,7 @@ import * as React from 'react';
 import './UpdateSettingsForm.css';
 import { SettingsContext } from '../../../../app/contexts/settings/SettingsContext';
 import { Result } from '../../../../types/result/result';
-import { GeneralSettings, UserSettings } from '../../../../types/settings/userSettings';
+import { GeneralSettings, TransactionCategorySettings, UserSettings } from '../../../../types/settings/userSettings';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import DenominationsSection from './denominations/DenominationsSection';
 import GeneralSettingsSection from './generalSettings/GeneralSettingsSection';
@@ -40,7 +40,13 @@ export default function UpdateSettingsForm(props: IUpdateSettingsFormProps): JSX
 
   const updateGeneralSettings = (generalSettings: GeneralSettings) => {
     setSettings(s => {
-      return s ? { ...s, general: generalSettings } : undefined
+      return s ? { ...s, general: generalSettings } : undefined;
+    });
+  }
+
+  const updateTransactionCategorySettings = (transactionCategorySettings: TransactionCategorySettings) => {
+    setSettings(s => {
+      return s ? { ...s, categories: transactionCategorySettings} : undefined;
     });
   }
 
@@ -48,7 +54,7 @@ export default function UpdateSettingsForm(props: IUpdateSettingsFormProps): JSX
     <form className='update-settings-form-wrapper standard-form'>
       <ResultDisplay result={recentResult} />
       <GeneralSettingsSection generalSettings={settings?.general} updateGeneralSettings={updateGeneralSettings}/>
-      <TransactionCategoriesSection />
+      <TransactionCategoriesSection transactionCategorySettings={settings?.categories} updateTransactionCategorySettings={updateTransactionCategorySettings}/>
       <DenominationsSection />
       <button className='standard-button' type='submit'>submit</button>
     </form>
