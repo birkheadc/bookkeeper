@@ -39,25 +39,25 @@ function BrowsePageDisplayDaysOfTheWeek(props: { viewMode: BrowseViewMode }): JS
   if (props.viewMode === BrowseViewMode.DAY) return null;
   return (
     <>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>sunday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>monday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>tuesday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>wednesday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>thursday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>friday</div>
       </div>
-      <div className="browse-page-display-card-outer-wrapper">
+      <div className="browse-page-display-card-outer-wrapper days-of-the-week">
         <div className='days-page-display-days-of-the-week-cell'>saturday</div>
       </div>
     </>

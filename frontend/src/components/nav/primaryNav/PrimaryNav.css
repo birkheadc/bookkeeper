@@ -3,8 +3,8 @@ nav.primary-nav-wrapper {
   background-color: var(--clr-black);
   color: var(--clr-white);
   border: var(--border-nav);
-  border-width: 2px 0;
-}
+  border-width: 3px 0;
+} 
 
 div.primary-nav-inner-wrapper {
   max-width: 90%;
@@ -65,13 +65,13 @@ div.nav-link-wrapper::before, div.nav-link-wrapper::after {
 
 div.nav-link-wrapper::before {
   border-radius: 5px 5px 0 0;
-  border-width: 2px 0 0 0;
+  border-width: 3px 0 0 0;
   top: -5px;
 }
 
 div.nav-link-wrapper::after {
   border-radius: 5px 5px 0 0;
-  border-width: 2px 0 0 0;
+  border-width: 3px 0 0 0;
   bottom: -5px;
 }
 
@@ -104,6 +104,13 @@ nav.primary-nav-wrapper a:hover, nav.primary-nav-wrapper a:focus {
   }
 
   span.nav-link-label {
-    height: 50px;
+    height: 80px;
+  }
+
+  nav.primary-nav-wrapper ul {
+    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 50px;
   }
 }
