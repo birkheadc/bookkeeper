@@ -14,7 +14,7 @@ export default function EmptyDisplayCards(props: IEmptyDisplayCardsProps): JSX.E
     <>
       {
         Array.from({ length: props.num }).map(
-          (item, index) =>
+          (_, index) =>
           <div key={`empty-display-card-key-${index}`} className='browse-page-display-card-outer-wrapper'>
             <div className='empty-display-card-wrapper'></div>
           </div>

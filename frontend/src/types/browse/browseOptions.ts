@@ -1,5 +1,6 @@
 import { ExtendedDate } from "../date/extendedDate";
-import { BrowseViewMode } from "./browseViewMode"
+import { BrowseViewMode } from "./browseViewMode";
+import {OmitProperties} from 'ts-essentials';
 
 export class BrowseOptions {
   date: ExtendedDate;
@@ -10,19 +11,19 @@ export class BrowseOptions {
     this.viewMode = BrowseViewMode.DAY;
   }
 
-  static fromSearchParams(searchParams: URLSearchParams): BrowseOptions | undefined {
-    const options = new BrowseOptions();
+  static fromSearchParamsOrDefault(searchParams: URLSearchParams, def: OmitProperties<BrowseOptions, Function>): { browseOptions: BrowseOptions, newSearchParams: URLSearchParams } {    
+    const browseOptions = new BrowseOptions();
+    const newSearchParams = new URLSearchParams();
 
-    const dateString = searchParams.get('date');
-    const viewModeString = searchParams.get('mode');
+    const date = ExtendedDate.fromStringOrDefault(searchParams.get('date'), def.date)
+    browseOptions.date = date;
+    newSearchParams.set('date', date.toSimpleString());
     
-    if (!dateString || !viewModeString) {
-      return undefined;
-    }
+    const viewMode = <BrowseViewMode> (searchParams.get('mode') ?? def.viewMode);
+    browseOptions.viewMode = Object.values(BrowseViewMode).includes(viewMode) ? viewMode : def.viewMode;
+    newSearchParams.set('mode', browseOptions.viewMode);
 
-    options.viewMode = <BrowseViewMode> viewModeString;
-    options.date = new ExtendedDate(dateString);
-    return options;
+    return { browseOptions, newSearchParams };
   }
 
   getDates(): ExtendedDate[] {

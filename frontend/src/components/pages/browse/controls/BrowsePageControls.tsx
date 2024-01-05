@@ -4,9 +4,10 @@ import { useSearchParams } from 'react-router-dom';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { BrowseOptions } from '../../../../types/browse/browseOptions';
 import { ExtendedDate } from '../../../../types/date/extendedDate';
+import { BrowseViewMode } from '../../../../types/browse/browseViewMode';
 
 interface IBrowsePageControlsProps {
-
+  browseOptions: BrowseOptions
 }
 
 /**
@@ -16,7 +17,7 @@ interface IBrowsePageControlsProps {
 export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX.Element | null {
 
   const [ searchParams, setSearchParams ] = useSearchParams();
-  const browseOptions = BrowseOptions.fromSearchParams(searchParams);
+  const browseOptions = props.browseOptions;
 
   const changeViewMode = (event: React.PointerEvent<HTMLButtonElement>) => {
     const name = event.currentTarget.name;

@@ -24,35 +24,27 @@ interface IBrowsePageProps {
 */
 export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null {
 
-  const [ reports, setReports ] = React.useState<ReportDictionary>();
+  const [ reports, setReports ] = React.useState<ReportDictionary>({});
   const [ recentResult, setRecentResult ] = React.useState<Result>();
 
   const { getReports } = React.useContext(ReportsContext);
 
   const [ searchParams, setSearchParams ] = useSearchParams();
-  const [ browseOptions, setBrowseOptions ] = React.useState<BrowseOptions | undefined>(BrowseOptions.fromSearchParams(searchParams));
+  const [ browseOptions, setBrowseOptions ] = React.useState<BrowseOptions | undefined>();
 
   const { settings } = React.useContext(SettingsContext);
 
   React.useEffect(function setDefaultSearchParamsIfMissing() {
     if (settings == null) return;
-    if (!searchParams.has('date')) {
-      searchParams.append('date', new ExtendedDate().toSimpleString());
-    }
-    if (!searchParams.has('mode')) {
-      searchParams.append('mode', settings.general.defaultViewMode ?? BrowseViewMode.DAY);
-    }
-    setSearchParams(searchParams);
+    const { browseOptions, newSearchParams } = BrowseOptions.fromSearchParamsOrDefault(searchParams, { date: new ExtendedDate(), viewMode: settings.general.defaultViewMode })
+    setBrowseOptions(browseOptions);
+    setSearchParams(newSearchParams);
   }, [ searchParams, settings ]);
 
-  React.useEffect(function updateBrowseOptionsOnSearchParamsChange() {
-    setBrowseOptions(BrowseOptions.fromSearchParams(searchParams));
-  }, [ searchParams ]);
-
   React.useEffect(() => {
-    setReports(undefined);
-    if (browseOptions == null) return;
     (async function getReportsOnDateChange() {
+      setReports({});
+      if (browseOptions == null) return;
       const result = await getReports(browseOptions.getDates());
       setRecentResult(result);
       if (result.wasSuccess && result.body != null) {
@@ -61,13 +53,13 @@ export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null 
     })();
   }, [ browseOptions ]);
 
-  if (settings == null || browseOptions == null) return null;
+  if (browseOptions == null) return null;
 
   return (
     <main className='browse-page-wrapper'>
       <h1>browse</h1>
       <ResultDisplay result={recentResult} />
-      <BrowsePageControls />
+      <BrowsePageControls browseOptions={browseOptions} />
       <BrowseSummary reports={reports} />
       <BrowsePageDisplay reports={reports} viewMode={browseOptions.viewMode} />
     </main>

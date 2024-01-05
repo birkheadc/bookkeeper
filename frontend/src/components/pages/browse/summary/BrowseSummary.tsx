@@ -4,7 +4,7 @@ import { ReportDictionary } from '../../../../types/report/report';
 import { ReportsSummary } from '../../../../types/report/reportsSummary';
 
 interface IBrowseSummaryProps {
-  reports: ReportDictionary | undefined
+  reports: ReportDictionary
 }
 
 /**
@@ -12,7 +12,6 @@ interface IBrowseSummaryProps {
 * @returns {JSX.Element | null}
 */
 export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element | null {
-  if (props.reports == null) return null;
   const summary = ReportsSummary.fromReportDictionary(props.reports);
 
   return (

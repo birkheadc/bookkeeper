@@ -49,19 +49,23 @@ export const ReportsProvider = ({ children }: Props) => {
   }, [ session ]);
 
   const getReport = async (date: ExtendedDate): Promise<Result<Report>> => {
-    const key = date.toString();
-      if (reports.hasOwnProperty(key)) {
-        return Result.Succeed().WithBody(reports[key]);
-      }
+    const key = date.toSimpleString();
+    if (reports.hasOwnProperty(key)) {
+      return Result.Succeed().WithBody(reports[key]);
+    }
+    console.log(`Didn't find key: ${key} in reports:`, reports);
     return await useLoading(async () => {
       const result = await _api.reports.getRangeReports( session.token, [ date ]);
       if (result.wasSuccess && result.body != null) {
         const report = result.body[0];
-
-        setReports(r => ({ ...r, key: report }));
+        setReports(r => {
+          const newReports = {...r};
+          newReports[report.date.toSimpleString()] = report;
+          return newReports;
+        });
         return Result.Succeed().WithBody(report);
       }
-      return result.OfType();      
+      return result.OfType();
     });
   }
 

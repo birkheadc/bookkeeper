@@ -6,7 +6,7 @@ import EmptyDisplayCards from './emptyDisplayCards/EmptyDisplayCards';
 import { BrowseViewMode } from '../../../../types/browse/browseViewMode';
 
 interface IBrowsePageDisplayProps {
-  reports: ReportDictionary | undefined,
+  reports: ReportDictionary,
   viewMode: BrowseViewMode
 }
 
@@ -17,7 +17,9 @@ interface IBrowsePageDisplayProps {
 export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.Element | null {
   const reports = props.reports;
   if (reports == null) return null;
+
   const [ start, end ] = calculateNumberEmptyCellsInMonth(reports, props.viewMode);
+  
   return (
     <div className='browse-page-display-wrapper'>
       <div className='browse-page-display-reports-wrapper'>
@@ -66,8 +68,9 @@ function BrowsePageDisplayDaysOfTheWeek(props: { viewMode: BrowseViewMode }): JS
 
 function calculateNumberEmptyCellsInMonth(reports: ReportDictionary, viewMode: BrowseViewMode): [ number, number ] {
   if (viewMode !== BrowseViewMode.MONTH) return [ 0, 0 ];
-
-  const date = reports[Object.keys(reports)[0]].date;
+  
+  const date = reports[Object.keys(reports)[0]]?.date;
+  if (date == null) return [ 0, 0 ];
 
   const first = new Date(date);
   first.setDate(1);

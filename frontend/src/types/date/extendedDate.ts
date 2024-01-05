@@ -1,6 +1,8 @@
+import { OmitProperties } from "ts-essentials";
 import { BrowseViewMode } from "../browse/browseViewMode";
 
 export class ExtendedDate extends Date {
+
   toSimpleString(): string {
     return this.toISOString().substring(0, 10);
   }
@@ -48,5 +50,23 @@ export class ExtendedDate extends Date {
     }
 
     return month;
+  }
+
+  isValid(): boolean {
+    return !isNaN(this.getDate());
+  }
+
+  static fromStringOrDefault(s: string | null | undefined, def: ExtendedDate): ExtendedDate {
+    if (s == null) return def;
+    const date = new ExtendedDate(s);
+    if (date.isValid()) return date;
+    return def;
+  }
+
+  static fromSearchParamsOrToday(searchParams: URLSearchParams): { date: ExtendedDate, newSearchParams: URLSearchParams } {
+    const date = ExtendedDate.fromStringOrDefault(searchParams.get('date'), new ExtendedDate());
+    const newSearchParams = new URLSearchParams();
+    newSearchParams.set('date', date.toSimpleString());
+    return { date, newSearchParams };
   }
 }
