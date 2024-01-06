@@ -1,6 +1,7 @@
 import { BrowseViewMode } from "../../types/browse/browseViewMode";
 import { Result } from "../../types/result/result";
-import { Denomination, TransactionCategory, UserSettings } from "../../types/settings/userSettings";
+import { Currency } from "../../types/settings/currency";
+import { Denomination, EarningCategory, ExpenseCategory, UserSettings } from "../../types/settings/userSettings";
 
 export default async function getSettings(token: string | undefined): Promise<Result<UserSettings>> {
   if (token == null) return Result.Fail().WithMessage('Token invalid.');
@@ -11,12 +12,15 @@ export default async function getSettings(token: string | undefined): Promise<Re
     }, 500);
   });
 
+  console.log('dummy:', DUMMY_SETTINGS);
+
   return Result.Succeed().WithBody(DUMMY_SETTINGS);
 }
 
 const DUMMY_SETTINGS: UserSettings = {
   general: {
-    defaultViewMode: BrowseViewMode.MONTH
+    defaultViewMode: BrowseViewMode.MONTH,
+    currency: Currency.KRW
   },
   categories: {
     earningCategories: generateEarningCategories(),
@@ -27,7 +31,7 @@ const DUMMY_SETTINGS: UserSettings = {
   }
 }
 
-function generateEarningCategories(): TransactionCategory[] {
+function generateEarningCategories(): EarningCategory[] {
   return [
     {
       name: 'cash',
@@ -42,7 +46,7 @@ function generateEarningCategories(): TransactionCategory[] {
   ];
 }
 
-function generateExpenseCategories(): TransactionCategory[] {
+function generateExpenseCategories(): ExpenseCategory[] {
   return [
     {
       name: 'delivery',
@@ -51,6 +55,14 @@ function generateExpenseCategories(): TransactionCategory[] {
     {
       name: 'lunch',
       isDefault: false
+    },
+    {
+      name: 'stock',
+      isDefault: true,
+      subcategories: [
+        'food inc',
+        'amazon'
+      ]
     }
   ];
 }

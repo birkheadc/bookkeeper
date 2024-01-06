@@ -1,5 +1,25 @@
+div.general-settings-section-inner-wrapper {
+  width: fit-content;
+  padding: 0 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+section.general-settings-section-wrapper div.standard-form-row {
+  justify-content: space-between;
+  gap: 50px;
+}
+
 div.default-view-mode-section button.active {
   background-color: var(--clr-accent-dark);
   color: var(--clr-white);
   pointer-events: none;
+}
+
+div.default-view-mode-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
 }

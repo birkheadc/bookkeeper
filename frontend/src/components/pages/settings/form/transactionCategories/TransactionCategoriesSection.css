@@ -6,3 +6,33 @@ div.transaction-category-settings-row {
   gap: 10px;
   width: 100%;
 }
+
+div.settings-expense-category {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 5px;
+}
+
+div.settings-expense-category-subcategories {
+  padding-left: 10px;
+}
+
+div.settings-expense-category-subcategories ul {
+  padding: 10px 20px;
+  list-style-type: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: fit-content;
+}
+
+li.settings-expense-subcategory>div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}

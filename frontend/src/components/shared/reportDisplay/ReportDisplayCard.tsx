@@ -17,7 +17,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
     <div className='report-display-card-wrapper'>
       <div className='report-display-card-top'>
         <span className='report-display-card-date'>{report.date.toSimpleString()}</span>
-        <span className='report-display-card-total'>{report.getTotalEarnings().toLocaleString()}</span>
+        <span className='report-display-card-total'>{Report.getTotalEarnings(report).toLocaleString()}</span>
         <div className='report-display-card-breakdowns'>
         {
           report.earnings.map(

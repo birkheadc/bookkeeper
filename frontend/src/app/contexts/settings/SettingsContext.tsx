@@ -6,6 +6,7 @@ import { SessionContext } from '../session/SessionContext';
 import api from '../../../api';
 import { SessionStatus } from '../../../types/session/session';
 import { BrowseViewMode } from '../../../types/browse/browseViewMode';
+import { Currency } from '../../../types/settings/currency';
 
 type Props = {
   children: React.ReactNode
@@ -18,7 +19,8 @@ type Data = {
 
 const DEFAULT_SETTINGS: UserSettings = {
   general: {
-    defaultViewMode: BrowseViewMode.DAY
+    defaultViewMode: BrowseViewMode.DAY,
+    currency: Currency.KRW
   },
   categories: {
     earningCategories: [],

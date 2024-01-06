@@ -9,6 +9,7 @@ interface IStandardFormLabeledInputProps {
   type?: string,
   autofocus?: boolean,
   validation?: Result | undefined,
+  hasErrors?: boolean,
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -23,7 +24,7 @@ export default function StandardFormLabeledInput(props: IStandardFormLabeledInpu
         <label htmlFor={props.name}>{props.label}</label>
         <input autoFocus={props.autofocus} id={props.name} name={props.name} type={props.type || 'text'} value={props.value} onChange={props.handleChange}></input>
       </div>
-      <span className='standard-form-labeleed-input-error-message'>{ props.value.length > 0 ? props.validation?.errors.find(e => e.field === props.name)?.message : ''}</span>
+      { (props.hasErrors || props.validation?.errors) && <span className='standard-form-labeleed-input-error-message'>{ props.value.length > 0 ? props.validation?.errors.find(e => e.field === props.name)?.message : ''}</span>}
     </div>
   );
 }

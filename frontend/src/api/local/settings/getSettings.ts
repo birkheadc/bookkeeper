@@ -1,6 +1,7 @@
 import { BrowseViewMode } from "../../../types/browse/browseViewMode";
 import { Result } from "../../../types/result/result";
-import { UserSettings, TransactionCategory, Denomination } from "../../../types/settings/userSettings";
+import { Currency } from "../../../types/settings/currency";
+import { UserSettings, Denomination, EarningCategory, ExpenseCategory } from "../../../types/settings/userSettings";
 
 export default async function getSettings(token: any): Promise<Result<UserSettings>> {
   await new Promise((res, rej) => {
@@ -21,7 +22,8 @@ export default async function getSettings(token: any): Promise<Result<UserSettin
 
 const DEFAULT_SETTINGS: UserSettings = {
   general: {
-    defaultViewMode: BrowseViewMode.MONTH
+    defaultViewMode: BrowseViewMode.MONTH,
+    currency: Currency.KRW
   },
   categories: {
     earningCategories: generateEarningCategories(),
@@ -32,7 +34,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   }
 }
 
-function generateEarningCategories(): TransactionCategory[] {
+function generateEarningCategories(): EarningCategory[] {
   return [
     {
       name: 'cash',
@@ -47,7 +49,7 @@ function generateEarningCategories(): TransactionCategory[] {
   ];
 }
 
-function generateExpenseCategories(): TransactionCategory[] {
+function generateExpenseCategories(): ExpenseCategory[] {
   return [
     {
       name: 'delivery',
@@ -56,6 +58,14 @@ function generateExpenseCategories(): TransactionCategory[] {
     {
       name: 'lunch',
       isDefault: false
+    },
+    {
+      name: 'stock',
+      isDefault: true,
+      subcategories: [
+        'food inc',
+        'amazon'
+      ]
     }
   ];
 }

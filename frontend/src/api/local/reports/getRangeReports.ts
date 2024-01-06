@@ -48,6 +48,9 @@ function generateRandomExpenses(): Expense[] {
       amount: (Math.floor(Math.random() * 1000000)) + 500000,
       isIncludeInCash: Math.round(Math.random()) === 1
     }
+    if (expense.category === 'stock') {
+      expense.subCategory = EXPENSE_SUBCATEGORIES[Math.floor(Math.random() * 2)]
+    }
     earnings.push(expense);
   }
 
@@ -55,4 +58,5 @@ function generateRandomExpenses(): Expense[] {
 }
 
 const EARNING_CATEGORIES = ['cash', 'card', 'coupon'];
-const EXPENSE_CATEGORIES = ['delivery', 'small change', 'lunch'];
+const EXPENSE_CATEGORIES = ['stock', 'small change', 'delivery'];
+const EXPENSE_SUBCATEGORIES = ['amazon', 'food inc', 'whoops co' ];

@@ -10,12 +10,12 @@ export class Report {
     this.expenses = [];
   }
 
-  getTotalEarnings(): number {
+  static getTotalEarnings(report: Report): number {
     let sum = 0;
-    this.earnings.forEach(earning => {
+    report.earnings.forEach(earning => {
       sum += earning.amount;
     });
-    this.expenses.forEach(expense => {
+    report.expenses.forEach(expense => {
       if (expense.isIncludeInCash) {
         sum += expense.amount;
       }

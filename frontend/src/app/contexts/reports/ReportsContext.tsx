@@ -53,7 +53,6 @@ export const ReportsProvider = ({ children }: Props) => {
     if (reports.hasOwnProperty(key)) {
       return Result.Succeed().WithBody(reports[key]);
     }
-    console.log(`Didn't find key: ${key} in reports:`, reports);
     return await useLoading(async () => {
       const result = await _api.reports.getRangeReports( session.token, [ date ]);
       if (result.wasSuccess && result.body != null) {

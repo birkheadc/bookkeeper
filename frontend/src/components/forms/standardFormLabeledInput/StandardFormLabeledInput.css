@@ -24,9 +24,10 @@ div.standard-form-labeled-input-wrapper>input:hover, div.standard-form-labeled-i
 div.standard-form-labeled-input-outer-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content:baseline;
   align-items: flex-start;
   height: 100%;
+
+  padding: 0.8em 0;
 }
 
 span.standard-form-labeleed-input-error-message {

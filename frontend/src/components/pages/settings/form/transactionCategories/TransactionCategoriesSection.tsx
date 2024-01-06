@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './TransactionCategoriesSection.css'
-import { TransactionCategorySettings } from '../../../../../types/settings/userSettings';
+import { ExpenseCategory, TransactionCategorySettings } from '../../../../../types/settings/userSettings';
 import StandardFormLabeledCheckbox from '../../../../forms/standardFormLabeledCheckbox/StandardFormLabeledCheckbox';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 
@@ -50,6 +50,25 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
     props.updateTransactionCategorySettings(newSettings);
   }
 
+  const handleAddSubcategory = (category: ExpenseCategory) => {
+    const subcategory = prompt(`Enter name of new subcategory for ${category.name}.`);
+    if (subcategory == null) return;
+    if (category.subcategories == null) {
+      category.subcategories = [];
+    }
+    if (category.subcategories.includes(subcategory)) {
+      alert('That subcategory already exists!');
+      return;
+    }
+    category.subcategories.push(subcategory);
+    props.updateTransactionCategorySettings(settings);
+  }
+
+  const handleRemoveSubcategory = (category: ExpenseCategory, subcategory: string) => {
+    if (category.subcategories == null) return;
+    category.subcategories = category.subcategories.filter(s => s !== subcategory);
+    props.updateTransactionCategorySettings(settings);
+  }
 
   return (
     <section className='transaction-categories-section settings-sub-section'>
@@ -68,9 +87,27 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
       
       { settings.expenseCategories.map(
         category =>
-          <div key={`expense-category-key-${category.name}`} className='standard-form-row'>
-            <StandardFormLabeledCheckbox label={category.name} name={`expense-category-${category.name}`} checked={category.isDefault} handleToggle={() => handleToggle('expense', category.name)} />
-            <button className='standard-button icon-button' type='button' onClick={() => handleDelete('expense', category.name)}><TrashIcon width={'20px'}/> delete</button>
+          <div key={`expense-category-key-${category.name}`} className='settings-expense-category'>
+            <div className="standard-form-row">
+              <StandardFormLabeledCheckbox label={category.name} name={`expense-category-${category.name}`} checked={category.isDefault} handleToggle={() => handleToggle('expense', category.name)} />
+              <button className='standard-button icon-button' type='button' onClick={() => handleDelete('expense', category.name)}><TrashIcon width={'20px'}/> delete</button>
+            </div>
+            <div className='settings-expense-category-subcategories'>
+              { category.subcategories &&
+                <ul>
+                  {category.subcategories.map(
+                    subcategory =>
+                    <li key={`settings-expense-subcategory-key-${subcategory}`} className='settings-expense-subcategory'>
+                      <div>
+                        <span>{subcategory}</span>
+                        <button type='button' className='standard-button icon-button' onClick={() => handleRemoveSubcategory(category, subcategory)}><TrashIcon width={'20px'} />remove</button>
+                      </div>
+                    </li>
+                  )}
+                </ul>
+              }
+              <button type='button' className='standard-button icon-button' onClick={() => handleAddSubcategory(category)}><PlusIcon width={'20px'} />add subcategory</button>
+            </div>
           </div>
       ) }
       <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('expense')}><PlusIcon width={'20px'} />new</button>

@@ -23,6 +23,10 @@ div.standard-form-row {
   width: 100%;
 }
 
+div.standard-form-row.start {
+  justify-content: start;
+}
+
 .standard-input {
   border: var(--border-pri);
   padding: 5px 10px;
