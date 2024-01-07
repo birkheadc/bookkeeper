@@ -9,6 +9,8 @@ import LoadingPage from '../../components/pages/loading/LoadingPage';
 import BrowsePage from '../../components/pages/browse/BrowsePage';
 import CreatePage from '../../components/pages/create/CreatePage';
 import DetailPage from '../../components/pages/detail/DetailPage';
+import BatchReportPage from '../../components/pages/batchReport/BatchReportPage';
+import CsvPage from '../../components/pages/csv/CsvPage';
 
 interface IAppRoutesProps {
 
@@ -43,7 +45,10 @@ export default function AppRoutes(props: IAppRoutesProps): JSX.Element | null {
 
 const LoggedInRoutes = (
   <>
+    
     <Route path='/browse' element={<BrowsePage />} />
+    <Route path='/create/batch-report' element={<BatchReportPage />} />
+    <Route path='/create/csv' element={<CsvPage />} />
     <Route path='/create' element={<CreatePage />} />
     <Route path='/detail' element={<DetailPage />} />
     <Route path='/settings' element={<SettingsPage />} />

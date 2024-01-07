@@ -13,6 +13,10 @@ form.create-report-form-wrapper h2 {
   text-align: center;
 }
 
+form.create-report-form-wrapper h3 {
+  /* color: var(--clr-accent-dark); */
+}
+
 form.create-report-form-wrapper>div.form-body {
   display: flex;
   flex-direction: row;
@@ -22,15 +26,10 @@ form.create-report-form-wrapper>div.form-body {
   gap: 10px;
 }
 
-div.transaction-inputs {
+div.create-report-form-subsection {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: 10px;
-  flex: 1;
-
-  width: 100%;
 }
 
 div.transaction-input-wrapper {
@@ -39,7 +38,9 @@ div.transaction-input-wrapper {
 
   display: flex;
   flex-direction: column;
-  width: max-content;
+  gap: 1em;
+  
+  width: max(100%, max-content);
 }
 
 @media (max-width: 980px) {

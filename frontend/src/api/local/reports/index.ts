@@ -1,5 +1,11 @@
-import getRangeReports from "./getRangeReports"
+import getRangeReports from "./getRangeReports";
+import postBatchTransactions from "./postBatchTransactions";
+import postCsv from "./postCsv";
+import postReport from "./postReport";
 
 export default {
-  getRangeReports
+  getRangeReports,
+  postBatchTransactions,
+  postCsv,
+  postReport
 }

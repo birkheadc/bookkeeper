@@ -1,48 +1,20 @@
 import * as React from 'react';
 import { SettingsContext } from '../../app/contexts/settings/SettingsContext';
-import { Currency } from '../../types/settings/currency';
+import { Currency, CurrencyProperties, currencyPropertiesMap } from '../../types/settings/currency';
 
-export function useCurrency(): { toString: (value: number, endsWithDecimal?: boolean) => string, toInt: (value: string) => number | undefined } {
+export function useCurrency(): { properties: CurrencyProperties, toDatabaseAmount: (value: number | null | undefined) => number, getActualAmount: (value: number | null | undefined) => number } {
   const { settings } = React.useContext(SettingsContext);
   const currency: Currency = settings?.general.currency ?? Currency.KRW;
-  const decimals = DECIMALS[currency] ?? 0;
 
-  const toString = (value: number, endsWithDecimal?: boolean): string => {
-    const actualValue = value / (Math.pow(10, decimals));
-    const r = actualValue.toLocaleString();
-    console.log('toString:', value);
-    console.log('ActualValue:', actualValue);
-    console.log('Decimals', decimals);
-    console.log('Return:', r)
-    return r + ((decimals > 0 && endsWithDecimal) ? '.' : '');
+  const properties = currencyPropertiesMap[currency];
+
+  const getActualAmount = (value: number | null | undefined) => {
+    return (value ?? 0) / Math.pow(10, properties.decimals);
   }
 
-  const toInt = (value: string): number | undefined => {
-    console.log('toInt:', value);
-    value = value.replace(/\,/g, '');
-    if (isNaN(Number(value))) {
-      return undefined;
-    }
-    console.log('Value:', value);
-    if (value.length < 1) return 0;
-    if (decimals === 0 || !value.includes('.')) {
-      const n = parseInt(value);
-      const r = (isNaN(n) || n < 0) ? undefined : n;
-      console.log('Return:', r);
-      return r;
-    }
-    const parts = value.split('.');
-    if (parts.length > 2) return undefined;
-    const r = parts.length > 1 ? toInt(parts[0] + parts[1].substring(0, 2)) : toInt(parts[0]);
-    console.log('Return:', r);
-    return r;
+  const toDatabaseAmount = (value: number | null | undefined) => {
+    return (value ?? 0) * Math.pow(10, properties.decimals);
   }
 
-  return { toString, toInt }
-}
-
-const DECIMALS: {[key: string]: number} = {
-  'USD': 2,
-  'KRW': 0,
-  'JPY': 0
+  return { properties, getActualAmount, toDatabaseAmount }
 }

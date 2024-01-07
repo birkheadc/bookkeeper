@@ -6,6 +6,7 @@ import { SessionContext } from "../session/SessionContext";
 import { ExtendedDate } from "../../../types/date/extendedDate";
 import { SessionStatus } from "../../../types/session/session";
 import api from "../../../api";
+import { SettingsContext } from "../settings/SettingsContext";
 
 
 type Props = {
@@ -15,8 +16,8 @@ type Props = {
 type Data = {
   getReport: (date: ExtendedDate) => Promise<Result<Report>>,
   getReports: (dates: ExtendedDate[]) => Promise<Result<ReportDictionary>>
-  addReport: (report: Report) => void,
-  addReports: (reports: Report[]) => void
+  addReport: (report: Report) => Promise<Result>,
+  addReports: (reports: Report[]) => Promise<Result>
 }
 
 const DEFAULT_DATA: Data = {
@@ -26,10 +27,10 @@ const DEFAULT_DATA: Data = {
   getReports: function (dates: ExtendedDate[]): Promise<Result<ReportDictionary>> {
     throw new Error("Function not implemented.");
   },
-  addReport: function (report: Report): void {
+  addReport: function (report: Report): Promise<Result> {
     throw new Error("Function not implemented.");
   },
-  addReports: function (reports: Report[]): void {
+  addReports: function (reports: Report[]): Promise<Result> {
     throw new Error("Function not implemented.");
   }
 }
@@ -97,12 +98,20 @@ export const ReportsProvider = ({ children }: Props) => {
     })
   }
 
-  const addReport = (report: Report) => {
-
+  const addReport = async (report: Report): Promise<Result> => {
+    return await useLoading(async () => {
+      const result = await _api.reports.postReport(session.token, report);
+      if (result.wasSuccess) {
+        const _reports: ReportDictionary = {};
+        _reports[report.date.toSimpleString()] = report;
+        setReports(r => ({ ...r, ..._reports }));
+      }
+      return result;
+    });
   }
 
-  const addReports = (reports: Report[]) => {
-
+  const addReports = async (reports: Report[]):Promise<Result> => {
+    return Result.Fail().WithMessage('Not yet implemented.');
   }
 
   return (

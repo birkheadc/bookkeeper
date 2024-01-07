@@ -2,6 +2,7 @@ import * as React from 'react';
 import './EarningInput.css'
 import { Earning } from '../../../../../types/report/report';
 import StandardFormLabeledInput from '../../../../forms/standardFormLabeledInput/StandardFormLabeledInput';
+import StandardFormLabeledCurrencyInput from '../../../../forms/standardFormLabeledCurrencyInput/StandardFormLabeledCurrencyInput';
 
 interface IEarningInputProps {
   earning: Earning,
@@ -14,8 +15,9 @@ interface IEarningInputProps {
 */
 export default function EarningInput(props: IEarningInputProps): JSX.Element | null {
 
-  const handleChangeAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-
+  const handleChangeAmount = (amount: number) => {
+    const newEarning: Earning = { ...props.earning, amount: amount };
+    props.update(newEarning);
   }
 
   const useCalculator = () => {
@@ -26,7 +28,7 @@ export default function EarningInput(props: IEarningInputProps): JSX.Element | n
     <div className='earning-input-wrapper transaction-input-wrapper'>
       <h3>{props.earning.category}</h3>
       <div className='standard-form-row'>
-        <StandardFormLabeledInput type='number' label={'amount'} name={'amount'} value={props.earning.amount.toString()} handleChange={handleChangeAmount} />
+      <StandardFormLabeledCurrencyInput amount={props.earning.amount} update={handleChangeAmount} />
         <button className='standard-button' type='button' onClick={useCalculator}>calc</button>
       </div>
     </div>

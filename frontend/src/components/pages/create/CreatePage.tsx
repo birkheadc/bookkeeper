@@ -2,7 +2,7 @@ import * as React from 'react';
 import './CreatePage.css'
 import CreateReportForm from './form/CreateReportForm';
 import CreatePageControls from './controls/CreatePageControls';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ExtendedDate } from '../../../types/date/extendedDate';
 import { ReportsContext } from '../../../app/contexts/reports/ReportsContext';
 import { Result } from '../../../types/result/result';
@@ -34,6 +34,11 @@ export default function CreatePage(props: ICreatePageProps): JSX.Element | null 
       <h1>create</h1>
       <CreatePageControls date={date} />
       <CreateReportForm date={date} />
+      <div className='create-page-alternate-upload-links'>
+        <Link to='/create/batch-report'>batch report</Link>
+        |
+        <Link to='/create/csv'>upload csv</Link>
+      </div>
     </main>
   );
 }

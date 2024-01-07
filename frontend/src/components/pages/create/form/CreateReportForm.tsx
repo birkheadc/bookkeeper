@@ -9,6 +9,7 @@ import { Result } from '../../../../types/result/result';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import EarningInput from './earningInput/EarningInput';
 import ExpenseInput from './expenseInput/ExpenseInput';
+import settings from '../../../../api/settings';
 
 interface ICreateReportFormProps {
   date: ExtendedDate
@@ -19,11 +20,11 @@ interface ICreateReportFormProps {
 * @returns {JSX.Element | null}
 */
 export default function CreateReportForm(props: ICreateReportFormProps): JSX.Element | null {
-  const { getReport } = React.useContext(ReportsContext);
+  const { getReport, addReport } = React.useContext(ReportsContext);
   const [ report, setReport ] = React.useState<Report | undefined>();
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>();
 
-  const { settings } = React.useContext(SettingsContext);
+  const { settings, updateSettings } = React.useContext(SettingsContext);
 
   React.useEffect(() => {
     (async function fetchReportOnDateChange() {
@@ -36,10 +37,42 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     })();
   }, [ props.date ]);
 
+  React.useEffect(function addDefaultTransactionCategoriesToFetchedReport() {
+    if (report == null) return;
+    if (settings == null) return;
+
+    let changed = false;
+    const newReport = { ...report };
+
+    settings.categories.earningCategories.forEach(category => {
+      if (category.isDefault && !newReport.earnings.some(e => e.category === category.name)) {
+        changed = true;
+        newReport.earnings.push({ category: category.name, amount: 0 });
+      }
+    });
+
+    settings.categories.expenseCategories.forEach(category => {
+      if (category.isDefault && !newReport.expenses.some(e => e.category === category.name)) {
+        changed = true;
+        newReport.expenses.push({ category: category.name, amount: 0, isIncludeInCash: false });
+      }
+    });
+
+    if (changed) setReport(newReport);
+
+  }, [ report, settings ] );
+
   if (report == null) return null;
 
   const handleUpdateEarning = (earning: Earning) => {
-
+    setReport(r => {
+      if (r == null) return r;
+      const newEarnings = [...r.earnings];
+      let i = newEarnings.findIndex(e => e.category === earning.category);
+      if (i < 0 || i >= newEarnings.length) return r;
+      newEarnings[i] = earning;
+      return { ...r, earnings: newEarnings };
+    });
   }
 
   const handleUpdateExpense = (expense: Expense) => {
@@ -53,16 +86,54 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     });
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleAddEarning = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // TODO
+  }
+
+  const handleAddExpense = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // TODO
+  }
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Submit this:', report);
+    const result = await addReportAndUpdateSettings(report);
+    setRecentResult(result);
+  }
+
+  const addReportAndUpdateSettings = async (report: Report): Promise<Result> => {
+    const reportResult = await addReport(report);
+
+    if (settings != null) {
+      const newSettings = { ...settings };
+      report.earnings.forEach(earning => {
+        const categories = newSettings.categories.earningCategories;
+        if (!categories.some(c => c.name === earning.category)) {
+          categories.push({ name: earning.category, isDefault: false });
+        }
+      });
+      report.expenses.forEach(expense => {
+        const categories = newSettings.categories.expenseCategories;
+        if (!categories.some(c => c.name === expense.category)) {
+          categories.push({ name: expense.category, isDefault: false });
+        }
+        const subCategory = expense.subCategory;
+        if (subCategory != null) {
+          const index = categories.findIndex(c => (c.name === expense.category && c.subcategories && !c.subcategories.includes(subCategory)));
+          if (index !== -1) {
+            categories[index].subcategories?.push(subCategory);
+          }
+        }
+      });
+      await updateSettings(newSettings);
+    }
+    return reportResult;
   }
 
   return (
     <form className='create-report-form-wrapper standard-form' onSubmit={handleSubmit}>
+      <ResultDisplay result={recentResult} />
       <div className="form-body">
-        <ResultDisplay result={recentResult} />
-        <div className='transaction-inputs'>
+        <div className='create-report-form-subsection transaction-inputs'>
           <h2>earnings</h2>
           {
             report.earnings.map(
@@ -70,23 +141,38 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
               <EarningInput key={`earning-input-key-${earning.category}-${index}`} earning={earning} update={handleUpdateEarning} />
             )
           }
-          <select>
-            <option>add earning</option>
+          <select className='standard-input' onChange={handleAddEarning}>
+            <option value='default'>add earning</option>
+            {
+              settings?.categories.earningCategories.map(
+                category =>
+                <option key={`add-earning-option-key-${category.name}`} value={`$${category.name}`}>{category.name}</option>
+              )
+            }
+            <option value='new'>create new</option>
           </select>
         </div>
-        <div className='transaction-inputs'>
+        <div className='create-report-form-subsection transaction-inputs'>
           <h2>expenses</h2>
           {
             report.expenses.map(
               (expense, index) =>
-              <ExpenseInput key={`expense-input-key-${expense.category}-${index}`} expense={expense} update={handleUpdateExpense} />
+              <ExpenseInput key={`expense-input-key-${expense.category}-${index}`} uniqueKey={`expense-input-key-${expense.category}-${index}`} expense={expense} update={handleUpdateExpense} />
             )
           }
-          <select>
-            <option>add expense</option>
+          <select className='standard-input' onChange={handleAddExpense}>
+            <option value='default'>add expense</option>
+            {
+              settings?.categories.expenseCategories.map(
+                category =>
+                <option key={`add-expense-option-key-${category.name}`} value={`$${category.name}`}>{category.name}</option>
+              )
+            }
+            <option value='new'>create new</option>
           </select>
         </div>
-        <div>
+        <div className='create-report-form-subsection'>
+          <h2>preview</h2>
           <ReportDisplayCard report={report} />
         </div>
       </div>

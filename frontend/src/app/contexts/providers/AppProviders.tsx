@@ -18,13 +18,13 @@ export default function AppProviders(props: IAppProvidersProps): JSX.Element | n
   return (
     <LoadingSpinnerProvider>
       <SessionProvider>
-        <ReportsProvider>
-          <SettingsProvider>
+        <SettingsProvider>
+          <ReportsProvider>
             <UsersProvider>
               {props.children}
             </UsersProvider>
-          </SettingsProvider>
-        </ReportsProvider>
+          </ReportsProvider>
+        </SettingsProvider>
       </SessionProvider>
     </LoadingSpinnerProvider>
   );

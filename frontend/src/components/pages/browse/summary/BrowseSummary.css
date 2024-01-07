@@ -33,6 +33,10 @@ table.browse-summary-table tr {
   border-bottom: var(--border-pri);
 }
 
+table.browse-summary-table tr td {
+  padding: 5px;
+}
+
 tr.browse-summary-table-headers {
   text-transform: capitalize;
   font-weight: 700;

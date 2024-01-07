@@ -22,6 +22,16 @@ export class Report {
     });
     return sum;
   }
+
+  static fromDto(dto: ReportDto): Report {
+    const report = new Report();
+
+    report.date = new ExtendedDate(dto.date);
+    report.earnings = dto.earnings;
+    report.expenses = dto.expenses;
+
+    return report;
+  }
 }
 
 export type Earning = {
@@ -39,4 +49,20 @@ export type Expense = {
 
 export type ReportDictionary = {
   [ key: string ]: Report
+}
+
+export class ReportDto {
+  date: number = 0;
+  earnings: Earning[] = [];
+  expenses: Expense[] = [];
+
+  static fromReport(report: Report): ReportDto {
+    const dto = new ReportDto();
+
+    dto.date = report.date.valueOf();
+    dto.earnings = report.earnings;
+    dto.expenses = report.expenses;
+
+    return dto;
+  }
 }

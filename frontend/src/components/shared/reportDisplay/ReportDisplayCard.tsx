@@ -2,6 +2,7 @@ import * as React from 'react';
 import './ReportDisplayCard.css';
 import { Report } from '../../../types/report/report';
 import { Link } from 'react-router-dom';
+import { useCurrency } from '../../../hooks/useCurrency/useCurrency';
 
 interface IReportDisplayCardProps {
   report: Report
@@ -13,28 +14,41 @@ interface IReportDisplayCardProps {
  */
 export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.Element | null {
   const report = props.report;
+  const { properties, getActualAmount } = useCurrency();
   return (
     <div className='report-display-card-wrapper'>
       <div className='report-display-card-top'>
         <span className='report-display-card-date'>{report.date.toSimpleString()}</span>
-        <span className='report-display-card-total'>{Report.getTotalEarnings(report).toLocaleString()}</span>
+        <span className='report-display-card-total'>{properties.symbol}{getActualAmount(Report.getTotalEarnings(report)).toLocaleString()}</span>
         <div className='report-display-card-breakdowns'>
         {
           report.earnings.map(
             earning =>
-            <div key={`report-display-card-earnings-key-${earning.category}`} className='report-display-card-breakdown-row earning-color'>
-              <span>{earning.category}</span>
-              <span>{earning.amount.toLocaleString()}</span>
-            </div>
+            {
+              if (earning.amount !== 0) {
+                return (
+                  <div key={`report-display-card-earnings-key-${earning.category}`} className='report-display-card-breakdown-row earning-color'>
+                    <span>{earning.category}</span>
+                    <span>{getActualAmount(earning.amount).toLocaleString()}</span>
+                  </div>
+                );
+              }
+            }
           )
         }
         {
           report.expenses.map(
             expense =>
-            <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row expense-color'>
-              <span>{expense.isIncludeInCash && '*'}{expense.category}</span>
-              <span>-{expense.amount.toLocaleString()}</span>
-            </div>
+            {
+              if (expense.amount !== 0) {
+                return (
+                  <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row expense-color'>
+                    <span>{expense.isIncludeInCash && '*'}{expense.category}</span>
+                    <span>-{getActualAmount(expense.amount).toLocaleString()}</span>
+                  </div>
+                );
+              }
+            }
           )
         }
         </div>

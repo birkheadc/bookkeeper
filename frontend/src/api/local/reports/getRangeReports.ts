@@ -1,5 +1,5 @@
 import { ExtendedDate } from "../../../types/date/extendedDate";
-import { Earning, Expense, Report } from "../../../types/report/report";
+import { Report, ReportDto } from "../../../types/report/report";
 import { Result } from "../../../types/result/result";
 
 export default async function getRangeReports(token: any, dates: ExtendedDate[]): Promise<Result<Report[]>> {
@@ -7,56 +7,27 @@ export default async function getRangeReports(token: any, dates: ExtendedDate[])
     setTimeout(() => {
       res('');
     }, 500);
-  })
-  const reports: Report[] = dates.map(d => generateDummyReport(d));
-  return Result.Succeed().WithBody(reports);
-}
+  });
 
-function generateDummyReport(date: ExtendedDate): Report {
-  const report = new Report();
-  report.date = date;
-  report.earnings = generateRandomEarnings();
-  report.expenses = generateRandomExpenses();
-
-  return report;
-}
-
-function generateRandomEarnings(): Earning[] {
-  const num = Math.ceil(Math.random() * 3);
-
-  const earnings: Earning[] = [];
-
-  for (let i = 0; i < num; i++) {
-    const earning: Earning = {
-      category: EARNING_CATEGORIES[i],
-      amount: (Math.floor(Math.random() * 1_000_000)) + 500_000
-    }
-    earnings.push(earning);
+  const reportsString = window.localStorage.getItem('LOCAL_REPORTS');
+  console.log('got this from LOCAL_REPORTS:', reportsString);
+  try {
+    const allReportDtos: ReportDto[] = JSON.parse(reportsString ?? '[]');
+    const reports: Report[] = [];
+    dates.forEach(date => {
+      const dto = allReportDtos.find(r => r.date === date.valueOf());
+      if (dto == null) {
+        const blankReport = new Report();
+        blankReport.date = date;
+        reports.push(blankReport);
+      } else {  
+        reports.push(Report.fromDto(dto));
+      }
+    });
+    console.log(reports);
+    return Result.Succeed().WithBody(reports);
+  } catch (error) {
+    console.log(error);
+    return Result.Succeed().WithBody([]);
   }
-
-  return earnings;
 }
-
-function generateRandomExpenses(): Expense[] {
-  const num = Math.ceil(Math.random() * 3);
-
-  const earnings: Expense[] = [];
-
-  for (let i = 0; i < num; i++) {
-    const expense: Expense = {
-      category: EXPENSE_CATEGORIES[i],
-      amount: (Math.floor(Math.random() * 1000000)) + 500000,
-      isIncludeInCash: Math.round(Math.random()) === 1
-    }
-    if (expense.category === 'stock') {
-      expense.subCategory = EXPENSE_SUBCATEGORIES[Math.floor(Math.random() * 2)]
-    }
-    earnings.push(expense);
-  }
-
-  return earnings;
-}
-
-const EARNING_CATEGORIES = ['cash', 'card', 'coupon'];
-const EXPENSE_CATEGORIES = ['stock', 'small change', 'delivery'];
-const EXPENSE_SUBCATEGORIES = ['amazon', 'food inc', 'whoops co' ];
