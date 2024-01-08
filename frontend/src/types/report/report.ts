@@ -32,6 +32,18 @@ export class Report {
 
     return report;
   }
+
+  static fromReportDictionary(dict: ReportDictionary): Report[] {
+    return Object.keys(dict).map(key => dict[key]).sort((a, b) => { return a.date.valueOf() - b.date.valueOf()});
+  }
+
+  static toDictionary(reports: Report[]): ReportDictionary {
+    const dict: ReportDictionary = {};
+    reports.forEach(report => {
+      dict[report.date.toSimpleString()] = report;
+    })
+    return dict;
+  }
 }
 
 export type Earning = {
@@ -52,14 +64,14 @@ export type ReportDictionary = {
 }
 
 export class ReportDto {
-  date: number = 0;
+  date: string = new ExtendedDate().toSimpleString();
   earnings: Earning[] = [];
   expenses: Expense[] = [];
 
   static fromReport(report: Report): ReportDto {
     const dto = new ReportDto();
 
-    dto.date = report.date.valueOf();
+    dto.date = report.date.toSimpleString();
     dto.earnings = report.earnings;
     dto.expenses = report.expenses;
 

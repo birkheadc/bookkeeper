@@ -6,7 +6,7 @@ div.empty-display-card-wrapper {
 }
 
 @media (max-width: 1320px) {
-  div.empty-display-card-wrapper {
+  div.empty-display-card-outer-wrapper {
     display: none;
   }
 }

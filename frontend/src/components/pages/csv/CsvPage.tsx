@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './CsvPage.css'
+import CsvUploadForm from './form/CsvUploadForm';
 
 interface ICsvPageProps {
 
@@ -18,6 +19,7 @@ export default function CsvPage(props: ICsvPageProps): JSX.Element | null {
         <p className='error'>This action will REPLACE the ENTIRE DATABASE.</p>
         <p className='error'>All information WILL BE LOST.</p>
         <p className='error'>Only proceed if you know what you are doing!</p>
+        <CsvUploadForm />
       </div>
     </main>
   );

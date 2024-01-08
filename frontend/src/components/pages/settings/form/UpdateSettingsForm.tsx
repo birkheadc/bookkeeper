@@ -33,6 +33,7 @@ export default function UpdateSettingsForm(props: IUpdateSettingsFormProps): JSX
     if (newSettings != null) {
       const result = await updateSettings(newSettings);
       setRecentResult(result);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 

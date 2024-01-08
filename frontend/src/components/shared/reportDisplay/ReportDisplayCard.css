@@ -10,6 +10,7 @@ div.report-display-card-wrapper {
   transition: scale 50ms linear, box-shadow 50ms linear;
   width: min(100%, 500px);
   margin: 0 auto;
+  font-size: 1.2em;
 }
 
 div.report-display-card-top {
@@ -68,6 +69,11 @@ div.report-display-card-breakdown-row:last-child {
 }
 
 @media (max-width: 1320px) {  
+  div.report-display-card-wrapper {
+    font-size: 1.5em;
+    padding: 30px
+  }
+  
   div.report-display-card-wrapper:hover {
     scale: 1.0;
     box-shadow: none;

@@ -1,3 +1,4 @@
+import { ExtendedDate } from "../date/extendedDate";
 import { Earning, Expense, ReportDictionary } from "./report";
 
 export class ReportsSummary {
@@ -16,14 +17,14 @@ export class ReportsSummary {
 
   static fromReportDictionary(reports: ReportDictionary): ReportsSummary {
     const summary = new ReportsSummary();
-    let numReports = 0;
+    let numReportsForAverage = 0;
     let sum = 0;
     let allEarnings: (Earning & { average: number, num: number })[] = [];
     let allExpenses: (Omit<Expense, 'isIncludeInCash'> & { average: number, num: number })[] = [];
 
     Object.keys(reports).forEach(key => {
       const report = reports[key];
-      numReports++;
+      if (isDateBeforeToday(report.date)) numReportsForAverage++;
       report.earnings.forEach(earning => {
         sum += earning.amount;
         const pre = allEarnings.find(e => e.category === earning.category);
@@ -61,10 +62,23 @@ export class ReportsSummary {
     });
 
     summary.total = sum;
-    summary.average = numReports > 0 ? Math.round(sum / numReports) : 0;
+    summary.average = numReportsForAverage > 0 ? Math.round(sum / numReportsForAverage) : 0;
     summary.earnings = allEarnings;
     summary.expenses = allExpenses;
 
     return summary;
   }
+}
+
+function isDateBeforeToday(date: ExtendedDate): boolean {
+  const today = new ExtendedDate();
+
+  if (date.getFullYear() < today.getFullYear()) return true;
+  if (date.getFullYear() > today.getFullYear()) return false;
+
+  if (date.getMonth() < today.getMonth()) return true;
+  if (date.getMonth() > today.getMonth()) return false;
+
+  if (date.getDate() < today.getDate()) return true;
+  return false;
 }

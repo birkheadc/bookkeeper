@@ -10,6 +10,7 @@ import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import EarningInput from './earningInput/EarningInput';
 import ExpenseInput from './expenseInput/ExpenseInput';
 import settings from '../../../../api/settings';
+import { useNavigate } from 'react-router-dom';
 
 interface ICreateReportFormProps {
   date: ExtendedDate
@@ -25,6 +26,8 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>();
 
   const { settings, updateSettings } = React.useContext(SettingsContext);
+
+  const nav = useNavigate();
 
   React.useEffect(() => {
     (async function fetchReportOnDateChange() {
@@ -87,17 +90,43 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
   }
 
   const handleAddEarning = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // TODO
+    const value = event.currentTarget.value;
+
+    if (value === 'default') return;
+
+    const category = (value === 'new') ? prompt('Enter name of new category') : value.substring(1);
+    event.currentTarget.value = 'default';
+
+    if (category == null) return;
+
+    const newEarnings: Earning[] = [ ...report.earnings ];
+    newEarnings.push({ category: category, amount: 0 });
+    setReport(r => r ? ({ ...r, earnings: newEarnings }): r);
+
   }
 
   const handleAddExpense = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // TODO
+    const value = event.currentTarget.value;
+
+    if (value === 'default') return;
+
+    const category = (value === 'new') ? prompt('Enter name of new category') : value.substring(1);
+    event.currentTarget.value = 'default';
+
+    if (category == null) return;
+
+    const newExpenses: Expense[] = [ ...report.expenses ];
+    newExpenses.push({ category: category, amount: 0, isIncludeInCash: false });
+    setReport(r => r ? ({ ...r, expenses: newExpenses }): r);
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = await addReportAndUpdateSettings(report);
     setRecentResult(result);
+    if (result.wasSuccess) {
+      nav(`/browse?date=${report.date.toSimpleString()}`);
+    }
   }
 
   const addReportAndUpdateSettings = async (report: Report): Promise<Result> => {

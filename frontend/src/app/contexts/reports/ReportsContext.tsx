@@ -17,7 +17,8 @@ type Data = {
   getReport: (date: ExtendedDate) => Promise<Result<Report>>,
   getReports: (dates: ExtendedDate[]) => Promise<Result<ReportDictionary>>
   addReport: (report: Report) => Promise<Result>,
-  addReports: (reports: Report[]) => Promise<Result>
+  addReports: (reports: Report[]) => Promise<Result>,
+  uploadCsv: (file: any) => Promise<Result>
 }
 
 const DEFAULT_DATA: Data = {
@@ -31,6 +32,9 @@ const DEFAULT_DATA: Data = {
     throw new Error("Function not implemented.");
   },
   addReports: function (reports: Report[]): Promise<Result> {
+    throw new Error("Function not implemented.");
+  },
+  uploadCsv: function (file: any): Promise<Result<any>> {
     throw new Error("Function not implemented.");
   }
 }
@@ -102,20 +106,30 @@ export const ReportsProvider = ({ children }: Props) => {
     return await useLoading(async () => {
       const result = await _api.reports.postReport(session.token, report);
       if (result.wasSuccess) {
-        const _reports: ReportDictionary = {};
-        _reports[report.date.toSimpleString()] = report;
-        setReports(r => ({ ...r, ..._reports }));
+        const dict = Report.toDictionary([report]);
+        setReports(r => ({ ...r, ...dict }));
       }
       return result;
     });
   }
 
   const addReports = async (reports: Report[]):Promise<Result> => {
-    return Result.Fail().WithMessage('Not yet implemented.');
+    return Result.Fail().WithMessage('not yet implemented.');
+  }
+
+  const uploadCsv = async (file: File | undefined): Promise<Result> => {
+    if (file == null) return Result.Fail().WithMessage('no file found');
+    return await useLoading(async () => {
+      const result = await _api.reports.postCsv(session.token, file);
+      if (result.wasSuccess && result.body) {
+        setReports(Report.toDictionary(result.body));
+      }
+      return result;
+    });
   }
 
   return (
-    <ReportsContext.Provider value={{ getReport, getReports, addReport, addReports }} >
+    <ReportsContext.Provider value={{ getReport, getReports, addReport, addReports, uploadCsv }} >
       { children }
     </ReportsContext.Provider>
   );

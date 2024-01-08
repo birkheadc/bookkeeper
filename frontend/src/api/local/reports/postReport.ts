@@ -11,14 +11,13 @@ export default async function postReport(token: any, report: Report): Promise<Re
   try {
     const reportsString = window.localStorage.getItem('LOCAL_REPORTS');
     const allReportDtos: ReportDto[] = reportsString ? JSON.parse(reportsString) : [];
-    const index = allReportDtos.findIndex(r => r.date === report.date.valueOf());
+    const index = allReportDtos.findIndex(r => r.date === report.date.toSimpleString());
     if (index === -1) {
       allReportDtos.push(ReportDto.fromReport(report));
     } else {
       allReportDtos[index] = ReportDto.fromReport(report);
     }
     const json = JSON.stringify(allReportDtos);
-    console.log('Write this to LOCAL_REPORTS:', json);
     window.localStorage.setItem('LOCAL_REPORTS', json);
     return Result.Succeed().WithMessage('Successfully updated local database.');
   } catch {

@@ -23,11 +23,11 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         <div className='report-display-card-breakdowns'>
         {
           report.earnings.map(
-            earning =>
+            (earning, index) =>
             {
               if (earning.amount !== 0) {
                 return (
-                  <div key={`report-display-card-earnings-key-${earning.category}`} className='report-display-card-breakdown-row earning-color'>
+                  <div key={`report-display-card-earnings-key-${earning.category}-${index}`} className='report-display-card-breakdown-row earning-color'>
                     <span>{earning.category}</span>
                     <span>{getActualAmount(earning.amount).toLocaleString()}</span>
                   </div>
@@ -38,11 +38,11 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         }
         {
           report.expenses.map(
-            expense =>
+            (expense, index) =>
             {
               if (expense.amount !== 0) {
                 return (
-                  <div key={`report-display-card-expenses-key-${expense.category}`} className='report-display-card-breakdown-row expense-color'>
+                  <div key={`report-display-card-expenses-key-${expense.category}-${index}`} className='report-display-card-breakdown-row expense-color'>
                     <span>{expense.isIncludeInCash && '*'}{expense.category}</span>
                     <span>-{getActualAmount(expense.amount).toLocaleString()}</span>
                   </div>

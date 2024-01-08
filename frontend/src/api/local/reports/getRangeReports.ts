@@ -10,12 +10,11 @@ export default async function getRangeReports(token: any, dates: ExtendedDate[])
   });
 
   const reportsString = window.localStorage.getItem('LOCAL_REPORTS');
-  console.log('got this from LOCAL_REPORTS:', reportsString);
   try {
     const allReportDtos: ReportDto[] = JSON.parse(reportsString ?? '[]');
     const reports: Report[] = [];
     dates.forEach(date => {
-      const dto = allReportDtos.find(r => r.date === date.valueOf());
+      const dto = allReportDtos.find(r => r.date === date.toSimpleString());
       if (dto == null) {
         const blankReport = new Report();
         blankReport.date = date;
@@ -24,10 +23,8 @@ export default async function getRangeReports(token: any, dates: ExtendedDate[])
         reports.push(Report.fromDto(dto));
       }
     });
-    console.log(reports);
     return Result.Succeed().WithBody(reports);
   } catch (error) {
-    console.log(error);
     return Result.Succeed().WithBody([]);
   }
 }

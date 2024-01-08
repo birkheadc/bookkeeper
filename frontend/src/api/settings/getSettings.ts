@@ -12,8 +12,6 @@ export default async function getSettings(token: string | undefined): Promise<Re
     }, 500);
   });
 
-  console.log('dummy:', DUMMY_SETTINGS);
-
   return Result.Succeed().WithBody(DUMMY_SETTINGS);
 }
 

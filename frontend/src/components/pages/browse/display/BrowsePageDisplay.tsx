@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './BrowsePageDisplay.css'
-import { ReportDictionary } from '../../../../types/report/report';
+import { Report, ReportDictionary } from '../../../../types/report/report';
 import ReportDisplayCard from '../../../shared/reportDisplay/ReportDisplayCard';
 import EmptyDisplayCards from './emptyDisplayCards/EmptyDisplayCards';
 import { BrowseViewMode } from '../../../../types/browse/browseViewMode';
@@ -15,8 +15,7 @@ interface IBrowsePageDisplayProps {
 * @returns {JSX.Element | null}
 */
 export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.Element | null {
-  const reports = props.reports;
-  if (reports == null) return null;
+  const reports: Report[] = Report.fromReportDictionary(props.reports);
 
   const [ start, end ] = calculateNumberEmptyCellsInMonth(reports, props.viewMode);
   
@@ -25,10 +24,10 @@ export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.E
       <div className='browse-page-display-reports-wrapper'>
         <BrowsePageDisplayDaysOfTheWeek viewMode={props.viewMode} />
         <EmptyDisplayCards num={start} />
-        { reports && Object.keys(reports).map(
-          date =>
-          <div key={`browse-page-display-card-key-${date}`} className='browse-page-display-card-outer-wrapper'>
-            <ReportDisplayCard report={reports[date]} />
+        {reports.map(
+          report =>
+          <div key={`browse-page-display-card-key-${report.date}`} className='browse-page-display-card-outer-wrapper'>
+            <ReportDisplayCard report={report} />
           </div>
         )}
         <EmptyDisplayCards num={end} />
@@ -66,10 +65,10 @@ function BrowsePageDisplayDaysOfTheWeek(props: { viewMode: BrowseViewMode }): JS
   );
 }
 
-function calculateNumberEmptyCellsInMonth(reports: ReportDictionary, viewMode: BrowseViewMode): [ number, number ] {
+function calculateNumberEmptyCellsInMonth(reports: Report[], viewMode: BrowseViewMode): [ number, number ] {
   if (viewMode !== BrowseViewMode.MONTH) return [ 0, 0 ];
   
-  const date = reports[Object.keys(reports)[0]]?.date;
+  const date = reports[0]?.date;
   if (date == null) return [ 0, 0 ];
 
   const first = new Date(date);
