@@ -14,6 +14,10 @@ Modal.defaultStyles.content = {};
 Modal.defaultStyles.overlay = {
   ...Modal.defaultStyles.overlay,
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  inset: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
   zIndex: 5
 };
 

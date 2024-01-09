@@ -1,0 +1,12 @@
+form.calculator-wrapper {
+  border: var(--border-nav);
+  box-shadow: var(--box-shadow-normal);
+  background-color: var(--clr-white);
+}
+
+span.calculator-total {
+  font-weight: 700;
+  font-size: 1.4em;
+  display: inline-block;
+  width: 100%;
+}

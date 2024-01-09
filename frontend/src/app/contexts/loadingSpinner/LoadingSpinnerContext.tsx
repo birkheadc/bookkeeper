@@ -36,7 +36,7 @@ export const LoadingSpinnerProvider = ({ children }: Props) => {
   
   return (
     <LoadingSpinnerContext.Provider value={{ isLoading, useLoading }}>
-      <ReactModal className={'loading-spinner-modal-wrapper'} isOpen={isLoading}>
+      <ReactModal shouldCloseOnOverlayClick={false} isOpen={isLoading}>
         <LoadingSpinner />
       </ReactModal>
       { children }

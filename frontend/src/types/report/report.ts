@@ -47,11 +47,15 @@ export class Report {
 }
 
 export type Earning = {
+  id: string,
+  date: ExtendedDate,
   category: string,
   amount: number
 }
 
 export type Expense = {
+  id: string,
+  date: ExtendedDate,
   category: string,
   subCategory?: string | undefined,
   amount: number,

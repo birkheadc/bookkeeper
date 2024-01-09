@@ -1,6 +1,7 @@
 import { ExtendedDate } from "../../../types/date/extendedDate";
 import { Earning, Expense, Report, ReportDictionary, ReportDto } from "../../../types/report/report";
 import { Result } from "../../../types/result/result";
+import { v4 as uuidv4 } from 'uuid';
 
 export default async function postCsv(token: any, file: File): Promise<Result<Report[]>> {
   await new Promise((res, rej) => {
@@ -34,6 +35,8 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
 
       if (parameters.length === 3) {
         const earning: Earning = {
+          id: uuidv4(),
+          date: date,
           category: categoryName,
           amount: amount
         };
@@ -43,6 +46,8 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
         const isIncludeInCash = parameters[4].toLowerCase() === 'true';
         const subCategory = categoryName === 'stock' ? note.toLowerCase() : '';
         const expense: Expense = {
+          id: uuidv4(),
+          date: date,
           category: categoryName,
           amount: amount,
           isIncludeInCash: isIncludeInCash,

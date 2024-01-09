@@ -77,6 +77,11 @@ select.standard-input {
   gap: 5px;
 }
 
+button.hidden-submit-button {
+  display: none;
+  position: absolute;
+}
+
 .link-button {
   cursor: pointer;
   text-decoration: underline;

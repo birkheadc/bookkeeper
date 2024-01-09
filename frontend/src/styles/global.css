@@ -9,6 +9,7 @@ body {
 }
 
 main {
+  overflow-x: hidden;
   background-color: var(--clr-white);
   max-width: min(1400px, calc(100vw - 40px));
   margin: 30px auto;

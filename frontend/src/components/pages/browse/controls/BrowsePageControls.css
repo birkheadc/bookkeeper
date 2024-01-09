@@ -29,7 +29,7 @@ div.browse-view-mode-buttons>button.active {
   pointer-events: none;
 }
 
-div.browse-date-controls {
+.browse-date-controls {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -37,7 +37,7 @@ div.browse-date-controls {
   gap: 10px;
 }
 
-div.browse-date-controls button {
+.browse-date-controls button {
   display: flex;
   flex-direction: row;
   justify-content: center;

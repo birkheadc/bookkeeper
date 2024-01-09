@@ -18,6 +18,8 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
 
   const [ searchParams, setSearchParams ] = useSearchParams();
   const browseOptions = props.browseOptions;
+  const [ date, setDate ] = React.useState<string>(browseOptions.date.toSimpleString());
+
 
   const changeViewMode = (event: React.PointerEvent<HTMLButtonElement>) => {
     const name = event.currentTarget.name;
@@ -27,8 +29,7 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
 
   const changeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     const date = event.currentTarget.value;
-    searchParams.set('date', date);
-    setSearchParams(searchParams);
+    setDate(date);
   }
 
   const goBack = () => {
@@ -43,7 +44,14 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
     if (browseOptions == null) return;
     const newDate = new ExtendedDate(browseOptions.date);
     newDate.addBrowseViewMode(browseOptions.viewMode, n);
+    setDate(newDate.toSimpleString());
     searchParams.set('date', newDate.toSimpleString());
+    setSearchParams(searchParams);
+  }
+
+  const goToDate = (event: React.FormEvent) => {
+    event.preventDefault();
+    searchParams.set('date', date);
     setSearchParams(searchParams);
   }
 
@@ -56,11 +64,12 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
         <button className={`standard-button${browseOptions.viewMode === 'week' ? ' active' : ''}`} name='week' type='button' onClick={changeViewMode}>week</button>
         <button className={`standard-button${browseOptions.viewMode === 'month' ? ' active' : ''}`} name='month' type='button' onClick={changeViewMode}>month</button>
       </div>
-      <div className='browse-date-controls'>
+      <form className='browse-date-controls' onSubmit={goToDate}>
         <button className='standard-button' type='button' onClick={goBack}><ArrowLeftIcon width={20} /></button>
-        <input className='standard-input' onChange={changeDate} value={browseOptions.date.toSimpleString()} type='date'></input>
+        <input className='standard-input' onBlur={goToDate} onChange={changeDate} value={date} type='date'></input>
         <button className='standard-button' type='button' onClick={goForward}><ArrowRightIcon width={20} /></button>
-      </div>
+        <button className='hidden-submit-button' type='submit'></button>
+      </form>
     </div>
   );
 }

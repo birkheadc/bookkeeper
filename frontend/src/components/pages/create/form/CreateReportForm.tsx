@@ -9,8 +9,8 @@ import { Result } from '../../../../types/result/result';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import EarningInput from './earningInput/EarningInput';
 import ExpenseInput from './expenseInput/ExpenseInput';
-import settings from '../../../../api/settings';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ICreateReportFormProps {
   date: ExtendedDate
@@ -41,28 +41,31 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
   }, [ props.date ]);
 
   React.useEffect(function addDefaultTransactionCategoriesToFetchedReport() {
-    if (report == null) return;
     if (settings == null) return;
+    if (report == null) return;
+    setReport(r => {
+      if (r == null) return r;
+      if (r.earnings.length > 0 || r.expenses.length > 0) return r;
+      let changed = false;
+      const newReport = { ...r };
 
-    let changed = false;
-    const newReport = { ...report };
+      settings.categories.earningCategories.forEach(category => {
+        if (category.isDefault && !newReport.earnings.some(e => e.category === category.name)) {
+          newReport.earnings.push({ id: uuidv4(), date: r.date, category: category.name, amount: 0 });
+          changed = true;
+        }
+      });
 
-    settings.categories.earningCategories.forEach(category => {
-      if (category.isDefault && !newReport.earnings.some(e => e.category === category.name)) {
-        changed = true;
-        newReport.earnings.push({ category: category.name, amount: 0 });
-      }
-    });
+      settings.categories.expenseCategories.forEach(category => {
+        if (newReport.expenses == null || report == null) return;
+        if (category.isDefault && !newReport.expenses.some(e => e.category === category.name)) {
+          newReport.expenses.push({ id: uuidv4(), date: r.date, category: category.name, amount: 0, isIncludeInCash: false });
+          changed = true;
+        }
+      });
 
-    settings.categories.expenseCategories.forEach(category => {
-      if (category.isDefault && !newReport.expenses.some(e => e.category === category.name)) {
-        changed = true;
-        newReport.expenses.push({ category: category.name, amount: 0, isIncludeInCash: false });
-      }
-    });
-
-    if (changed) setReport(newReport);
-
+      return changed ? newReport : r;
+    })
   }, [ report, settings ] );
 
   if (report == null) return null;
@@ -71,7 +74,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     setReport(r => {
       if (r == null) return r;
       const newEarnings = [...r.earnings];
-      let i = newEarnings.findIndex(e => e.category === earning.category);
+      let i = newEarnings.findIndex(e => e.id === earning.id);
       if (i < 0 || i >= newEarnings.length) return r;
       newEarnings[i] = earning;
       return { ...r, earnings: newEarnings };
@@ -82,7 +85,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     setReport(r => {
       if (r == null) return r;
       const newExpenses = [...r.expenses];
-      let i = newExpenses.findIndex(e => e.category === expense.category);
+      let i = newExpenses.findIndex(e => e.id === expense.id);
       if (i < 0 || i >= newExpenses.length) return r;
       newExpenses[i] = expense;
       return { ...r, expenses: newExpenses };
@@ -100,7 +103,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     if (category == null) return;
 
     const newEarnings: Earning[] = [ ...report.earnings ];
-    newEarnings.push({ category: category, amount: 0 });
+    newEarnings.push({ id: uuidv4(), date: report.date, category: category, amount: 0 });
     setReport(r => r ? ({ ...r, earnings: newEarnings }): r);
 
   }
@@ -116,7 +119,17 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     if (category == null) return;
 
     const newExpenses: Expense[] = [ ...report.expenses ];
-    newExpenses.push({ category: category, amount: 0, isIncludeInCash: false });
+    newExpenses.push({ id: uuidv4(), date: report.date, category: category, amount: 0, isIncludeInCash: false });
+    setReport(r => r ? ({ ...r, expenses: newExpenses }): r);
+  }
+
+  const handleDeleteEarning = (id: string) => {
+    const newEarnings: Earning[] = [ ...report.earnings ].filter(e => e.id !== id);
+    setReport(r => r ? ({ ...r, earnings: newEarnings }): r);
+  }
+
+  const handleDeleteExpense = (id: string) => {
+    const newExpenses: Expense[] = [ ...report.expenses ].filter(e => e.id !== id);
     setReport(r => r ? ({ ...r, expenses: newExpenses }): r);
   }
 
@@ -166,8 +179,8 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
           <h2>earnings</h2>
           {
             report.earnings.map(
-              (earning, index) =>
-              <EarningInput key={`earning-input-key-${earning.category}-${index}`} earning={earning} update={handleUpdateEarning} />
+              (earning) =>
+              <EarningInput key={`earning-input-key-${earning.id}`} earning={earning} update={handleUpdateEarning} delete={() => handleDeleteEarning(earning.id)} />
             )
           }
           <select className='standard-input' onChange={handleAddEarning}>
@@ -185,8 +198,8 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
           <h2>expenses</h2>
           {
             report.expenses.map(
-              (expense, index) =>
-              <ExpenseInput key={`expense-input-key-${expense.category}-${index}`} uniqueKey={`expense-input-key-${expense.category}-${index}`} expense={expense} update={handleUpdateExpense} />
+              (expense) =>
+              <ExpenseInput key={`expense-input-key-${expense.id}`} expense={expense} update={handleUpdateExpense} delete={() => handleDeleteExpense(expense.id)} />
             )
           }
           <select className='standard-input' onChange={handleAddExpense}>

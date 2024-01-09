@@ -6,11 +6,12 @@ import { ExpenseCategory } from '../../../../../types/settings/userSettings';
 import StandardFormLabeledCurrencyInput from '../../../../forms/standardFormLabeledCurrencyInput/StandardFormLabeledCurrencyInput';
 import StandardFormLabeledCheckbox from '../../../../forms/standardFormLabeledCheckbox/StandardFormLabeledCheckbox';
 import StandardFormLabeledInput from '../../../../forms/standardFormLabeledInput/StandardFormLabeledInput';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface IExpenseInputProps {
   expense: Expense,
   update: (expense: Expense) => void,
-  uniqueKey: string
+  delete: () => void
 }
 
 /**
@@ -21,6 +22,10 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
 
   const { settings, updateSettings } = React.useContext(SettingsContext);
   const subcategories = getDefaultSubcategories(settings?.categories.expenseCategories, props.expense);
+
+  const handleDeleteExpense = () => {
+    props.delete();
+  }
   
   const handleChangeSubcategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.currentTarget.value;
@@ -65,10 +70,6 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
     props.update(newExpense);
   }
 
-  const useCalculator = () => {
-
-  }
-
   return (
     <div className='expense-input-wrapper transaction-input-wrapper'>
       <div className="standard-form-row space-between">
@@ -78,21 +79,19 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
           <option value='none'>no subcategory</option>
           {subcategories.map(
             subcategory =>
-            <option key={`expense-input-subcategory-key-${props.uniqueKey}-${subcategory}`} value={`$${subcategory}`}>{subcategory}</option>
+            <option key={`expense-input-subcategory-key-${props.expense.id}-${subcategory}`} value={`$${subcategory}`}>{subcategory}</option>
           )
           }
           <option value='new'>create new</option>
         </select>
+        <button className='standard-button icon-button' onClick={handleDeleteExpense} type='button'><TrashIcon width={'20px'} /></button>
+      </div>
+      <StandardFormLabeledCurrencyInput amount={props.expense.amount} includeCalcButton update={handleChangeAmount} />
+      <div className='standard-form-row'>
+          <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${props.expense.id}`} checked={props.expense.isIncludeInCash} handleToggle={handleToggleIsCashInclude} />
       </div>
       <div className='standard-form-row'>
-        <StandardFormLabeledCurrencyInput amount={props.expense.amount} update={handleChangeAmount} />
-        <button className='standard-button' type='button' onClick={useCalculator}>calc</button>
-      </div>
-      <div className='standard-form-row'>
-          <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${props.uniqueKey}`} checked={props.expense.isIncludeInCash} handleToggle={handleToggleIsCashInclude} />
-      </div>
-      <div className='standard-form-row'>
-          <StandardFormLabeledInput label={'note'} name={`expense-input-note-${props.uniqueKey}`} value={props.expense.note ?? ''} handleChange={handleChangeNote} />
+          <StandardFormLabeledInput label={'note'} name={`expense-input-note-${props.expense.id}`} value={props.expense.note ?? ''} handleChange={handleChangeNote} />
       </div>
     </div>
   );

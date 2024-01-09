@@ -5,6 +5,7 @@ import { SessionProvider } from '../session/SessionContext';
 import { ReportsProvider } from '../reports/ReportsContext';
 import { SettingsProvider } from '../settings/SettingsContext';
 import { UsersProvider } from '../users/UsersContext';
+import { CalculatorProvider } from '../calculator/CalculatorContext';
 
 interface IAppProvidersProps {
   children: React.ReactNode
@@ -21,7 +22,9 @@ export default function AppProviders(props: IAppProvidersProps): JSX.Element | n
         <SettingsProvider>
           <ReportsProvider>
             <UsersProvider>
-              {props.children}
+              <CalculatorProvider>
+                {props.children}
+              </CalculatorProvider>
             </UsersProvider>
           </ReportsProvider>
         </SettingsProvider>
