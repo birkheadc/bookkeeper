@@ -21,7 +21,7 @@ export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.E
   
   return (
     <div className='browse-page-display-wrapper'>
-      <div className='browse-page-display-reports-wrapper'>
+      <div className={`browse-page-display-reports-wrapper${props.viewMode === BrowseViewMode.DAY ? ' single-column' : ''}`}>
         <BrowsePageDisplayDaysOfTheWeek viewMode={props.viewMode} />
         <EmptyDisplayCards num={start} />
         {reports.map(

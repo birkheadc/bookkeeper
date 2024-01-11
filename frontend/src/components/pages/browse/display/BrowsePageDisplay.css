@@ -1,13 +1,16 @@
 div.browse-page-display-wrapper {
-  overflow-x: scroll;
   width: 100%;
 }
 
 div.browse-page-display-reports-wrapper {
   display: grid;
-  grid-template-columns: repeat(7, min-content);
+  grid-template-columns: repeat(7, 1fr);
   margin: 0 auto;
   width: fit-content;
+}
+
+div.browse-page-display-reports-wrapper.single-column {
+  grid-template-columns: 1fr;
 }
 
 .browse-page-display-card-outer-wrapper {
@@ -34,9 +37,6 @@ div.days-page-display-days-of-the-week-cell {
 }
 
 @media (max-width: 1320px) {
-  div.browse-page-display-wrapper {
-    overflow-x: hidden;
-  }
   
   div.browse-page-display-reports-wrapper {
     display: flex;

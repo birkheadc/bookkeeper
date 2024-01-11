@@ -11,6 +11,7 @@ div.report-display-card-wrapper {
   width: min(100%, 500px);
   margin: 0 auto;
   font-size: 1.2em;
+  overflow: hidden;
 }
 
 div.report-display-card-top {

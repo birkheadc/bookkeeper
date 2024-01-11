@@ -1,3 +1,3 @@
 export class GetRangeDto {
-  dates: string[];
+  dates: number[];
 }
