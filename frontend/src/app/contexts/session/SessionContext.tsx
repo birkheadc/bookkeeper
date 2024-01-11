@@ -1,29 +1,47 @@
 import * as React from 'react';
 import { DEFAULT_SESSION, Session, SessionStatus } from '../../../types/session/session';
-import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
-import api from '../../../api';
 import { useNavigate } from 'react-router-dom';
+import { LoginCredentials } from '../../../types/credentials/loginCredentials';
+import { Result } from '../../../types/result/result';
+import { useApi } from '../../../hooks/useApi/useApi';
+import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 
-type Props = {
-  children: React.ReactNode
-}
-
-type SessionState = {
+type SessionContextState = {
   session: Session,
-  login: (token: string | undefined) => void,
+  login: (credentials: LoginCredentials) => Promise<Result>,
   logout: () => void,
   expire: () => void,
   loginLocal: () => void
 }
 
+const DEFAULT_SESSION_CONTEXT_STATE: SessionContextState = {
+  session: {
+    status: SessionStatus.CHECKING,
+    token: undefined
+  },
+  logout: function (): void {
+    throw new Error('Function not implemented.');
+  },
+  expire: function (): void {
+    throw new Error('Function not implemented.');
+  },
+  loginLocal: function (): void {
+    throw new Error('Function not implemented.');
+  },
+  login: function (credentials: LoginCredentials): Promise<Result<any>> {
+    throw new Error('Function not implemented.');
+  }
+}
+
 const LOCAL_STORAGE_TOKEN_KEY = "token";
 
-export const SessionContext = React.createContext<SessionState>({ session: DEFAULT_SESSION, login: () => {}, logout: () => {}, expire: () => {}, loginLocal: () => {} });
-export const SessionProvider = ({ children }: Props) => {
+export const SessionContext = React.createContext<SessionContextState>(DEFAULT_SESSION_CONTEXT_STATE);
+export const SessionProvider = ({ children }: any) => {
 
   const [ session, setSession ] = React.useState<Session>(DEFAULT_SESSION);
   const { useLoading } = React.useContext(LoadingSpinnerContext);
   
+  const { api } = useApi();
 
   const nav = useNavigate();
 
@@ -41,7 +59,7 @@ export const SessionProvider = ({ children }: Props) => {
       await useLoading(async () => {
         const result = await api.auth.verifyToken(token);
         if (result.wasSuccess) {
-          login(token);
+          storeToken(token);
         } else {
           expire();
         }
@@ -49,14 +67,17 @@ export const SessionProvider = ({ children }: Props) => {
     })();
   }, []);
 
-  const login = (token: string | undefined) => {
-    if (token == null) return;
-    window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
-    setSession({
-      status: SessionStatus.LOGGED_IN,
-      token: token
-    });
+  const login = async (credentials: LoginCredentials) => {
+    const result = await useLoading(async () => {
+      return await api.auth.login(credentials);
+    })
+    if (result.wasSuccess && result.body) {
+      const token = result.body;
+      storeToken(token);
+    }
+    return result;
   }
+
   const logout = () => {
     window.localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     setSession({
@@ -76,6 +97,14 @@ export const SessionProvider = ({ children }: Props) => {
   const loginLocal = () => {
     window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, LOCAL_TOKEN_VALUE);
     setSession({ status: SessionStatus.LOCAL, token: undefined });
+  }
+
+  const storeToken = (token: string) => {
+    window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
+    setSession({
+      status: SessionStatus.LOGGED_IN,
+      token: token
+    });
   }
 
   return (

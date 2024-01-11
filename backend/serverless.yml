@@ -22,7 +22,9 @@ custom:
       domain:
         sources:
           - table: bookkeeperUsers
-            rawsources: [./serverless/seedData.dev.json]
+            rawsources: [./serverless/data/users/data.dev.json]
+          - table: bookkeeperTransactions
+            rawsources: [./serverless/data/transactions/data.dev.json]
   scriptable:
     hooks:
       after:aws:deploy:finalize:cleanup: node ./dist/serverless/seed.js ap-southeast-2
@@ -45,9 +47,31 @@ provider:
           Resource:
             - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperUsers/index/*'
             - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperUsers'
+            - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperTransactions/index/*'
+            - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperTransactions'
 
 resources:
   Resources:
+    transactionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: bookkeeperTransactions
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: date
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: date
+            KeySchema:
+              - AttributeName: date
+                KeyType: HASH
+            Projection:
+              ProjectionType: 'ALL'
+        BillingMode: PAY_PER_REQUEST
     usersTable:
       Type: AWS::DynamoDB::Table
       Properties:

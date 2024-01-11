@@ -1,7 +1,7 @@
-import { BrowseViewMode } from "../../types/browse/browseViewMode";
-import { Result } from "../../types/result/result";
-import { Currency } from "../../types/settings/currency";
-import { Denomination, EarningCategory, ExpenseCategory, UserSettings } from "../../types/settings/userSettings";
+import { BrowseViewMode } from "../../../types/browse/browseViewMode";
+import { Result } from "../../../types/result/result";
+import { Currency } from "../../../types/settings/currency";
+import { Denomination, EarningCategory, ExpenseCategory, UserSettings } from "../../../types/settings/userSettings";
 
 export default async function getSettings(token: string | undefined): Promise<Result<UserSettings>> {
   if (token == null) return Result.Fail().WithMessage('Token invalid.');

@@ -7,6 +7,15 @@ export class ExtendedDate extends Date {
     return this.toISOString().substring(0, 10);
   }
 
+  toDatabaseDate(): number {
+    const yearString = this.getFullYear().toString();
+    const monthString = (this.getMonth() + 1).toString().padStart(2, '0');
+    const dayString = this.getDate().toString().padStart(2, '0');
+
+    const s = yearString.concat(monthString).concat(dayString);
+    return parseInt(s);
+  }
+
   addBrowseViewMode(viewMode: BrowseViewMode, n: number) {
     switch (viewMode) {
       case BrowseViewMode.DAY:

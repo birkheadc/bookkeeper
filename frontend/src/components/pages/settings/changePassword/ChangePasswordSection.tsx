@@ -5,7 +5,7 @@ import { LoadingSpinnerContext } from '../../../../app/contexts/loadingSpinner/L
 import ChangePasswordForm from './form/ChangePasswordForm';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import { ChangePasswordRequest } from '../../../../types/settings/changePassword';
-import api from '../../../../api';
+import api from '../../../../api/live';
 import { SessionContext } from '../../../../app/contexts/session/SessionContext';
 import { UsersContext } from '../../../../app/contexts/users/UsersContext';
 

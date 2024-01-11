@@ -12,6 +12,9 @@ export type ApiConfig = {
   },
   users: {
     url: string
+  },
+  transactions: {
+    url: string
   }
 }
 

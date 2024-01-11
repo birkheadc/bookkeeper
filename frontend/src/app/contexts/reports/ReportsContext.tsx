@@ -4,9 +4,7 @@ import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import { Result } from "../../../types/result/result";
 import { SessionContext } from "../session/SessionContext";
 import { ExtendedDate } from "../../../types/date/extendedDate";
-import { SessionStatus } from "../../../types/session/session";
-import api from "../../../api";
-import { SettingsContext } from "../settings/SettingsContext";
+import { useApi } from "../../../hooks/useApi/useApi";
 
 
 type Props = {
@@ -47,7 +45,7 @@ export const ReportsProvider = ({ children }: Props) => {
 
   const { session } = React.useContext(SessionContext);
 
-  const _api = session.status === SessionStatus.LOCAL ? api.local : api;
+  const { api } = useApi();
 
   React.useEffect(function clearCacheOnChangeInSession() {
     setReports({});
@@ -59,7 +57,7 @@ export const ReportsProvider = ({ children }: Props) => {
       return Result.Succeed().WithBody(reports[key]);
     }
     return await useLoading(async () => {
-      const result = await _api.reports.getRangeReports( session.token, [ date ]);
+      const result = await api.reports.getRangeReports( session.token, [ date ]);
       if (result.wasSuccess && result.body != null) {
         const report = result.body[0];
         setReports(r => {
@@ -89,7 +87,7 @@ export const ReportsProvider = ({ children }: Props) => {
       return Result.Succeed().WithBody(_reports);
     }
     return await useLoading(async () => {
-      const result = await _api.reports.getRangeReports(session.token, datesToFetch);
+      const result = await api.reports.getRangeReports(session.token, datesToFetch);
       if (result.wasSuccess && result.body != null) {
         result.body.forEach(report => {
           _reports[report.date.toSimpleString()] = report;
@@ -104,7 +102,7 @@ export const ReportsProvider = ({ children }: Props) => {
 
   const addReport = async (report: Report): Promise<Result> => {
     return await useLoading(async () => {
-      const result = await _api.reports.postReport(session.token, report);
+      const result = await api.reports.postReport(session.token, report);
       if (result.wasSuccess) {
         const dict = Report.toDictionary([report]);
         setReports(r => ({ ...r, ...dict }));
@@ -120,7 +118,7 @@ export const ReportsProvider = ({ children }: Props) => {
   const uploadCsv = async (file: File | undefined): Promise<Result> => {
     if (file == null) return Result.Fail().WithMessage('no file found');
     return await useLoading(async () => {
-      const result = await _api.reports.postCsv(session.token, file);
+      const result = await api.reports.postCsv(session.token, file);
       if (result.wasSuccess && result.body) {
         setReports(Report.toDictionary(result.body));
       }

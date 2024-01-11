@@ -11,6 +11,9 @@ const apiConfig: ApiConfig = {
   },
   users: {
     url: BACKEND_URL + "/users"
+  },
+  transactions: {
+    url: BACKEND_URL + "/transactions"
   }
 }
 

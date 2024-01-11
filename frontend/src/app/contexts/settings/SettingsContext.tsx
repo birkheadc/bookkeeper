@@ -3,10 +3,10 @@ import { Result } from "../../../types/result/result"
 import { UserSettings } from "../../../types/settings/userSettings"
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import { SessionContext } from '../session/SessionContext';
-import api from '../../../api';
 import { SessionStatus } from '../../../types/session/session';
 import { BrowseViewMode } from '../../../types/browse/browseViewMode';
 import { Currency } from '../../../types/settings/currency';
+import { useApi } from '../../../hooks/useApi/useApi';
 
 type Props = {
   children: React.ReactNode
@@ -46,13 +46,13 @@ export const SettingsProvider = ({ children }: Props) => {
 
   const { session } = React.useContext(SessionContext);
 
-  const _api = session.status === SessionStatus.LOCAL ? api.local : api;
+  const { api } = useApi();
 
   React.useEffect(() => {
     (async function fetchSettingsOnMount() {
       if (session.status === SessionStatus.LOCAL || session.status === SessionStatus.LOGGED_IN) {
         await useLoading(async () => {
-          const result = await _api.settings.getSettings(session.token);
+          const result = await api.settings.getSettings(session.token);
           if (result.wasSuccess && result.body != null) {
             setSettings(result.body);
           } else {
@@ -78,7 +78,7 @@ export const SettingsProvider = ({ children }: Props) => {
 
   const updateSettings = async (settings: UserSettings): Promise<Result> => {
     return await useLoading(async () => {
-      const result = await _api.settings.updateSettings(session.token, settings);
+      const result = await api.settings.updateSettings(session.token, settings);
       if (result.wasSuccess) {
         setSettings(settings);
       }

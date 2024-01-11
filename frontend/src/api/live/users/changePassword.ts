@@ -1,7 +1,7 @@
-import config from "../../config";
-import { Result } from "../../types/result/result";
-import { ChangePasswordRequest } from "../../types/settings/changePassword";
-import helpers from "../helpers";
+import config from "../../../config";
+import { Result } from "../../../types/result/result";
+import { ChangePasswordRequest } from "../../../types/settings/changePassword";
+import helpers from "../../helpers";
 
 export default async function changePassword(token: string | undefined, request: ChangePasswordRequest): Promise<Result> {
   if (token == null) return Result.Fail().WithMessage('Token not found.');

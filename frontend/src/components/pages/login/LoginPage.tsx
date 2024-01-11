@@ -4,7 +4,7 @@ import LoginForm from './form/LoginForm';
 import { LoginCredentials } from '../../../types/credentials/loginCredentials';
 import { Link } from 'react-router-dom';
 import { LoadingSpinnerContext } from '../../../app/contexts/loadingSpinner/LoadingSpinnerContext';
-import api from '../../../api';
+import api from '../../../api/live';
 import ResultDisplay from '../../resultDisplay/ResultDisplay';
 import { Result } from '../../../types/result/result';
 import { SessionContext } from '../../../app/contexts/session/SessionContext';
@@ -21,17 +21,11 @@ interface ILoginPageProps {
 export default function LoginPage(props: ILoginPageProps): JSX.Element | null {
 
   const [ recentResult, setRecentResult ] = React.useState<Result | undefined>(undefined);
-  const { useLoading } = React.useContext(LoadingSpinnerContext);
   const { session, login, loginLocal } = React.useContext(SessionContext);
 
   const submit = async (request: LoginCredentials) => {
-    await useLoading(async () => {
-      const result = await api.auth.login(request);
-      setRecentResult(result);
-      if (result.wasSuccess) {
-        login(result.body);
-      }
-    })
+    const result = await login(request);
+    setRecentResult(result);
   }
 
   const handleLoginLocal = () => {

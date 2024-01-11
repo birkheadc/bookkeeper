@@ -1,11 +1,11 @@
+import auth from "./auth";
+import users from "./users";
 import reports from "./reports";
 import settings from "./settings";
-import users from "./users";
-import auth from "./auth";
 
 export default {
-  reports,
-  settings,
+  auth,
   users,
-  auth
+  reports,
+  settings
 }
