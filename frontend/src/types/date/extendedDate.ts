@@ -7,13 +7,26 @@ export class ExtendedDate extends Date {
     return this.toISOString().substring(0, 10);
   }
 
-  toDatabaseDate(): number {
+  toDatabaseDate(): string {
     const yearString = this.getFullYear().toString();
     const monthString = (this.getMonth() + 1).toString().padStart(2, '0');
     const dayString = this.getDate().toString().padStart(2, '0');
 
     const s = yearString.concat(monthString).concat(dayString);
-    return parseInt(s);
+    return s;
+  }
+
+  static fromDatabaseDate(databaseDate: string): ExtendedDate {
+    const yearString = databaseDate.substring(0, 4);
+    const monthString = databaseDate.substring(4, 6);
+    const dayString = databaseDate.substring(6);
+
+    const date = new ExtendedDate();
+    date.setFullYear(parseInt(yearString));
+    date.setMonth(parseInt(monthString) - 1);
+    date.setDate(parseInt(dayString));
+
+    return date;
   }
 
   addBrowseViewMode(viewMode: BrowseViewMode, n: number) {

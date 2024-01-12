@@ -44,6 +44,19 @@ export class Report {
     })
     return dict;
   }
+
+  static fromServerData(data: any): Report[] {
+    return data.map((d: any) => {
+      const report = new Report()
+
+      report.date = ExtendedDate.fromDatabaseDate(d.id);
+      
+      report.earnings = d.earnings ?? [];
+      report.expenses = d.expenses ?? [];
+
+      return report;
+    });
+  }
 }
 
 export type Earning = {

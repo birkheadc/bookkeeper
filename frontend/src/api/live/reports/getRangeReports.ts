@@ -1,21 +1,19 @@
 import config from "../../../config";
 import { ExtendedDate } from "../../../types/date/extendedDate";
 import { Report } from "../../../types/report/report";
-import { GetRangeRequest } from "../../../types/requests/getRangeRequest";
+import { GetByDatesRequest } from "../../../types/requests/getRangeRequest";
 import { Result } from "../../../types/result/result";
 import helpers from "../../helpers";
 
 export default async function getRangeReports(token: string | undefined, dates: ExtendedDate[]): Promise<Result<Report[]>> {
   if (token == null) return Result.Fail().WithMessage('Token invalid.');
 
-  const url = config.api.transactions.url + `/range`;
+  const url = config.api.reports.url + `/by-dates`;
   const { signal, timeout } = helpers.getAbortSignal();
 
-  const request: GetRangeRequest = {
+  const request: GetByDatesRequest = {
     dates: dates.map(d => d.toDatabaseDate())
   }
-
-  console.log('send reqeust:', JSON.stringify(request));
 
   try {
     const response = await fetch(url, {
@@ -27,7 +25,11 @@ export default async function getRangeReports(token: string | undefined, dates: 
       body: JSON.stringify(request),
       signal: signal
     });
-    console.log(response.status);
+    if (!response.ok) return Result.Fail().WithMessage('Server refused request.');
+    const data = await response.json();
+    const reports = Report.fromServerData(data);
+
+    return Result.Succeed().WithBody(reports);
   } catch (error) {
     console.log(error)
   } finally {

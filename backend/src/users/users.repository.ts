@@ -8,7 +8,6 @@ export class UsersRepository {
   constructor(private readonly client: DynamoDBClient) { }
 
   async getUserById(id: string): Promise<User> {
-    console.log(`looking for user: (${id})`);
     const command = new GetItemCommand({
       TableName: this.tableName,
       Key: { id: { S: id } }

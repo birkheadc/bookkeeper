@@ -1,0 +1,56 @@
+[
+  {
+    "id": {
+      "S": "20240110"
+    },
+    "earnings": {
+      "L": [
+        {
+          "M": {
+            "id": {
+              "S": "ff61bbcf-61a8-41c6-92b4-1dcea1604c9f"
+            },
+            "transactionDate": {
+              "S": "20240110"
+            },
+            "category": {
+              "S": "cash"
+            },
+            "amount": {
+              "N": "99999"
+            }
+          }
+        }
+      ]
+    },
+    "expenses": {
+      "L": [
+        {
+          "M": {
+            "id": {
+              "S": "8fceae03-eaf4-43d2-9ff8-30185417dfe9"
+            },
+            "transactionDate": {
+              "N": "1704844800000"
+            },
+            "category": {
+              "S": "stock"
+            },
+            "subCategory": {
+              "S": "amazon"
+            },
+            "amount": {
+              "N": "7777"
+            },
+            "isIncludeInCash": {
+              "N": "0"
+            },
+            "note": {
+              "S": "bought some stuff"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

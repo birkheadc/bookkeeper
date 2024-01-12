@@ -28,13 +28,14 @@ import { hashSync } from 'bcrypt';
 
   {
     const command = new ScanCommand({
-      TableName: 'bookkeeperTransactions'
+      TableName: 'bookkeeperReports'
     });
 
     const response = await client.send(command);
     if (response.Count && response.Count > 0) return;
 
-    seedData.transactionsData.forEach(async (element) => {
+    seedData.reportsData.forEach(async (element) => {
+      // Todo
       // element.id.S = randomUUID();
       // const command = new PutItemCommand({
       //   TableName: 'bookkeeperUsers',
