@@ -1,12 +1,9 @@
 import * as React from 'react';
 import './ChangePasswordSection.css'
 import { Result } from '../../../../types/result/result';
-import { LoadingSpinnerContext } from '../../../../app/contexts/loadingSpinner/LoadingSpinnerContext';
 import ChangePasswordForm from './form/ChangePasswordForm';
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import { ChangePasswordRequest } from '../../../../types/settings/changePassword';
-import api from '../../../../api/live';
-import { SessionContext } from '../../../../app/contexts/session/SessionContext';
 import { UsersContext } from '../../../../app/contexts/users/UsersContext';
 
 interface IChangePasswordSectionProps {

@@ -3,11 +3,15 @@ import { BrowseViewMode } from "../browse/browseViewMode";
 
 export class ExtendedDate extends Date {
 
+  copy(): ExtendedDate {
+    return ExtendedDate.fromDto(this.toDto());
+  }
+
   toSimpleString(): string {
     return this.toISOString().substring(0, 10);
   }
 
-  toDatabaseDate(): string {
+  toDto(): ExtendedDateDto {
     const yearString = this.getFullYear().toString();
     const monthString = (this.getMonth() + 1).toString().padStart(2, '0');
     const dayString = this.getDate().toString().padStart(2, '0');
@@ -16,10 +20,10 @@ export class ExtendedDate extends Date {
     return s;
   }
 
-  static fromDatabaseDate(databaseDate: string): ExtendedDate {
-    const yearString = databaseDate.substring(0, 4);
-    const monthString = databaseDate.substring(4, 6);
-    const dayString = databaseDate.substring(6);
+  static fromDto(dto: ExtendedDateDto): ExtendedDate {
+    const yearString = dto.substring(0, 4);
+    const monthString = dto.substring(4, 6);
+    const dayString = dto.substring(6);
 
     const date = new ExtendedDate();
     date.setFullYear(parseInt(yearString));
@@ -92,3 +96,5 @@ export class ExtendedDate extends Date {
     return { date, newSearchParams };
   }
 }
+
+export type ExtendedDateDto = string;

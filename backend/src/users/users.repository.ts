@@ -58,7 +58,6 @@ export class UsersRepository {
     });
     try {
       const response = await this.client.send(command);
-      // TODO: This is attempting to check whether the command failed, and throw if it did. But I'm not sure if that's what is actually happening.
       if (response.Attributes == null) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
       return user;
     } catch (error) {

@@ -52,6 +52,7 @@ export const SettingsProvider = ({ children }: Props) => {
     (async function fetchSettingsOnMount() {
       if (session.status === SessionStatus.LOCAL || session.status === SessionStatus.LOGGED_IN) {
         await useLoading(async () => {
+          if (api == null) return Result.Fail().WithMessage('api not ready');
           const result = await api.settings.getSettings(session.token);
           if (result.wasSuccess && result.body != null) {
             setSettings(result.body);
@@ -63,21 +64,11 @@ export const SettingsProvider = ({ children }: Props) => {
         setSettings(undefined);
       }
     })();
-  }, [ session ]);
-
-  // const getSettings = async (): Promise<Result<UserSettings>> => {
-  //   return await useLoading(async () => {
-  //     if (settings != null) return Result.Succeed().WithBody(settings);
-  //     const result = await _api.settings.getSettings(session.token);
-  //     if (result.wasSuccess && result.body != null) {
-  //       setSettings(result.body);
-  //     }
-  //     return result;
-  //   });
-  // }
+  }, [ session, api ]);
 
   const updateSettings = async (settings: UserSettings): Promise<Result> => {
     return await useLoading(async () => {
+      if (api == null) return Result.Fail().WithMessage('api not ready');
       const result = await api.settings.updateSettings(session.token, settings);
       if (result.wasSuccess) {
         setSettings(settings);

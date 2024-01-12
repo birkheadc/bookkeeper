@@ -5,14 +5,14 @@ import { GetByDatesRequest } from "../../../types/requests/getRangeRequest";
 import { Result } from "../../../types/result/result";
 import helpers from "../../helpers";
 
-export default async function getRangeReports(token: string | undefined, dates: ExtendedDate[]): Promise<Result<Report[]>> {
+export default async function getReportsByDates(token: string | undefined, dates: ExtendedDate[]): Promise<Result<Report[]>> {
   if (token == null) return Result.Fail().WithMessage('Token invalid.');
 
-  const url = config.api.reports.url + `/by-dates`;
+  const url = config.api.reports.url + `/get-by-dates`;
   const { signal, timeout } = helpers.getAbortSignal();
 
   const request: GetByDatesRequest = {
-    dates: dates.map(d => d.toDatabaseDate())
+    dates: dates.map(d => d.toDto())
   }
 
   try {
@@ -27,7 +27,7 @@ export default async function getRangeReports(token: string | undefined, dates: 
     });
     if (!response.ok) return Result.Fail().WithMessage('Server refused request.');
     const data = await response.json();
-    const reports = Report.fromServerData(data);
+    const reports = Report.fromJson(data);
 
     return Result.Succeed().WithBody(reports);
   } catch (error) {

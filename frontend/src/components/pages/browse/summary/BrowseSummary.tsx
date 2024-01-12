@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './BrowseSummary.css'
-import { ReportDictionary } from '../../../../types/report/report';
 import { ReportsSummary } from '../../../../types/report/reportsSummary';
 import { useCurrency } from '../../../../hooks/useCurrency/useCurrency';
+import { Report } from '../../../../types/report/report';
 
 interface IBrowseSummaryProps {
-  reports: ReportDictionary
+  reports: Record<string, Report>
 }
 
 /**
@@ -13,7 +13,7 @@ interface IBrowseSummaryProps {
 * @returns {JSX.Element | null}
 */
 export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element | null {
-  const summary = ReportsSummary.fromReportDictionary(props.reports);
+  const summary = ReportsSummary.fromRecord(props.reports);
   const { properties, getActualAmount } = useCurrency();
 
   return (

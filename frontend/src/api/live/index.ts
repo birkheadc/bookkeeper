@@ -7,5 +7,6 @@ export default {
   auth,
   users,
   reports,
-  settings
+  settings,
+  type: 'LIVE'
 }

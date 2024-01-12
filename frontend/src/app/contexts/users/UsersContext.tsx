@@ -29,6 +29,7 @@ export const UsersProvider = ({ children }: Props) => {
 
   const changePassword = async (request: ChangePasswordRequest): Promise<Result> => {
     return useLoading(async () => {
+      if (api == null) return Result.Fail().WithMessage('api not ready');
       return await api.users.changePassword(session.token, request);
     });
   }

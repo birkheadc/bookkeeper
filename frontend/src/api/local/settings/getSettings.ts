@@ -1,7 +1,7 @@
 import { BrowseViewMode } from "../../../types/browse/browseViewMode";
 import { Result } from "../../../types/result/result";
 import { Currency } from "../../../types/settings/currency";
-import { UserSettings, Denomination, EarningCategory, ExpenseCategory } from "../../../types/settings/userSettings";
+import { UserSettings } from "../../../types/settings/userSettings";
 
 export default async function getSettings(token: any): Promise<Result<UserSettings>> {
   await new Promise((res, rej) => {
@@ -26,61 +26,10 @@ const DEFAULT_SETTINGS: UserSettings = {
     currency: Currency.KRW
   },
   categories: {
-    earningCategories: generateEarningCategories(),
-    expenseCategories: generateExpenseCategories()
+    earningCategories: [],
+    expenseCategories: []
   },
   denominations: {
-    denominations: generateDenominations()
+    denominations: []
   }
-}
-
-function generateEarningCategories(): EarningCategory[] {
-  return [
-    {
-      name: 'cash',
-      isDefault: true
-    },{
-      name: 'card',
-      isDefault: true
-    },{
-      name: 'coupon',
-      isDefault: false
-    }
-  ];
-}
-
-function generateExpenseCategories(): ExpenseCategory[] {
-  return [
-    {
-      name: 'delivery',
-      isDefault: true
-    },
-    {
-      name: 'lunch',
-      isDefault: false
-    },
-    {
-      name: 'stock',
-      isDefault: true,
-      subcategories: [
-        'food inc',
-        'amazon'
-      ]
-    }
-  ];
-}
-
-function generateDenominations(): Denomination[] {
-  return [
-    {
-      value: 10_000,
-      isDefault: true
-    },{
-      value: 50_000,
-      isDefault: true
-    },{
-      value: 5_000,
-      isDefault: false
-    },
-  ];
 }

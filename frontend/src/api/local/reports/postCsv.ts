@@ -1,5 +1,5 @@
 import { ExtendedDate } from "../../../types/date/extendedDate";
-import { Earning, Expense, Report, ReportDictionary, ReportDto } from "../../../types/report/report";
+import { Earning, Expense, Report, ReportDto } from "../../../types/report/report";
 import { Result } from "../../../types/result/result";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,7 +10,7 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
     }, 500);
   });
 
-  const dict: ReportDictionary = {};
+  const record: Record<string, Report> = {};
 
   const text = await file.text();
   const lines = text.split('\r\n');
@@ -23,38 +23,36 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
       const parameters = line.split(',');
 
       const date = parseDate(parameters[0]);
-      const key = date.toSimpleString();
-      if (!(key in dict)) {
+      const key = date.toDto();
+      if (!(key in record)) {
         const report = new Report();
-        report.date = date;
-        dict[key] = report;
+        report.id = date;
+        record[key] = report;
       }
 
       const categoryName = parameters[1];
       const amount = Math.abs(parseInt(parameters[2]));
 
       if (parameters.length === 3) {
-        const earning: Earning = {
-          id: uuidv4(),
-          date: date,
-          category: categoryName,
-          amount: amount
-        };
-        dict[key].earnings.push(earning);
+        const earning: Earning = new Earning();
+        earning.id = uuidv4();
+        earning.reportDate = date;
+        earning.category = categoryName;
+        earning.amount = amount;
+        record[key].earnings.push(earning);
       } else {
         const note = parameters[3];
         const isIncludeInCash = parameters[4].toLowerCase() === 'true';
         const subCategory = categoryName === 'stock' ? note.toLowerCase() : '';
-        const expense: Expense = {
-          id: uuidv4(),
-          date: date,
-          category: categoryName,
-          amount: amount,
-          isIncludeInCash: isIncludeInCash,
-          subCategory: subCategory,
-          note: note
-        }; 
-        dict[key].expenses.push(expense);
+        const expense: Expense = new Expense();
+        expense.id = uuidv4();
+        expense.reportDate = date;
+        expense.category = categoryName;
+        expense.amount = amount;
+        expense.isIncludeInCash = isIncludeInCash;
+        expense.subCategory = subCategory;
+        expense.note = note;
+        record[key].expenses.push(expense);
       }
     } catch (error) {
       wasError = true;
@@ -64,10 +62,10 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
     return Result.Fail().WithMessage('error processing file.');
   }
   
-  const reports = Report.fromReportDictionary(dict);
+  const reports = Report.fromRecord(record);
   const dtos: ReportDto[] = [];
   reports.forEach(report => {
-    dtos.push(ReportDto.fromReport(report));
+    dtos.push(report.toDto());
   });
 
   try {

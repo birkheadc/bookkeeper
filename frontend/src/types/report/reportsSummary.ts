@@ -1,12 +1,12 @@
 import { ExtendedDate } from "../date/extendedDate";
-import { Earning, Expense, ReportDictionary } from "./report";
+import { Earning, EarningDto, Expense, ExpenseDto, Report } from "./report";
 
 export class ReportsSummary {
 
   total: number;
   average: number;
-  earnings: (Earning & { average: number })[];
-  expenses: (Omit<Expense, 'isIncludeInCash'> & { average: number })[];
+  earnings: (Omit<EarningDto, 'id' | 'reportDate' > & { average: number })[];
+  expenses: (Omit<ExpenseDto, 'isIncludeInCash' | 'id' | 'reportDate' > & { average: number })[];
 
   constructor() {
     this.total = 1_000_000;
@@ -15,16 +15,16 @@ export class ReportsSummary {
     this.expenses = [];
   }
 
-  static fromReportDictionary(reports: ReportDictionary): ReportsSummary {
+  static fromRecord(reports: Record<string, Report>): ReportsSummary {
     const summary = new ReportsSummary();
     let numReportsForAverage = 0;
     let sum = 0;
-    let allEarnings: (Earning & { average: number, num: number })[] = [];
-    let allExpenses: (Omit<Expense, 'isIncludeInCash'> & { average: number, num: number })[] = [];
+    let allEarnings: (Omit<EarningDto, 'id' | 'reportDate'> & { average: number, num: number })[] = [];
+    let allExpenses: (Omit<ExpenseDto, 'isIncludeInCash' | 'id' | 'reportDate' > & { average: number, num: number })[] = [];
 
     Object.keys(reports).forEach(key => {
       const report = reports[key];
-      if (isDateBeforeToday(report.date)) numReportsForAverage++;
+      if (isDateBeforeToday(report.id)) numReportsForAverage++;
       report.earnings.forEach(earning => {
         sum += earning.amount;
         const pre = allEarnings.find(e => e.category === earning.category);

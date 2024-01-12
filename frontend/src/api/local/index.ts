@@ -7,5 +7,6 @@ export default {
   reports,
   settings,
   users,
-  auth
+  auth,
+  type: 'LOCAL'
 }

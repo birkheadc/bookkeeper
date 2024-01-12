@@ -1,4 +1,4 @@
-import { BatchGetItemCommand, DynamoDBClient, KeysAndAttributes } from "@aws-sdk/client-dynamodb";
+import { BatchGetItemCommand, DynamoDBClient, KeysAndAttributes, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Report } from "./entities/report.entity";
 
@@ -27,7 +27,24 @@ export class ReportsRepository {
       const reports = items[this.tableName].map(v => Report.fromAttributeValues(v));      
       return reports;
     } catch (error) {
-      console.log('Error in TransactionRepository.getAllInDateRange', dates, error);
+      console.log('Error in ReportsRepository.getByDates', dates, error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async put(report: Report): Promise<Report> {
+    const item = report.toAttributeValues();
+    console.log('Item:', JSON.stringify(item));
+    const command = new PutItemCommand({
+      TableName: this.tableName,
+      Item: item
+    });
+
+    try {
+      await this.client.send(command);
+      return report;
+    } catch (error) {
+      console.log('Error in ReportsRepository.put', report, error);
       throw new InternalServerErrorException();
     }
   }

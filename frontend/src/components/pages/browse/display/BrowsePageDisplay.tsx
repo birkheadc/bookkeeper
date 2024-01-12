@@ -1,12 +1,12 @@
 import * as React from 'react';
 import './BrowsePageDisplay.css'
-import { Report, ReportDictionary } from '../../../../types/report/report';
+import { Report } from '../../../../types/report/report';
 import ReportDisplayCard from '../../../shared/reportDisplay/ReportDisplayCard';
 import EmptyDisplayCards from './emptyDisplayCards/EmptyDisplayCards';
 import { BrowseViewMode } from '../../../../types/browse/browseViewMode';
 
 interface IBrowsePageDisplayProps {
-  reports: ReportDictionary,
+  reports: Record<string, Report>,
   viewMode: BrowseViewMode
 }
 
@@ -15,7 +15,7 @@ interface IBrowsePageDisplayProps {
 * @returns {JSX.Element | null}
 */
 export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.Element | null {
-  const reports: Report[] = Report.fromReportDictionary(props.reports);
+  const reports: Report[] = Report.fromRecord(props.reports);
 
   const [ start, end ] = calculateNumberEmptyCellsInMonth(reports, props.viewMode);
   
@@ -26,7 +26,7 @@ export default function BrowsePageDisplay(props: IBrowsePageDisplayProps): JSX.E
         <EmptyDisplayCards num={start} />
         {reports.map(
           report =>
-          <div key={`browse-page-display-card-key-${report.date}`} className='browse-page-display-card-outer-wrapper'>
+          <div key={`browse-page-display-card-key-${report.id}`} className='browse-page-display-card-outer-wrapper'>
             <ReportDisplayCard report={report} />
           </div>
         )}
@@ -68,7 +68,7 @@ function BrowsePageDisplayDaysOfTheWeek(props: { viewMode: BrowseViewMode }): JS
 function calculateNumberEmptyCellsInMonth(reports: Report[], viewMode: BrowseViewMode): [ number, number ] {
   if (viewMode !== BrowseViewMode.MONTH) return [ 0, 0 ];
   
-  const date = reports[0]?.date;
+  const date = reports[0]?.id;
   if (date == null) return [ 0, 0 ];
 
   const first = new Date(date);

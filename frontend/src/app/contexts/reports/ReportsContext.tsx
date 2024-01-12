@@ -1,4 +1,4 @@
-import { Report, ReportDictionary } from "../../../types/report/report";
+import { Report } from "../../../types/report/report";
 import * as React from 'react';
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import { Result } from "../../../types/result/result";
@@ -13,7 +13,7 @@ type Props = {
 
 type Data = {
   getReport: (date: ExtendedDate) => Promise<Result<Report>>,
-  getReports: (dates: ExtendedDate[]) => Promise<Result<ReportDictionary>>
+  getReports: (dates: ExtendedDate[]) => Promise<Result<Record<string, Report>>>
   addReport: (report: Report) => Promise<Result>,
   addReports: (reports: Report[]) => Promise<Result>,
   uploadCsv: (file: any) => Promise<Result>
@@ -23,7 +23,7 @@ const DEFAULT_DATA: Data = {
   getReport: function (date: ExtendedDate): Promise<Result<Report>> {
     throw new Error("Function not implemented.");
   },
-  getReports: function (dates: ExtendedDate[]): Promise<Result<ReportDictionary>> {
+  getReports: function (dates: ExtendedDate[]): Promise<Result<Record<string, Report>>> {
     throw new Error("Function not implemented.");
   },
   addReport: function (report: Report): Promise<Result> {
@@ -40,7 +40,7 @@ const DEFAULT_DATA: Data = {
 export const ReportsContext = React.createContext<Data>(DEFAULT_DATA);
 export const ReportsProvider = ({ children }: Props) => {
 
-  const [ reports, setReports ] = React.useState<ReportDictionary>({});
+  const [ reports, setReports ] = React.useState<Record<string, Report>>({});
   const { useLoading } = React.useContext(LoadingSpinnerContext);
 
   const { session } = React.useContext(SessionContext);
@@ -52,17 +52,18 @@ export const ReportsProvider = ({ children }: Props) => {
   }, [ session ]);
 
   const getReport = async (date: ExtendedDate): Promise<Result<Report>> => {
-    const key = date.toSimpleString();
+    const key = date.toDto();
     if (reports.hasOwnProperty(key)) {
       return Result.Succeed().WithBody(reports[key]);
     }
     return await useLoading(async () => {
-      const result = await api.reports.getRangeReports( session.token, [ date ]);
+      if (api == null) return Result.Fail().WithMessage('api not ready');
+      const result = await api.reports.getReportsByDates( session.token, [ date ]);
       if (result.wasSuccess && result.body != null) {
         const report = result.body[0];
         setReports(r => {
           const newReports = {...r};
-          newReports[report.date.toSimpleString()] = report;
+          newReports[key] = report;
           return newReports;
         });
         return Result.Succeed().WithBody(report);
@@ -71,12 +72,12 @@ export const ReportsProvider = ({ children }: Props) => {
     });
   }
 
-  const getReports = async (dates: ExtendedDate[]): Promise<Result<ReportDictionary>> => {
-    const _reports: { [key: string]: Report } = {};
+  const getReports = async (dates: ExtendedDate[]): Promise<Result<Record<string, Report>>> => {
+    const _reports: Record<string, Report> = {};
     const datesToFetch: ExtendedDate[] = [];
     
     dates.forEach(date => {
-      const key = date.toSimpleString();
+      const key = date.toDto();
       if (reports.hasOwnProperty(key)) {
         _reports[key] = (reports[key]);
       } else {
@@ -87,10 +88,11 @@ export const ReportsProvider = ({ children }: Props) => {
       return Result.Succeed().WithBody(_reports);
     }
     return await useLoading(async () => {
-      const result = await api.reports.getRangeReports(session.token, datesToFetch);
+      if (api == null) return Result.Fail().WithMessage('api not ready');
+      const result = await api.reports.getReportsByDates(session.token, datesToFetch);
       if (result.wasSuccess && result.body != null) {
         result.body.forEach(report => {
-          _reports[report.date.toSimpleString()] = report;
+          _reports[report.id.toDto()] = report;
         });
   
         setReports(r => ({...r, ..._reports}));
@@ -102,10 +104,11 @@ export const ReportsProvider = ({ children }: Props) => {
 
   const addReport = async (report: Report): Promise<Result> => {
     return await useLoading(async () => {
+      if (api == null) return Result.Fail().WithMessage('api not ready');
       const result = await api.reports.postReport(session.token, report);
       if (result.wasSuccess) {
-        const dict = Report.toDictionary([report]);
-        setReports(r => ({ ...r, ...dict }));
+        const record = Report.toRecord([report]);
+        setReports(r => ({ ...r, ...record }));
       }
       return result;
     });
@@ -118,9 +121,10 @@ export const ReportsProvider = ({ children }: Props) => {
   const uploadCsv = async (file: File | undefined): Promise<Result> => {
     if (file == null) return Result.Fail().WithMessage('no file found');
     return await useLoading(async () => {
+      if (api == null) return Result.Fail().WithMessage('api not ready');
       const result = await api.reports.postCsv(session.token, file);
       if (result.wasSuccess && result.body) {
-        setReports(Report.toDictionary(result.body));
+        setReports(Report.toRecord(result.body));
       }
       return result;
     });

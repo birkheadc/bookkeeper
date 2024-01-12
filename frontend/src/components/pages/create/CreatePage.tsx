@@ -4,11 +4,6 @@ import CreateReportForm from './form/CreateReportForm';
 import CreatePageControls from './controls/CreatePageControls';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ExtendedDate } from '../../../types/date/extendedDate';
-import { ReportsContext } from '../../../app/contexts/reports/ReportsContext';
-import { Result } from '../../../types/result/result';
-import { Report } from '../../../types/report/report';
-import ResultDisplay from '../../resultDisplay/ResultDisplay';
-import ReportDisplayCard from '../../shared/reportDisplay/ReportDisplayCard';
 
 interface ICreatePageProps {
 

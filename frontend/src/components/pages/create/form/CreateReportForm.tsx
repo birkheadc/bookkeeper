@@ -47,11 +47,10 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
       if (r == null) return r;
       if (r.earnings.length > 0 || r.expenses.length > 0) return r;
       let changed = false;
-      const newReport = { ...r };
-
+      const newReport = r.copy();
       settings.categories.earningCategories.forEach(category => {
         if (category.isDefault && !newReport.earnings.some(e => e.category === category.name)) {
-          newReport.earnings.push({ id: uuidv4(), date: r.date, category: category.name, amount: 0 });
+          newReport.earnings.push(Earning.fromDto({ id: uuidv4(), reportDate: r.id.toDto(), category: category.name, amount: 0 }));
           changed = true;
         }
       });
@@ -59,11 +58,10 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
       settings.categories.expenseCategories.forEach(category => {
         if (newReport.expenses == null || report == null) return;
         if (category.isDefault && !newReport.expenses.some(e => e.category === category.name)) {
-          newReport.expenses.push({ id: uuidv4(), date: r.date, category: category.name, amount: 0, isIncludeInCash: false });
+          newReport.expenses.push(Expense.fromDto({ id: uuidv4(), reportDate: r.id.toDto(), category: category.name, amount: 0, isIncludeInCash: false }));
           changed = true;
         }
       });
-
       return changed ? newReport : r;
     })
   }, [ report, settings ] );
@@ -73,22 +71,24 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
   const handleUpdateEarning = (earning: Earning) => {
     setReport(r => {
       if (r == null) return r;
-      const newEarnings = [...r.earnings];
+      const newReport = r.copy();
+      const newEarnings = newReport.earnings;
       let i = newEarnings.findIndex(e => e.id === earning.id);
       if (i < 0 || i >= newEarnings.length) return r;
       newEarnings[i] = earning;
-      return { ...r, earnings: newEarnings };
+      return newReport;
     });
   }
 
   const handleUpdateExpense = (expense: Expense) => {
     setReport(r => {
       if (r == null) return r;
-      const newExpenses = [...r.expenses];
+      const newReport = r.copy();
+      const newExpenses = newReport.expenses;
       let i = newExpenses.findIndex(e => e.id === expense.id);
       if (i < 0 || i >= newExpenses.length) return r;
       newExpenses[i] = expense;
-      return { ...r, expenses: newExpenses };
+      return newReport;
     });
   }
 
@@ -101,11 +101,14 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     event.currentTarget.value = 'default';
 
     if (category == null) return;
-
-    const newEarnings: Earning[] = [ ...report.earnings ];
-    newEarnings.push({ id: uuidv4(), date: report.date, category: category, amount: 0 });
-    setReport(r => r ? ({ ...r, earnings: newEarnings }): r);
-
+    
+    setReport(r => {
+      if (r == null) return r;
+      const newReport = r.copy();
+      const newEarnings = newReport.earnings;
+      newEarnings.push(Earning.fromDto({ id: uuidv4(), reportDate: report.id.toDto(), category: category, amount: 0 }))
+      return newReport;
+    });
   }
 
   const handleAddExpense = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,19 +121,33 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
 
     if (category == null) return;
 
-    const newExpenses: Expense[] = [ ...report.expenses ];
-    newExpenses.push({ id: uuidv4(), date: report.date, category: category, amount: 0, isIncludeInCash: false });
-    setReport(r => r ? ({ ...r, expenses: newExpenses }): r);
+    setReport(r => {
+      if (r == null) return r;
+      const newReport = r.copy();
+      const newExpenses = newReport.expenses;
+      newExpenses.push(Expense.fromDto({ id: uuidv4(), reportDate: report.id.toDto(), category: category, amount: 0, isIncludeInCash: false }))
+      return newReport;
+    });
   }
 
   const handleDeleteEarning = (id: string) => {
-    const newEarnings: Earning[] = [ ...report.earnings ].filter(e => e.id !== id);
-    setReport(r => r ? ({ ...r, earnings: newEarnings }): r);
+    setReport(r => {
+      if (r == null) return r;
+      const newReport = r.copy();
+      const newEarnings = newReport.earnings.filter(e => e.id !== id);
+      newReport.earnings = newEarnings;
+      return newReport;
+    });
   }
 
   const handleDeleteExpense = (id: string) => {
-    const newExpenses: Expense[] = [ ...report.expenses ].filter(e => e.id !== id);
-    setReport(r => r ? ({ ...r, expenses: newExpenses }): r);
+    setReport(r => {
+      if (r == null) return r;
+      const newReport = r.copy();
+      const newExpenses = newReport.expenses.filter(e => e.id !== id);
+      newReport.expenses = newExpenses;
+      return newReport;
+    });
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -138,7 +155,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     const result = await addReportAndUpdateSettings(report);
     setRecentResult(result);
     if (result.wasSuccess) {
-      nav(`/browse?date=${report.date.toSimpleString()}`);
+      nav(`/browse?date=${report.id.toSimpleString()}`);
     }
   }
 

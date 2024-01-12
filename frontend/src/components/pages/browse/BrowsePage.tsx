@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './BrowsePage.css'
-import { ReportDictionary } from '../../../types/report/report';
 import { ReportsContext } from '../../../app/contexts/reports/ReportsContext';
 import ResultDisplay from '../../resultDisplay/ResultDisplay';
 import { Result } from '../../../types/result/result';
@@ -11,8 +10,7 @@ import BrowsePageControls from './controls/BrowsePageControls';
 import { ExtendedDate } from '../../../types/date/extendedDate';
 import BrowseSummary from './summary/BrowseSummary';
 import { SettingsContext } from '../../../app/contexts/settings/SettingsContext';
-import { UserSettings } from '../../../types/settings/userSettings';
-import { BrowseViewMode } from '../../../types/browse/browseViewMode';
+import { Report } from '../../../types/report/report';
 
 interface IBrowsePageProps {
 
@@ -24,7 +22,7 @@ interface IBrowsePageProps {
 */
 export default function BrowsePage(props: IBrowsePageProps): JSX.Element | null {
 
-  const [ reports, setReports ] = React.useState<ReportDictionary>({});
+  const [ reports, setReports ] = React.useState<Record<string, Report>>({});
   const [ recentResult, setRecentResult ] = React.useState<Result>();
 
   const { getReports } = React.useContext(ReportsContext);

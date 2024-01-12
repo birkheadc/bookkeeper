@@ -1,7 +1,7 @@
 import { Report, ReportDto } from "../../../types/report/report";
 import { Result } from "../../../types/result/result";
 
-export default async function postReport(token: any, report: Report): Promise<Result> {
+export default async function postReport(token: string | undefined, report: Report): Promise<Result> {
   await new Promise((res, rej) => {
     setTimeout(() => {
       res('');
@@ -11,11 +11,11 @@ export default async function postReport(token: any, report: Report): Promise<Re
   try {
     const reportsString = window.localStorage.getItem('LOCAL_REPORTS');
     const allReportDtos: ReportDto[] = reportsString ? JSON.parse(reportsString) : [];
-    const index = allReportDtos.findIndex(r => r.date === report.date.toSimpleString());
+    const index = allReportDtos.findIndex(r => r.id === report.id.toDto());
     if (index === -1) {
-      allReportDtos.push(ReportDto.fromReport(report));
+      allReportDtos.push(report.toDto());
     } else {
-      allReportDtos[index] = ReportDto.fromReport(report);
+      allReportDtos[index] = report.toDto();
     }
     const json = JSON.stringify(allReportDtos);
     window.localStorage.setItem('LOCAL_REPORTS', json);

@@ -18,8 +18,8 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
   return (
     <div className='report-display-card-wrapper'>
       <div className='report-display-card-top'>
-        <span className='report-display-card-date'>{report.date.toSimpleString()}</span>
-        <span className='report-display-card-total'>{properties.symbol}{getActualAmount(Report.getTotalEarnings(report)).toLocaleString()}</span>
+        <span className='report-display-card-date'>{report.id.toSimpleString()}</span>
+        <span className='report-display-card-total'>{properties.symbol}{getActualAmount(report.getTotalEarnings()).toLocaleString()}</span>
         <div className='report-display-card-breakdowns'>
         {
           report.earnings.map(
@@ -53,7 +53,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         }
         </div>
       </div>
-      <Link className='standard-button' to={`/create?date=${report.date.toSimpleString()}`}>Edit</Link>
+      <Link className='standard-button' to={`/create?date=${report.id.toSimpleString()}`}>Edit</Link>
     </div>
   );
 }

@@ -17,9 +17,11 @@ interface IEarningInputProps {
 * @returns {JSX.Element | null}
 */
 export default function EarningInput(props: IEarningInputProps): JSX.Element | null {
+  const earning = props.earning;
 
   const handleChangeAmount = (amount: number) => {
-    const newEarning: Earning = { ...props.earning, amount: amount };
+    const newEarning = earning.copy();
+    newEarning.amount = amount;
     props.update(newEarning);
   }
 

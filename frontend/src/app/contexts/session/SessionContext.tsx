@@ -3,8 +3,8 @@ import { DEFAULT_SESSION, Session, SessionStatus } from '../../../types/session/
 import { useNavigate } from 'react-router-dom';
 import { LoginCredentials } from '../../../types/credentials/loginCredentials';
 import { Result } from '../../../types/result/result';
-import { useApi } from '../../../hooks/useApi/useApi';
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
+import api from '../../../api';
 
 type SessionContextState = {
   session: Session,
@@ -41,8 +41,6 @@ export const SessionProvider = ({ children }: any) => {
   const [ session, setSession ] = React.useState<Session>(DEFAULT_SESSION);
   const { useLoading } = React.useContext(LoadingSpinnerContext);
   
-  const { api } = useApi();
-
   const nav = useNavigate();
 
   React.useEffect(() => {
@@ -57,7 +55,7 @@ export const SessionProvider = ({ children }: any) => {
         return;
       }
       await useLoading(async () => {
-        const result = await api.auth.verifyToken(token);
+        const result = await api.live.auth.verifyToken(token);
         if (result.wasSuccess) {
           storeToken(token);
         } else {
@@ -65,11 +63,12 @@ export const SessionProvider = ({ children }: any) => {
         }
       })
     })();
-  }, []);
+  }, [ api.live ]);
 
   const login = async (credentials: LoginCredentials) => {
     const result = await useLoading(async () => {
-      return await api.auth.login(credentials);
+      if (api.live == null) return Result.Fail().WithMessage('api not ready');
+      return await api.live.auth.login(credentials);
     })
     if (result.wasSuccess && result.body) {
       const token = result.body;

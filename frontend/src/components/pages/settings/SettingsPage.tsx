@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './SettingsPage.css'
-import ChangePasswordSection from './changePassword/ChangePasswordSection';
 import UpdateSettingsForm from './form/UpdateSettingsForm';
 
 interface ISettingsPageProps {

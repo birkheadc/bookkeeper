@@ -20,8 +20,9 @@ interface IExpenseInputProps {
 */
 export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | null {
 
-  const { settings, updateSettings } = React.useContext(SettingsContext);
-  const subcategories = getDefaultSubcategories(settings?.categories.expenseCategories, props.expense);
+  const expense = props.expense;
+  const { settings } = React.useContext(SettingsContext);
+  const subcategories = getDefaultSubcategories(settings?.categories.expenseCategories, expense);
 
   const handleDeleteExpense = () => {
     props.delete();
@@ -31,8 +32,9 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
     const value = event.currentTarget.value;
     if (value === 'default') return;
     if (value === 'none') {
-      props.expense.subCategory = undefined;
-      const newExpense: Expense = { ...props.expense, subCategory: undefined };
+      expense.subCategory = undefined;
+      const newExpense = expense.copy();
+      newExpense.subCategory = undefined;
       props.update(newExpense);
       return;
     }
@@ -45,53 +47,58 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
         return;
       }
       subcategories.push(newSubcategory);
-      const newExpense: Expense = { ...props.expense, subCategory: newSubcategory };
+      const newExpense = expense.copy();
+      newExpense.subCategory = newSubcategory;
       props.update(newExpense);
       return;
     }
     const subcategory = value.substring(1);
-    const newExpense: Expense = { ...props.expense, subCategory: subcategory };
+    const newExpense = expense.copy();
+    newExpense.subCategory = subcategory;
     props.update(newExpense);
   }
 
   const handleChangeAmount = (amount: number) => {
-    const newExpense: Expense = { ...props.expense, amount: amount };
+    const newExpense = expense.copy();
+    newExpense.amount = amount;
     props.update(newExpense);
   }
 
   const handleToggleIsCashInclude = () => {
-    const newExpense: Expense = { ...props.expense, isIncludeInCash: !props.expense.isIncludeInCash };
+    const newExpense = expense.copy();
+    newExpense.isIncludeInCash = !newExpense.isIncludeInCash;
     props.update(newExpense);
   }
 
   const handleChangeNote = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value
-    const newExpense: Expense = { ...props.expense, note: value };
+    const newExpense = expense.copy();
+    newExpense.note = value;
     props.update(newExpense);
   }
 
   return (
     <div className='expense-input-wrapper transaction-input-wrapper'>
       <div className="standard-form-row space-between">
-        <h3>{props.expense.category}</h3>
-        <select className='standard-input' onChange={handleChangeSubcategory} value={`$${props.expense.subCategory}` ?? 'none'}>
+        <h3>{expense.category}</h3>
+        <select className='standard-input' onChange={handleChangeSubcategory} value={`$${expense.subCategory}` ?? 'none'}>
           {/* <option value='default'>subcategory</option> */}
           <option value='none'>no subcategory</option>
           {subcategories.map(
             subcategory =>
-            <option key={`expense-input-subcategory-key-${props.expense.id}-${subcategory}`} value={`$${subcategory}`}>{subcategory}</option>
+            <option key={`expense-input-subcategory-key-${expense.id}-${subcategory}`} value={`$${subcategory}`}>{subcategory}</option>
           )
           }
           <option value='new'>create new</option>
         </select>
         <button className='standard-button icon-button' onClick={handleDeleteExpense} type='button'><TrashIcon width={'20px'} /></button>
       </div>
-      <StandardFormLabeledCurrencyInput amount={props.expense.amount} includeCalcButton update={handleChangeAmount} />
+      <StandardFormLabeledCurrencyInput amount={expense.amount} includeCalcButton update={handleChangeAmount} />
       <div className='standard-form-row'>
-          <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${props.expense.id}`} checked={props.expense.isIncludeInCash} handleToggle={handleToggleIsCashInclude} />
+          <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${expense.id}`} checked={expense.isIncludeInCash} handleToggle={handleToggleIsCashInclude} />
       </div>
       <div className='standard-form-row'>
-          <StandardFormLabeledInput label={'note'} name={`expense-input-note-${props.expense.id}`} value={props.expense.note ?? ''} handleChange={handleChangeNote} />
+          <StandardFormLabeledInput label={'note'} name={`expense-input-note-${expense.id}`} value={expense.note ?? ''} handleChange={handleChangeNote} />
       </div>
     </div>
   );
