@@ -3,6 +3,7 @@ import './CsvUploadForm.css'
 import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import { Result } from '../../../../types/result/result';
 import { ReportsContext } from '../../../../app/contexts/reports/ReportsContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ICsvUploadFormProps {
 
@@ -19,6 +20,8 @@ export default function CsvUploadForm(props: ICsvUploadFormProps): JSX.Element |
 
   const [ file, setFile ] = React.useState<File>();
 
+  const nav = useNavigate();
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file == null) return;
@@ -29,6 +32,9 @@ export default function CsvUploadForm(props: ICsvUploadFormProps): JSX.Element |
     event.preventDefault();
     const result = await uploadCsv(file);
     setRecentResult(result);
+    if (result.wasSuccess) {
+      nav('/browse');
+    }
   }
 
   return (

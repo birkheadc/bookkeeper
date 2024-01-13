@@ -1,4 +1,4 @@
-import { BatchGetItemCommand, DynamoDBClient, KeysAndAttributes, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { AttributeValue, BatchGetItemCommand, BatchWriteItemCommand, DynamoDBClient, KeysAndAttributes, PutItemCommand, WriteRequest } from "@aws-sdk/client-dynamodb";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Report } from "./entities/report.entity";
 
@@ -8,7 +8,6 @@ export class ReportsRepository {
   constructor(private readonly client: DynamoDBClient) { }
 
   async getByDates(dates: string[]): Promise<Report[]> {
-    
     const requestItems: Record<string, KeysAndAttributes> = {};
     requestItems[this.tableName] = { Keys: [] };
     dates.forEach(date => {
@@ -34,7 +33,6 @@ export class ReportsRepository {
 
   async put(report: Report): Promise<Report> {
     const item = report.toAttributeValues();
-    console.log('Item:', JSON.stringify(item));
     const command = new PutItemCommand({
       TableName: this.tableName,
       Item: item
@@ -45,6 +43,33 @@ export class ReportsRepository {
       return report;
     } catch (error) {
       console.log('Error in ReportsRepository.put', report, error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async putMany(reports: Report[]) {
+    while (reports.length > 25) {
+      const batch = reports.splice(0, 25);
+      await this.putMany(batch);
+    }
+    const requestItems: Record<string, WriteRequest[]> = {};
+    requestItems[this.tableName] = [];
+    reports.forEach(report => {
+      const request: WriteRequest = {
+        "PutRequest": {
+          "Item": report.toAttributeValues()
+        }
+      }
+      requestItems[this.tableName].push(request);
+    });
+    const command = new BatchWriteItemCommand({
+      RequestItems: requestItems
+    })
+
+    try {
+      await this.client.send(command);
+    } catch (error) {
+      console.log('Error in ReportsRepository.putMany', reports, error);
       throw new InternalServerErrorException();
     }
   }

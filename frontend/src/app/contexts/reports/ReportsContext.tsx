@@ -123,8 +123,8 @@ export const ReportsProvider = ({ children }: Props) => {
     return await useLoading(async () => {
       if (api == null) return Result.Fail().WithMessage('api not ready');
       const result = await api.reports.postCsv(session.token, file);
-      if (result.wasSuccess && result.body) {
-        setReports(Report.toRecord(result.body));
+      if (result.wasSuccess) {
+        setReports({});
       }
       return result;
     });

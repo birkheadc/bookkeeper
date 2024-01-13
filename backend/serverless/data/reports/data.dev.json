@@ -10,7 +10,7 @@
             "id": {
               "S": "ff61bbcf-61a8-41c6-92b4-1dcea1604c9f"
             },
-            "transactionDate": {
+            "reportDate": {
               "S": "20240110"
             },
             "category": {
@@ -30,7 +30,7 @@
             "id": {
               "S": "8fceae03-eaf4-43d2-9ff8-30185417dfe9"
             },
-            "transactionDate": {
+            "reportDate": {
               "N": "1704844800000"
             },
             "category": {
