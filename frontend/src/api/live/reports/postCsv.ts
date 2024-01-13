@@ -18,7 +18,6 @@ export default async function postCsv(token: string | undefined, file: File): Pr
       body: formData,
       signal: signal
     });
-    console.log(response);
     if (!response.ok) return Result.Fail().WithMessage('server refused request');
     return Result.Succeed();
   } catch {
