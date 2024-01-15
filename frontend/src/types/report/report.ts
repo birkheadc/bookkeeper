@@ -137,7 +137,7 @@ export class Expense extends Earning {
     expense.reportDate = ExtendedDate.fromDto(dto.reportDate);
     expense.category = dto.category;
     expense.amount = dto.amount;
-    expense.subCategory = dto.subCategory;
+    expense.subCategory = (dto.subCategory == null || dto.subCategory === '') ? undefined : dto.subCategory;
     expense.isIncludeInCash = dto.isIncludeInCash;
     expense.note = dto.note;
 
