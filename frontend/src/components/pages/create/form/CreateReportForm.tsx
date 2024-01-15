@@ -35,7 +35,6 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
       const result = await getReport(props.date);
       setRecentResult(result);
       if (result.wasSuccess && result.body != null) {
-        console.log('Got report: ', result.body);
         setReport(result.body);
       }
     })();
