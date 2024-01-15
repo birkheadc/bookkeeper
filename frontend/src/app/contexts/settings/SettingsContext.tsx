@@ -14,7 +14,8 @@ type Props = {
 
 type Data = {
   settings: UserSettings | undefined,
-  updateSettings: (settings: UserSettings) => Promise<Result>
+  updateSettings: (settings: UserSettings) => Promise<Result>,
+  refreshSettings: () => Promise<void>
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
@@ -23,8 +24,8 @@ const DEFAULT_SETTINGS: UserSettings = {
     currency: Currency.KRW
   },
   categories: {
-    earningCategories: [],
-    expenseCategories: []
+    earnings: [],
+    expenses: []
   },
   denominations: {
     denominations: []
@@ -35,7 +36,10 @@ const DEFAULT_DATA: Data = {
   updateSettings: function (settings: UserSettings): Promise<Result<any>> {
     throw new Error("Function not implemented.");
   },
-  settings: DEFAULT_SETTINGS
+  settings: DEFAULT_SETTINGS,
+  refreshSettings: function (): Promise<void> {
+    throw new Error('Function not implemented.');
+  }
 }
 
 export const SettingsContext = React.createContext<Data>(DEFAULT_DATA);
@@ -77,8 +81,20 @@ export const SettingsProvider = ({ children }: Props) => {
     });
   }
 
+  const refreshSettings = async (): Promise<void> => {
+    if (api == null) return;
+    await useLoading(async () => {
+      const result = await api.settings.getSettings(session.token);
+      if (result.wasSuccess && result.body != null) {
+        setSettings(result.body);
+      } else {
+        setSettings(DEFAULT_SETTINGS);
+      }
+    })
+  }
+
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings }} >
+    <SettingsContext.Provider value={{ settings, updateSettings, refreshSettings }} >
       { children }
     </SettingsContext.Provider>
   );

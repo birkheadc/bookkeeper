@@ -17,7 +17,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
   const settings = props.transactionCategorySettings;
   
   const handleToggle = (polarity: 'earning' | 'expense', name: string) => {
-    const categories = polarity === 'earning' ? settings.earningCategories : settings.expenseCategories;
+    const categories = polarity === 'earning' ? settings.earnings : settings.expenses;
     const category = categories.find(c => c.name === name);
     if (category == null) return;
     category.isDefault = !category.isDefault;
@@ -28,7 +28,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
     const name = prompt('Enter name of new category.');
     if (name == null) return;
 
-    const categories = polarity === 'earning' ? settings.earningCategories : settings.expenseCategories;
+    const categories = polarity === 'earning' ? settings.earnings : settings.expenses;
     const doesExist = categories.some(c => c.name === name);
 
     if (doesExist) {
@@ -44,7 +44,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
   }
 
   const handleDelete = (polarity: 'earning' | 'expense', name: string) => {
-    const categories = polarity === 'earning' ? settings.earningCategories : settings.expenseCategories;
+    const categories = polarity === 'earning' ? settings.earnings : settings.expenses;
     const newCategories = categories.filter(c => c.name !== name);
     const newSettings = polarity === 'earning' ? { ...settings, earningCategories: newCategories } : { ...settings, expenseCategories: newCategories };
     props.updateTransactionCategorySettings(newSettings);
@@ -53,20 +53,20 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
   const handleAddSubcategory = (category: ExpenseCategory) => {
     const subcategory = prompt(`Enter name of new subcategory for ${category.name}.`);
     if (subcategory == null) return;
-    if (category.subcategories == null) {
-      category.subcategories = [];
+    if (category.subCategories == null) {
+      category.subCategories = [];
     }
-    if (category.subcategories.includes(subcategory)) {
+    if (category.subCategories.includes(subcategory)) {
       alert('That subcategory already exists!');
       return;
     }
-    category.subcategories.push(subcategory);
+    category.subCategories.push(subcategory);
     props.updateTransactionCategorySettings(settings);
   }
 
   const handleRemoveSubcategory = (category: ExpenseCategory, subcategory: string) => {
-    if (category.subcategories == null) return;
-    category.subcategories = category.subcategories.filter(s => s !== subcategory);
+    if (category.subCategories == null) return;
+    category.subCategories = category.subCategories.filter(s => s !== subcategory);
     props.updateTransactionCategorySettings(settings);
   }
 
@@ -75,7 +75,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
       <h2>default transaction categories</h2>
       <h3>earnings</h3>
       
-      { settings.earningCategories.map(
+      { settings.earnings.map(
         category =>
           <div key={`earning-category-key-${category.name}`} className='standard-form-row'>
             <StandardFormLabeledCheckbox label={category.name} name={`earning-category-${category.name}`} checked={category.isDefault} handleToggle={() => handleToggle('earning', category.name)} />
@@ -85,7 +85,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
       <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('earning')}><PlusIcon width={'20px'} />new</button>
       <h3>expenses</h3>
       
-      { settings.expenseCategories.map(
+      { settings.expenses.map(
         category =>
           <div key={`expense-category-key-${category.name}`} className='settings-expense-category'>
             <div className="standard-form-row">
@@ -93,9 +93,9 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
               <button className='standard-button icon-button' type='button' onClick={() => handleDelete('expense', category.name)}><TrashIcon width={'20px'}/> delete</button>
             </div>
             <div className='settings-expense-category-subcategories'>
-              { category.subcategories &&
+              { category.subCategories &&
                 <ul>
-                  {category.subcategories.map(
+                  {category.subCategories.map(
                     subcategory =>
                     <li key={`settings-expense-subcategory-key-${subcategory}`} className='settings-expense-subcategory'>
                       <div>

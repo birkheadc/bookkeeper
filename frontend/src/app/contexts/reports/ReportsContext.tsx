@@ -5,6 +5,7 @@ import { Result } from "../../../types/result/result";
 import { SessionContext } from "../session/SessionContext";
 import { ExtendedDate } from "../../../types/date/extendedDate";
 import { useApi } from "../../../hooks/useApi/useApi";
+import { SettingsContext } from "../settings/SettingsContext";
 
 
 type Props = {
@@ -44,6 +45,7 @@ export const ReportsProvider = ({ children }: Props) => {
   const { useLoading } = React.useContext(LoadingSpinnerContext);
 
   const { session } = React.useContext(SessionContext);
+  const { refreshSettings } = React.useContext(SettingsContext);
 
   const { api } = useApi();
 
@@ -110,6 +112,7 @@ export const ReportsProvider = ({ children }: Props) => {
         const record = Report.toRecord([report]);
         setReports(r => ({ ...r, ...record }));
       }
+      await refreshSettings();
       return result;
     });
   }
@@ -126,6 +129,7 @@ export const ReportsProvider = ({ children }: Props) => {
       if (result.wasSuccess) {
         setReports({});
       }
+      await refreshSettings();
       return result;
     });
   }

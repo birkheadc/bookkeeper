@@ -22,7 +22,7 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
 
   const expense = props.expense;
   const { settings } = React.useContext(SettingsContext);
-  const subcategories = getDefaultSubcategories(settings?.categories.expenseCategories, expense);
+  const subcategories = getDefaultSubcategories(settings?.categories.expenses, expense);
 
   const handleDeleteExpense = () => {
     props.delete();
@@ -109,8 +109,8 @@ function getDefaultSubcategories(expenseCategorySettings: ExpenseCategory[] | un
 
   if (expenseCategorySettings != null) {
     const category = expenseCategorySettings.find(c => c.name === expense.category);
-    if (category != null && category.subcategories != null) {
-      subcategories = category.subcategories;
+    if (category != null && category.subCategories != null) {
+      subcategories = category.subCategories;
     }
   }
 

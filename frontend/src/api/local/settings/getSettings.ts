@@ -26,8 +26,8 @@ const DEFAULT_SETTINGS: UserSettings = {
     currency: Currency.KRW
   },
   categories: {
-    earningCategories: [],
-    expenseCategories: []
+    earnings: [],
+    expenses: []
   },
   denominations: {
     denominations: []

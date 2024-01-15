@@ -92,6 +92,17 @@ resources:
             Projection:
               ProjectionType: 'ALL'
         BillingMode: PAY_PER_REQUEST
+    settingsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: bookkeeperSettings
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 
 
 functions:

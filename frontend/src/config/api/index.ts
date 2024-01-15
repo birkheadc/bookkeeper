@@ -14,6 +14,9 @@ const apiConfig: ApiConfig = {
   },
   reports: {
     url: BACKEND_URL + "/reports"
+  },
+  settings: {
+    url: BACKEND_URL + "/settings"
   }
 }
 

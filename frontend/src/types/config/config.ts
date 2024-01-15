@@ -15,6 +15,9 @@ export type ApiConfig = {
   },
   reports: {
     url: string
+  },
+  settings: {
+    url: string
   }
 }
 

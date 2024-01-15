@@ -2,12 +2,14 @@ import { AuthConfig } from "src/auth/auth.config"
 import { UsersConfig } from "../users/users.config"
 import { SecretsConfig } from "../secrets/secrets.config"
 import { ReportsConfig } from "src/reports/reports.config"
+import { SettingsConfig } from "../settings/settings.config"
 
 type Configuration = {
   auth: AuthConfig,
   users: UsersConfig,
   secrets: SecretsConfig,
-  reports: ReportsConfig
+  reports: ReportsConfig,
+  settings: SettingsConfig
 }
 
 export default (): Configuration => ({
@@ -25,6 +27,10 @@ export default (): Configuration => ({
     devSecretValue: process.env.AWS_DEV_SECRET_VALUE
   },
   reports: {
+    region: process.env.AWS_REGION,
+    endpoint: process.env.AWS_DYNAMODB_ENDPOINT
+  },
+  settings: {
     region: process.env.AWS_REGION,
     endpoint: process.env.AWS_DYNAMODB_ENDPOINT
   }

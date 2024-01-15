@@ -48,14 +48,14 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
       if (r.earnings.length > 0 || r.expenses.length > 0) return r;
       let changed = false;
       const newReport = r.copy();
-      settings.categories.earningCategories.forEach(category => {
+      settings.categories.earnings.forEach(category => {
         if (category.isDefault && !newReport.earnings.some(e => e.category === category.name)) {
           newReport.earnings.push(Earning.fromDto({ id: uuidv4(), reportDate: r.id.toDto(), category: category.name, amount: 0 }));
           changed = true;
         }
       });
 
-      settings.categories.expenseCategories.forEach(category => {
+      settings.categories.expenses.forEach(category => {
         if (newReport.expenses == null || report == null) return;
         if (category.isDefault && !newReport.expenses.some(e => e.category === category.name)) {
           newReport.expenses.push(Expense.fromDto({ id: uuidv4(), reportDate: r.id.toDto(), category: category.name, amount: 0, isIncludeInCash: false }));
@@ -165,21 +165,21 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
     if (settings != null) {
       const newSettings = { ...settings };
       report.earnings.forEach(earning => {
-        const categories = newSettings.categories.earningCategories;
+        const categories = newSettings.categories.earnings;
         if (!categories.some(c => c.name === earning.category)) {
           categories.push({ name: earning.category, isDefault: false });
         }
       });
       report.expenses.forEach(expense => {
-        const categories = newSettings.categories.expenseCategories;
+        const categories = newSettings.categories.expenses;
         if (!categories.some(c => c.name === expense.category)) {
           categories.push({ name: expense.category, isDefault: false });
         }
         const subCategory = expense.subCategory;
         if (subCategory != null) {
-          const index = categories.findIndex(c => (c.name === expense.category && c.subcategories && !c.subcategories.includes(subCategory)));
+          const index = categories.findIndex(c => (c.name === expense.category && c.subCategories && !c.subCategories.includes(subCategory)));
           if (index !== -1) {
-            categories[index].subcategories?.push(subCategory);
+            categories[index].subCategories?.push(subCategory);
           }
         }
       });
@@ -203,7 +203,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
           <select className='standard-input' onChange={handleAddEarning}>
             <option value='default'>add earning</option>
             {
-              settings?.categories.earningCategories.map(
+              settings?.categories.earnings.map(
                 category =>
                 <option key={`add-earning-option-key-${category.name}`} value={`$${category.name}`}>{category.name}</option>
               )
@@ -222,7 +222,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
           <select className='standard-input' onChange={handleAddExpense}>
             <option value='default'>add expense</option>
             {
-              settings?.categories.expenseCategories.map(
+              settings?.categories.expenses.map(
                 category =>
                 <option key={`add-expense-option-key-${category.name}`} value={`$${category.name}`}>{category.name}</option>
               )
