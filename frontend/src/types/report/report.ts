@@ -12,11 +12,6 @@ export class Report {
   
   copy(): Report {
     return Report.fromDto(this.toDto());
-    // const report = new Report();
-    // report.id = this.id;
-    // report.earnings = this.earnings.map(e => e.copy());
-    // report.expenses = this.expenses.map(e => e.copy());
-    // return report;
   }
 
   getTotalEarnings(): number {
@@ -70,8 +65,8 @@ export class Report {
 
       report.id = ExtendedDate.fromDto(d.id);
       
-      report.earnings = d.earnings ?? [];
-      report.expenses = d.expenses ?? [];
+      report.earnings = d.earnings?.map((dto: any) => Earning.fromDto(dto)) ?? [];
+      report.expenses = d.expenses?.map((dto: any) => Expense.fromDto(dto)) ?? [];
 
       return report;
     });

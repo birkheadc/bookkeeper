@@ -28,7 +28,7 @@ export default async function getReportsByDates(token: string | undefined, dates
     if (!response.ok) return Result.Fail().WithMessage('Server refused request.');
     const data = await response.json();
     const reports = Report.fromJson(data);
-
+    console.log('Got reports: ', reports[0].copy());
     return Result.Succeed().WithBody(reports);
   } catch (error) {
     console.log(error)
