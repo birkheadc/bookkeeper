@@ -5,6 +5,7 @@ import { Earning, Expense, Report } from './entities/report.entity';
 import { ReportDto } from './dto/report.dto';
 import { randomUUID } from 'crypto';
 import { SettingsService } from 'src/settings/settings.service';
+import { PutTransactionsRequestDto } from './dto/put-transactions-request.dto';
 
 @Injectable()
 export class ReportsService {
@@ -42,6 +43,26 @@ export class ReportsService {
 
     await this.reportsRepository.putMany(Object.values(reports));
     await this.settingsService.addNewTransactionCategories(id, Object.values(reports));
+  }
+
+  async addTransactions(id: string, dto: PutTransactionsRequestDto): Promise<void> {
+    const dates: string[] = [];
+    dto.earnings.forEach(earning => {
+      if (!dates.includes(earning.reportDate)) dates.push(earning.reportDate);
+    });
+    dto.expenses.forEach(expense => {
+      if (!dates.includes(expense.reportDate)) dates.push(expense.reportDate);
+    })
+    const reports = await this.getByDates({dates});
+    dto.earnings.forEach(earning => {
+      const report = reports.find(r => r.id === earning.reportDate);
+      if (report != null) report.earnings.push(earning);
+    });
+    dto.expenses.forEach(expense => {
+      const report = reports.find(r => r.id === expense.reportDate);
+      if (report != null) report.expenses.push(expense);
+    });
+    await this.reportsRepository.putMany(reports.map(dto => Report.fromDto(dto)));
   }
 }
 

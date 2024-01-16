@@ -22,7 +22,7 @@ export default async function postReport(token: string | undefined, report: Repo
       signal: signal
     });
     if (!response.ok) return Result.Fail().WithMessage('request was denied by server');
-    return Result.Succeed();
+    return Result.Succeed().WithMessage('success');
   } catch {
     return Result.Fail().WithMessage('unable to connect to server');
   } finally {

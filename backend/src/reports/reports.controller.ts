@@ -5,6 +5,7 @@ import { GetByDatesRequestDto } from './dto/get-by-dates-request.dto';
 import { ReportDto } from './dto/report.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BearerAuthenticatedRequest } from 'src/auth/request/bearerAuthenticatedRequest';
+import { PutTransactionsRequestDto } from './dto/put-transactions-request.dto';
 
 @Controller('reports')
 export class ReportsController {
@@ -20,6 +21,12 @@ export class ReportsController {
   @UseGuards(JwtGuard)
   async putReport(@Request() request: BearerAuthenticatedRequest, @Body() dto: ReportDto): Promise<ReportDto> {
     return await this.reportsService.createOrUpdate(request.user.id, dto);
+  }
+
+  @Put('put-transactions')
+  @UseGuards(JwtGuard)
+  async putTransactions(@Request() request: BearerAuthenticatedRequest, @Body() dto: PutTransactionsRequestDto): Promise<void> {
+    await this.reportsService.addTransactions(request.user.id, dto);
   }
 
   @Post('upload-csv')
