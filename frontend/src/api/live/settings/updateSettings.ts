@@ -20,7 +20,7 @@ export default async function updateSettings(token: any, userSettings: UserSetti
       signal: signal
     });
     if (!response.ok) return Result.Fail().WithMessage('server refused request');
-    return Result.Succeed();
+    return Result.Succeed().WithMessage('settings saved');
   } catch {
     return Result.Fail().WithMessage('error connecting to server')
   } finally {

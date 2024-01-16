@@ -7,11 +7,13 @@ import { SettingsContext } from '../../../../../app/contexts/settings/SettingsCo
 import { ExpenseCategory } from '../../../../../types/settings/userSettings';
 import StandardFormLabeledCurrencyInput from '../../../../forms/standardFormLabeledCurrencyInput/StandardFormLabeledCurrencyInput';
 import StandardFormLabeledCheckbox from '../../../../forms/standardFormLabeledCheckbox/StandardFormLabeledCheckbox';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface IBatchTransactionInputProps {
   type: 'earning' | 'expense',
   transaction: Earning | Expense,
-  update: (transaction: Earning | Expense) => void
+  update: (transaction: Earning | Expense) => void,
+  delete: () => void
 }
 
 /**
@@ -26,12 +28,6 @@ export default function BatchTransactionInput(props: IBatchTransactionInputProps
   const handleChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTransaction = props.transaction.copy();
     newTransaction.reportDate = new ExtendedDate(event.currentTarget.value);
-    props.update(newTransaction);
-  }
-
-  const handleChangeCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newTransaction = props.transaction.copy();
-    newTransaction.category = event.currentTarget.value;
     props.update(newTransaction);
   }
 
@@ -86,11 +82,15 @@ export default function BatchTransactionInput(props: IBatchTransactionInputProps
     props.update(newExpense);
   }
 
+  const handleDelete = () => {
+    props.delete();
+  }
+
   return (
     <div className='batch-transaction-input standard-form-row'>
       <h3 className={`batch-transaction-category-${props.type}`}>{props.transaction.category}</h3>
       {/* <StandardFormLabeledInput label={'category'} name={'category'} value={props.transaction.category} handleChange={handleChangeCategory} /> */}
-      <input className='standard-input' onChange={handleChangeDate} type='date' value={props.transaction.reportDate.toSimpleString()}></input>
+      <input autoFocus className='standard-input' onChange={handleChangeDate} type='date' value={props.transaction.reportDate.toSimpleString()}></input>
       {props.type === 'expense' &&
         <select className='standard-input' onChange={handleChangeSubcategory} value={`$${(props.transaction as Expense).subCategory}` ?? 'none'}>
         {/* <option value='default'>subcategory</option> */}
@@ -110,6 +110,7 @@ export default function BatchTransactionInput(props: IBatchTransactionInputProps
         <StandardFormLabeledInput label={'note'} name={`expense-input-note-${props.transaction.id}`} value={(props.transaction as Expense).note ?? ''} handleChange={handleChangeNote} />
       </>
       }
+      <button className='standard-button icon-button' type='button' onClick={handleDelete}><TrashIcon width={'20px'} /></button>
     </div>
   );
 }

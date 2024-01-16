@@ -16,7 +16,7 @@ div.standard-form-labeled-checkbox-outer-wrapper:active:hover {
 
 div.standard-form-labeled-checkbox-wrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: row;  
   justify-content: space-between;
   align-items: center;
   gap: 20px;

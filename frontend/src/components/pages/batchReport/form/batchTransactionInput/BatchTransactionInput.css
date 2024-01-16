@@ -10,7 +10,7 @@ div.batch-transaction-input>* {
   min-width: max-content;
   max-width: 200px;
 }
-
+  
 h3.batch-transaction-category-earning {
   color: var(--clr-earning);
 }

@@ -1,4 +1,4 @@
-import { Report } from "../../../types/report/report";
+import { Earning, Expense, Report } from "../../../types/report/report";
 import * as React from 'react';
 import { LoadingSpinnerContext } from '../loadingSpinner/LoadingSpinnerContext';
 import { Result } from "../../../types/result/result";
@@ -17,7 +17,8 @@ type Data = {
   getReports: (dates: ExtendedDate[]) => Promise<Result<Record<string, Report>>>
   addReport: (report: Report) => Promise<Result>,
   addReports: (reports: Report[]) => Promise<Result>,
-  uploadCsv: (file: any) => Promise<Result>
+  uploadCsv: (file: any) => Promise<Result>,
+  addTransactions: (transactions: { earnings: Earning[], expenses: Expense[] }) => Promise<Result>
 }
 
 const DEFAULT_DATA: Data = {
@@ -34,6 +35,9 @@ const DEFAULT_DATA: Data = {
     throw new Error("Function not implemented.");
   },
   uploadCsv: function (file: any): Promise<Result<any>> {
+    throw new Error("Function not implemented.");
+  },
+  addTransactions: function (transactions: { earnings: Earning[]; expenses: Expense[]; }): Promise<Result<any>> {
     throw new Error("Function not implemented.");
   }
 }
@@ -128,14 +132,49 @@ export const ReportsProvider = ({ children }: Props) => {
       const result = await api.reports.postCsv(session.token, file);
       if (result.wasSuccess) {
         setReports({});
+        await refreshSettings();
       }
-      await refreshSettings();
       return result;
     });
   }
 
+  const addTransactions = async (transactions: { earnings: Earning[], expenses: Expense[] }): Promise<Result> => {
+    return await useLoading(async () => {
+      if (api == null) return Result.Fail().WithMessage('api not ready');
+      const result = await api.reports.postBatchTransactions(session.token, transactions);
+      if (result.wasSuccess) {
+        addTransactionsToCache(transactions);
+        await refreshSettings();
+      }
+      return result;
+    })
+  }
+
+  function addTransactionsToCache(transactions: { earnings: Earning[], expenses: Expense[] }) {
+    const newReports = { ...reports };
+    transactions.earnings.forEach(earning => {
+      const key = earning.reportDate.toDto();
+      if (!newReports.hasOwnProperty(key)) {
+        const report = new Report();
+        report.id = earning.reportDate;
+        newReports[key] = report;
+      }
+      newReports[key].earnings.push(earning);
+    });
+    transactions.expenses.forEach(expense => {
+      const key = expense.reportDate.toDto();
+      if (!newReports.hasOwnProperty(key)) {
+        const report = new Report();
+        report.id = expense.reportDate;
+        newReports[key] = report;
+      }
+      newReports[key].expenses.push(expense);
+    });
+    setReports(newReports);
+  }
+  
   return (
-    <ReportsContext.Provider value={{ getReport, getReports, addReport, addReports, uploadCsv }} >
+    <ReportsContext.Provider value={{ getReport, getReports, addReport, addReports, uploadCsv, addTransactions }} >
       { children }
     </ReportsContext.Provider>
   );

@@ -6,6 +6,9 @@ import BatchTransactionInput from './batchTransactionInput/BatchTransactionInput
 import { v4 as uuidv4 } from 'uuid';
 import { SettingsContext } from '../../../../app/contexts/settings/SettingsContext';
 import { ExtendedDate } from '../../../../types/date/extendedDate';
+import { Result } from '../../../../types/result/result';
+import ResultDisplay from '../../../resultDisplay/ResultDisplay';
+import { ReportsContext } from '../../../../app/contexts/reports/ReportsContext';
 
 interface IBatchReportFormProps {
 
@@ -18,24 +21,9 @@ interface IBatchReportFormProps {
 export default function BatchReportForm(props: IBatchReportFormProps): JSX.Element | null {
 
   const [ transactions, setTransactions ] = React.useState<{ earnings: Earning[], expenses: Expense[] }>({ earnings: [], expenses: [] });
-
   const { settings } = React.useContext(SettingsContext);
-
-  const addTransaction = (type: 'earning' | 'expense') => {
-    if (type === 'earning') {
-      const newEarning = new Earning();
-      newEarning.id = uuidv4();
-      const newEarnings = [...transactions.earnings];
-      newEarnings.push(newEarning);
-      setTransactions(t => ({...t, earnings: newEarnings}));
-      return;
-    }
-    const newExpense = new Expense();
-    newExpense.id = uuidv4();
-    const newExpenses = [...transactions.expenses];
-    newExpenses.push(newExpense);
-    setTransactions(t => ({...t, expenses: newExpenses}));
-  }
+  const { addTransactions } = React.useContext(ReportsContext);
+  const [ recentResult, setRecentResult ] = React.useState<Result | undefined>();
 
   const handleAddEarning = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.currentTarget.value;
@@ -75,7 +63,6 @@ export default function BatchReportForm(props: IBatchReportFormProps): JSX.Eleme
 
   const handleUpdate = (type: 'earning' | 'expense', transaction: Earning | Expense) => {
     // On second thought, `type: 'earning' | 'expense' was not such a good idea after all.
-    console.log(transaction);
     setTransactions(transactions => {
       if (type === 'earning') {
         const earning = transaction as Earning;
@@ -95,19 +82,34 @@ export default function BatchReportForm(props: IBatchReportFormProps): JSX.Eleme
       return newTransactions;
     })
   }
+
+  const handleDelete = (type: 'earning' | 'expense', id: string) => {
+    setTransactions(transactions => {
+      if (type === 'earning') {
+        const newEarnings = [ ...transactions.earnings ].filter(e => e.id !== id);
+        const newTransactions = { ...transactions, earnings: newEarnings };
+        return newTransactions;
+      }
+      const newExpenses = [ ...transactions.expenses ].filter(e => e.id !== id);
+      const newTransactions = { ...transactions, expenses: newExpenses };
+      return newTransactions;
+    })
+  }
   
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Submit this:', transactions);
+    const result = await addTransactions(transactions);
+    setRecentResult(result);
   }
 
   return (
     <form className='batch-report-form-wrapper standard-form' onSubmit={handleSubmit}>
+      <ResultDisplay result={recentResult} />
       {transactions.earnings.map(earning =>
-        <BatchTransactionInput key={`batch-transaction-input-${earning.id}`} type='earning' transaction={earning} update={(t) => handleUpdate('earning', t)}/>
+        <BatchTransactionInput key={`batch-transaction-input-${earning.id}`} type='earning' transaction={earning} update={(t) => handleUpdate('earning', t)} delete={() => handleDelete('earning', earning.id)}/>
       )}
       {transactions.expenses.map(expense =>
-        <BatchTransactionInput key={`batch-transaction-input-${expense.id}`} type='expense' transaction={expense} update={(t) => handleUpdate('expense', t)}/>
+        <BatchTransactionInput key={`batch-transaction-input-${expense.id}`} type='expense' transaction={expense} update={(t) => handleUpdate('expense', t)} delete={() => handleDelete('expense', expense.id)}/>
       )}
       <div className="standard-form-row">
       <select className='standard-input' onChange={handleAddEarning}>
