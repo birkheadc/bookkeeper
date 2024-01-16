@@ -82,7 +82,7 @@ export class Settings {
             "earnings": {
               "L": this.categories.earnings.map(e => ({
                 "M": {
-                  "name": { "S": e.name},
+                  "name": { "S": e.name.toLowerCase()},
                   "isDefault": { "BOOL": e.isDefault }
                 }
               }))
@@ -90,7 +90,7 @@ export class Settings {
             "expenses": {
               "L": this.categories.expenses.map(e => ({
                 "M": {
-                  "name": { "S": e.name},
+                  "name": { "S": e.name.toLowerCase()},
                   "isDefault": { "BOOL": e.isDefault },
                   "subCategories": {
                     "L": e.subCategories?.map(s => ({ "S": s})) ?? []

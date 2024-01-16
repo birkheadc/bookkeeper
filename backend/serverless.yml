@@ -49,6 +49,8 @@ provider:
             - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperUsers'
             - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperReports/index/*'
             - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperReports'
+            - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperSettings/index/*'
+            - 'arn:aws:dynamodb:ap-southeast-2:290153383648:table/bookkeeperSettings'
 
 resources:
   Resources:

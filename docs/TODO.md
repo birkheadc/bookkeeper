@@ -8,3 +8,7 @@
 
 ## add multi-language support? looks like some of the notes are becoming garbled
   - Data was good so somewhere along the line the application is destroying korean text
+
+## fix backend allowing categories with same name (lower case bug)
+
+## fix delete category in settings

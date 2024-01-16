@@ -30,7 +30,7 @@ export default function BatchReportForm(props: IBatchReportFormProps): JSX.Eleme
 
     if (value === 'default') return;
 
-    const category = (value === 'new') ? prompt('Enter name of new category') : value.substring(1);
+    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase();
     event.currentTarget.value = 'default';
 
     if (category == null) return;
@@ -47,7 +47,7 @@ export default function BatchReportForm(props: IBatchReportFormProps): JSX.Eleme
 
     if (value === 'default') return;
 
-    const category = (value === 'new') ? prompt('Enter name of new category') : value.substring(1);
+    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase();
     event.currentTarget.value = 'default';
 
     if (category == null) return;

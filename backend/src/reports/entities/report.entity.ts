@@ -78,7 +78,7 @@ export class Earning {
     const values = {
       id: { "S": this.id },
       reportDate: { "S": this.reportDate },
-      category: { "S": this.category },
+      category: { "S": this.category.toLowerCase() },
       amount: { "N": this.amount.toString() }
     };
     return values;
@@ -130,11 +130,11 @@ export class Expense extends Earning {
     const values: Record<string, AttributeValue> = {
       id: { "S": this.id },
       reportDate: { "S": this.reportDate },
-      category: { "S": this.category },
+      category: { "S": this.category.toLowerCase() },
       amount: { "N": this.amount.toString() },
       isIncludeInCash: { "BOOL": this.isIncludeInCash }
     };
-    if (this.subCategory) values.subCategory = { "S": this.subCategory };
+    if (this.subCategory) values.subCategory = { "S": this.subCategory.toLowerCase() };
     if (this.note) values.note = { "S": this.note };
     return values;
   }
