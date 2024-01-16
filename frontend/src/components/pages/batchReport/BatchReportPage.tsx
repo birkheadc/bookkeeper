@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './BatchReportPage.css'
+import BatchReportForm from './form/BatchReportForm';
 
 interface IBatchReportPageProps {
 
@@ -13,6 +14,7 @@ export default function BatchReportPage(props: IBatchReportPageProps): JSX.Eleme
   return (
     <main className='batch-report-page'>
       <h1>batch report</h1>
+      <BatchReportForm />
     </main>
   );
 }

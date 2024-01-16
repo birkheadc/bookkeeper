@@ -13,7 +13,7 @@ export default async function getSettings(token: any): Promise<Result<UserSettin
   const settingsString = window.localStorage.getItem('LOCAL_SETTINGS');
   if (settingsString == null) return Result.Succeed().WithBody(DEFAULT_SETTINGS);
   try {
-    const settings: UserSettings = JSON.parse(settingsString);
+    const settings: UserSettings = UserSettings.fromJson(JSON.parse(settingsString));
     return Result.Succeed().WithBody(settings);
   } catch {
     return Result.Succeed().WithBody(DEFAULT_SETTINGS);

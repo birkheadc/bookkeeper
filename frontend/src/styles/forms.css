@@ -10,7 +10,7 @@ form.standard-form {
 
   width: fit-content;
   max-width: 100%;
-  margin: auto;
+  margin: 0 auto;
 }
 
 div.standard-form-row {
@@ -34,6 +34,9 @@ div.standard-form-row.space-between {
 .standard-input {
   border: var(--border-pri);
   padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .standard-input:hover, .standard-input:focus {

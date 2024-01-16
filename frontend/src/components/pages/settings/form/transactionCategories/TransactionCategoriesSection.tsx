@@ -15,6 +15,7 @@ interface ITransactionCategoriesSectionProps {
 */
 export default function TransactionCategoriesSection(props: ITransactionCategoriesSectionProps): JSX.Element | null {
   const settings = props.transactionCategorySettings;
+  console.log('settings:', settings);
   
   const handleToggle = (polarity: 'earning' | 'expense', name: string) => {
     const categories = polarity === 'earning' ? settings.earnings : settings.expenses;

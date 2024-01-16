@@ -1,8 +1,6 @@
 import * as React from 'react';
 import './StandardFormLabeledCurrencyInput.css'
 import CurrencyInput, { CurrencyInputOnChangeValues } from 'react-currency-input-field';
-import settings from '../../../api/settings';
-import { Currency } from '../../../types/settings/currency';
 import { useCurrency } from '../../../hooks/useCurrency/useCurrency';
 import { CalculatorContext } from '../../../app/contexts/calculator/CalculatorContext';
 
@@ -37,14 +35,14 @@ export default function StandardFormLabeledCurrencyInput(props: IStandardFormLab
   }
 
   return (
-    <div className='standard-form-row'>
+    <>
       <div className='standard-form-labeled-input-outer-wrapper'>
         <div className='standard-form-labeled-input-wrapper'>
           <label>{props.label ?? 'amount'}</label>
-          <CurrencyInput allowDecimals={properties.decimals !== 0} decimalsLimit={properties.decimals} prefix={properties.symbol} allowNegativeValue={false} maxLength={'999999999999999'.length} onValueChange={handleChangeAmount} value={amount}/>
+          <CurrencyInput className='standard-input' allowDecimals={properties.decimals !== 0} decimalsLimit={properties.decimals} prefix={properties.symbol} allowNegativeValue={false} maxLength={'999999999999999'.length} onValueChange={handleChangeAmount} value={amount}/>
         </div>
       </div>
       { props.includeCalcButton && <button className='standard-button' type='button' onClick={openCalculator}>calc</button>}
-    </div>
+    </>
   );
 }

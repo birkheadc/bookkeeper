@@ -93,7 +93,9 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
         </select>
         <button className='standard-button icon-button' onClick={handleDeleteExpense} type='button'><TrashIcon width={'20px'} /></button>
       </div>
-      <StandardFormLabeledCurrencyInput amount={expense.amount} includeCalcButton update={handleChangeAmount} />
+      <div className='standard-form-row'>
+        <StandardFormLabeledCurrencyInput amount={expense.amount} includeCalcButton update={handleChangeAmount} />
+      </div>
       <div className='standard-form-row'>
           <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${expense.id}`} checked={expense.isIncludeInCash} handleToggle={handleToggleIsCashInclude} />
       </div>

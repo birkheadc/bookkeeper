@@ -1,0 +1,20 @@
+div.batch-transaction-input {
+  row-gap: 1em;
+  border: var(--border-pri);
+  border-color: var(--clr-accent-light);
+  padding: 1em;
+  justify-content: flex-start;
+}
+
+div.batch-transaction-input>* {
+  min-width: max-content;
+  max-width: 200px;
+}
+
+h3.batch-transaction-category-earning {
+  color: var(--clr-earning);
+}
+
+h3.batch-transaction-category-expense {
+  color: var(--clr-expense);
+}
