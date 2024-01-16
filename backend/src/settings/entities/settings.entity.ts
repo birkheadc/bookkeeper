@@ -14,16 +14,18 @@ export class Settings {
     denominations: []
   };
 
-  static fromDto(dto: SettingsDto): Settings {
+  static default: Settings = this.fromDto({ general: { currency: 'USD', defaultViewMode: 'day' } });
+
+  static fromDto(dto: Partial<SettingsDto>): Settings {
     const settings = new Settings();
 
-    settings.general.currency = dto.general?.currency ?? '';
-    settings.general.defaultViewMode = dto.general?.defaultViewMode ?? '';
+    settings.general.currency = dto?.general?.currency ?? '';
+    settings.general.defaultViewMode = dto?.general?.defaultViewMode ?? '';
 
-    settings.categories.earnings = dto.categories?.earnings ?? [];
-    settings.categories.expenses = dto.categories?.expenses ?? [];
+    settings.categories.earnings = dto?.categories?.earnings ?? [];
+    settings.categories.expenses = dto?.categories?.expenses?.map(e => ({...e, subCategories: e.subCategories ?? []})) ?? [];
 
-    settings.denominations.denominations = dto.denominations?.denominations ?? [];
+    settings.denominations.denominations = dto?.denominations?.denominations ?? [];
 
     return settings;
   }
@@ -55,7 +57,7 @@ export class Settings {
       isDefault: av.M?.isDefault?.BOOL ?? false,
       subCategories: av.M?.subCategories?.L?.map((_av: AttributeValue) => (
         _av.S ?? ''
-      ))
+      )) ?? []
     })) ?? [];;
 
     settings.denominations.denominations = settingValues.denominations?.M?.denominations?.L?.map((av: AttributeValue) => ({
@@ -125,13 +127,13 @@ type TransactionCategorySettings = {
   expenses: ExpenseCategory[]
 }
 
-type EarningCategory = {
+export type EarningCategory = {
   name: string,
   isDefault: boolean
 }
 
-type ExpenseCategory = EarningCategory & {
-  subCategories?: string[] | undefined
+export type ExpenseCategory = EarningCategory & {
+  subCategories: string[]
 }
 
 type DenominationSettings = {

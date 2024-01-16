@@ -4,11 +4,12 @@ import { ReportsRepository } from './reports.repository';
 import { Earning, Expense, Report } from './entities/report.entity';
 import { ReportDto } from './dto/report.dto';
 import { randomUUID } from 'crypto';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Injectable()
 export class ReportsService {
 
-  constructor(private readonly reportsRepository: ReportsRepository) { }
+  constructor(private readonly reportsRepository: ReportsRepository, private readonly settingsService: SettingsService) { }
 
   async getByDates(dto: GetByDatesRequestDto): Promise<ReportDto[]> {
     const reports = await this.reportsRepository.getByDates(dto.dates);
@@ -20,12 +21,13 @@ export class ReportsService {
     return reports.map(r => r.toDto());
   }
 
-  async createOrUpdate(dto: ReportDto): Promise<ReportDto> {
+  async createOrUpdate(id: string, dto: ReportDto): Promise<ReportDto> {
     const report = await this.reportsRepository.put(Report.fromDto(dto));
+    await this.settingsService.addNewTransactionCategories(id, [report]);
     return report.toDto();
   }
 
-  async processCsv(file: Express.Multer.File) {
+  async processCsv(id: string, file: Express.Multer.File) {
     const lines = file.buffer.toString().split(/\r?\n/);
     const reports: Record<string, Report> = {};
 
@@ -39,6 +41,7 @@ export class ReportsService {
     });
 
     await this.reportsRepository.putMany(Object.values(reports));
+    await this.settingsService.addNewTransactionCategories(id, Object.values(reports));
   }
 }
 

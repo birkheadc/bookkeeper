@@ -5,6 +5,7 @@ import { ReportsRepository } from './reports.repository';
 import { ReportsConfig } from './reports.config';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { ConfigService } from '@nestjs/config';
+import { SettingsModule } from 'src/settings/settings.module';
 
 @Module({
   controllers: [ReportsController],
@@ -16,5 +17,6 @@ import { ConfigService } from '@nestjs/config';
       return new DynamoDBClient({ region: config.region, endpoint: config.endpoint })
     }
   }],
+  imports: [ SettingsModule ]
 })
 export class ReportsModule {}

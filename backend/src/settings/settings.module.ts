@@ -16,5 +16,6 @@ import { ConfigService } from '@nestjs/config';
       return new DynamoDBClient({ region: config.region, endpoint: config.endpoint })
     }
   }],
+  exports: [ SettingsService ]
 })
 export class SettingsModule {}

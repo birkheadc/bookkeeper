@@ -7,6 +7,10 @@ export class SettingsRepository {
   private readonly tableName: string = "bookkeeperSettings";
   constructor(private readonly client: DynamoDBClient) { }
 
+  async createUserSettings(id: string): Promise<void> {
+    await this.putUserSettings(id, Settings.default);
+  }
+
   async getUserSettings(id: string): Promise<Settings> {
     const command = new GetItemCommand({
       TableName: this.tableName,
@@ -17,7 +21,8 @@ export class SettingsRepository {
       const response = await this.client.send(command);
       if (!response.Item) {
         console.log('User Settings not found');
-        throw new NotFoundException();
+        await this.createUserSettings(id);
+        return await this.getUserSettings(id);
       }
       const settings = Settings.fromAttributeValues(response.Item);
       return settings;
@@ -30,7 +35,7 @@ export class SettingsRepository {
   async putUserSettings(id: string, settings: Settings): Promise<void> {
     const command = new PutItemCommand({
       TableName: this.tableName,
-      Item: { id: { S: id}, settings: settings.toAttributeValue() }
+      Item: { id: { S: id }, settings: settings.toAttributeValue() }
     });
 
     try {
