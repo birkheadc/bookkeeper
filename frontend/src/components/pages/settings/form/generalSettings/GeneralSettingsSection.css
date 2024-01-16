@@ -10,6 +10,10 @@ div.general-settings-section-inner-wrapper {
 section.general-settings-section-wrapper div.standard-form-row {
   justify-content: space-between;
   gap: 50px;
+  border: var(--border-pri);
+  border-color: var(--clr-accent-light);
+  padding: 10px;
+  align-items: center;
 }
 
 div.default-view-mode-section button.active {

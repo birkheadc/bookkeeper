@@ -3,6 +3,7 @@ import './StandardFormLabeledCurrencyInput.css'
 import CurrencyInput, { CurrencyInputOnChangeValues } from 'react-currency-input-field';
 import { useCurrency } from '../../../hooks/useCurrency/useCurrency';
 import { CalculatorContext } from '../../../app/contexts/calculator/CalculatorContext';
+import { CalculatorIcon } from '@heroicons/react/24/outline';
 
 interface IStandardFormLabeledCurrencyInputProps {
   amount: number,
@@ -42,7 +43,7 @@ export default function StandardFormLabeledCurrencyInput(props: IStandardFormLab
           <CurrencyInput className='standard-input' allowDecimals={properties.decimals !== 0} decimalsLimit={properties.decimals} prefix={properties.symbol} allowNegativeValue={false} maxLength={'999999999999999'.length} onValueChange={handleChangeAmount} value={amount}/>
         </div>
       </div>
-      { props.includeCalcButton && <button className='standard-button' type='button' onClick={openCalculator}>calc</button>}
+      { props.includeCalcButton && <button className='standard-button' type='button' onClick={openCalculator}><CalculatorIcon width={'20px'}/></button>}
     </>
   );
 }

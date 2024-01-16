@@ -53,7 +53,7 @@ export default function ReportDisplayCard(props: IReportDisplayCardProps): JSX.E
         }
         </div>
       </div>
-      <Link className='standard-button' to={`/create?date=${report.id.toSimpleString()}`}>Edit</Link>
+      <Link className='standard-button' to={`/create?date=${report.id.toSimpleString()}`}>edit</Link>
     </div>
   );
 }

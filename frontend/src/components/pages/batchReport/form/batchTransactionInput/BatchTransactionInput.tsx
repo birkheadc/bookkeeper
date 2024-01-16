@@ -103,7 +103,7 @@ export default function BatchTransactionInput(props: IBatchTransactionInputProps
         <option value='new'>create new</option>
       </select>
       }
-      <StandardFormLabeledCurrencyInput amount={props.transaction.amount} update={handleChangeAmount} />
+      <StandardFormLabeledCurrencyInput includeCalcButton amount={props.transaction.amount} update={handleChangeAmount} />
       {props.type === 'expense' &&
       <>
         <StandardFormLabeledCheckbox label={'include in cash?'} name={`expense-input-is-include-cash-${props.transaction.id}`} checked={(props.transaction as Expense).isIncludeInCash} handleToggle={handleToggleIsCashInclude} />

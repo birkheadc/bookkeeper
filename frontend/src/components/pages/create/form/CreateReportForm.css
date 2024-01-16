@@ -34,6 +34,7 @@ div.create-report-form-subsection {
 
 div.transaction-input-wrapper {
   border: var(--border-pri);
+  border-color: var(--clr-accent-light);
   padding: 10px;
 
   display: flex;
