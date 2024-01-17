@@ -28,23 +28,6 @@ export class ReportsService {
     return report.toDto();
   }
 
-  // async processCsv(id: string, file: Express.Multer.File) {
-  //   const lines = file.buffer.toString().split(/\r?\n/);
-  //   const reports: Record<string, Report> = {}; 
-
-  //   lines.forEach(line => {
-  //     try {
-  //       addCsvLineToReports(line, reports);
-  //     } catch (error) {
-  //       console.log('Error trying to parse csv line: ', line, error);
-  //       throw new InternalServerErrorException();
-  //     }
-  //   });
-
-  //   await this.reportsRepository.putMany(Object.values(reports));
-  //   await this.settingsService.addNewTransactionCategories(id, Object.values(reports));
-  // }
-
   async addTransactions(id: string, dto: PutTransactionsRequestDto): Promise<void> {
     const dates: string[] = [];
     dto.earnings.forEach(earning => {

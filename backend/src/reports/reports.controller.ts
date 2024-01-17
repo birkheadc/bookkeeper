@@ -28,12 +28,4 @@ export class ReportsController {
   async putTransactions(@Request() request: BearerAuthenticatedRequest, @Body() dto: PutTransactionsRequestDto): Promise<void> {
     await this.reportsService.addTransactions(request.user.id, dto);
   }
-
-  // @Post('upload-csv')
-  // @UseGuards(JwtGuard)
-  // @UseInterceptors(FileInterceptor('file'))
-  // async uploadCsv(@Request() request: BearerAuthenticatedRequest, @UploadedFile() file: Express.Multer.File) {
-  //   console.log(file);
-  //   await this.reportsService.processCsv(request.user.id, file);
-  // }
 }
