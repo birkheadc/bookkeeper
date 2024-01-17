@@ -44,9 +44,12 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
   }
 
   const handleDelete = (polarity: 'earning' | 'expense', name: string) => {
+    console.log('delete', polarity, name);
     const categories = polarity === 'earning' ? settings.earnings : settings.expenses;
     const newCategories = categories.filter(c => c.name !== name);
-    const newSettings = polarity === 'earning' ? { ...settings, earningCategories: newCategories } : { ...settings, expenseCategories: newCategories };
+    console.log(newCategories);
+    const newSettings = (polarity === 'earning') ? { ...settings, earnings: newCategories } : { ...settings, expenses: newCategories };
+    console.log(newSettings);
     props.updateTransactionCategorySettings(newSettings);
   }
 
