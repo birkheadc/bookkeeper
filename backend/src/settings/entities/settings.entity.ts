@@ -122,7 +122,7 @@ type GeneralSettings = {
   defaultViewMode: string
 }
 
-type TransactionCategorySettings = {
+export type TransactionCategorySettings = {
   earnings: EarningCategory[],
   expenses: ExpenseCategory[]
 }

@@ -8,9 +8,15 @@ export class ReportsRepository {
   constructor(private readonly client: DynamoDBClient) { }
 
   async getByDates(dates: string[]): Promise<Report[]> {
+    let reports: Report[] = [];
+    let _dates = [...dates];
+    while (_dates.length > 25) {
+      const batch = await this.getByDates(_dates.splice(0, 25));
+      reports = reports.concat(batch);
+    }
     const requestItems: Record<string, KeysAndAttributes> = {};
     requestItems[this.tableName] = { Keys: [] };
-    dates.forEach(date => {
+    _dates.forEach(date => {
       requestItems[this.tableName].Keys?.push({ 'id': { S: date }});
     });
 
@@ -23,10 +29,10 @@ export class ReportsRepository {
       const items = response.Responses;
       if (items == null) return [];
 
-      const reports = items[this.tableName].map(v => Report.fromAttributeValues(v));      
+      reports = reports.concat(items[this.tableName].map(v => Report.fromAttributeValues(v)))
       return reports;
     } catch (error) {
-      console.log('Error in ReportsRepository.getByDates', dates, error);
+      console.log('Error in ReportsRepository.getByDates', _dates, error);
       throw new InternalServerErrorException();
     }
   }

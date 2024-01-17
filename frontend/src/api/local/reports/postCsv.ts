@@ -37,20 +37,20 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
         const earning: Earning = new Earning();
         earning.id = uuidv4();
         earning.reportDate = date;
-        earning.category = categoryName;
+        earning.category = categoryName.toLowerCase().trim();
         earning.amount = amount;
         record[key].earnings.push(earning);
       } else {
         const note = parameters[3];
         const isIncludeInCash = parameters[4].toLowerCase() === 'true';
-        const subCategory = categoryName === 'stock' ? note.toLowerCase() : '';
+        const subCategory = categoryName === 'stock' ? note.toLowerCase().trim() : '';
         const expense: Expense = new Expense();
         expense.id = uuidv4();
         expense.reportDate = date;
-        expense.category = categoryName;
+        expense.category = categoryName.toLowerCase().trim();
         expense.amount = amount;
         expense.isIncludeInCash = isIncludeInCash;
-        expense.subCategory = subCategory;
+        expense.subCategory = subCategory.toLowerCase().trim();
         expense.note = note;
         record[key].expenses.push(expense);
       }

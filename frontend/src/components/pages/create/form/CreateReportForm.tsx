@@ -97,7 +97,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
 
     if (value === 'default') return;
 
-    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase();
+    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase().trim();
     event.currentTarget.value = 'default';
 
     if (category == null) return;
@@ -116,7 +116,7 @@ export default function CreateReportForm(props: ICreateReportFormProps): JSX.Ele
 
     if (value === 'default') return;
 
-    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase();
+    const category = ((value === 'new') ? prompt('Enter name of new category') : value.substring(1))?.toLowerCase().trim();
     event.currentTarget.value = 'default';
 
     if (category == null) return;

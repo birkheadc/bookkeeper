@@ -29,7 +29,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
     if (name == null) return;
 
     const categories = polarity === 'earning' ? settings.earnings : settings.expenses;
-    const doesExist = categories.some(c => c.name === name);
+    const doesExist = categories.some(c => c.name.toLowerCase().trim() === name.toLowerCase().trim());
 
     if (doesExist) {
       alert('That category already exists!');

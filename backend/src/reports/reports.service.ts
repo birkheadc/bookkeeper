@@ -24,26 +24,26 @@ export class ReportsService {
 
   async createOrUpdate(id: string, dto: ReportDto): Promise<ReportDto> {
     const report = await this.reportsRepository.put(Report.fromDto(dto));
-    await this.settingsService.addNewTransactionCategories(id, [report]);
+    await this.settingsService.addNewTransactionCategories(id, { earnings: report.earnings, expenses: report.expenses });
     return report.toDto();
   }
 
-  async processCsv(id: string, file: Express.Multer.File) {
-    const lines = file.buffer.toString().split(/\r?\n/);
-    const reports: Record<string, Report> = {};
+  // async processCsv(id: string, file: Express.Multer.File) {
+  //   const lines = file.buffer.toString().split(/\r?\n/);
+  //   const reports: Record<string, Report> = {}; 
 
-    lines.forEach(line => {
-      try {
-        addCsvLineToReports(line, reports);
-      } catch (error) {
-        console.log('Error trying to parse csv line: ', line, error);
-        throw new InternalServerErrorException();
-      }
-    });
+  //   lines.forEach(line => {
+  //     try {
+  //       addCsvLineToReports(line, reports);
+  //     } catch (error) {
+  //       console.log('Error trying to parse csv line: ', line, error);
+  //       throw new InternalServerErrorException();
+  //     }
+  //   });
 
-    await this.reportsRepository.putMany(Object.values(reports));
-    await this.settingsService.addNewTransactionCategories(id, Object.values(reports));
-  }
+  //   await this.reportsRepository.putMany(Object.values(reports));
+  //   await this.settingsService.addNewTransactionCategories(id, Object.values(reports));
+  // }
 
   async addTransactions(id: string, dto: PutTransactionsRequestDto): Promise<void> {
     const dates: string[] = [];
@@ -63,6 +63,7 @@ export class ReportsService {
       if (report != null) report.expenses.push(expense);
     });
     await this.reportsRepository.putMany(reports.map(dto => Report.fromDto(dto)));
+    await this.settingsService.addNewTransactionCategories(id, { earnings: dto.earnings, expenses: dto.expenses });
   }
 }
 
@@ -71,6 +72,11 @@ function addCsvLineToReports(line: string, reports: Record<string, Report>) {
   const parameters = line.split(',');
 
   const date = parseDate(parameters[0]);
+
+  if (date === '20230523') {
+    console.log(line);
+  };
+
   if (!(date in reports)) {
     const report = Report.emptyWithDate(date);
     reports[date] = report;
@@ -82,20 +88,20 @@ function addCsvLineToReports(line: string, reports: Record<string, Report>) {
     const earning: Earning = new Earning();
     earning.id = randomUUID();
     earning.reportDate = date;
-    earning.category = categoryName;
+    earning.category = categoryName.toLowerCase().trim();
     earning.amount = amount;
     reports[date].earnings.push(earning);
   } else {
-    const note = parameters[3];
+    const note = parameters[3].trim() === '' ? undefined : parameters[3].trim();
     const isIncludeInCash = parameters[4].toLowerCase() === 'true';
-    const subCategory = categoryName === 'stock' ? note.toLowerCase() : '';
+    const subCategory = categoryName === 'stock' ? note : undefined;
     const expense: Expense = new Expense();
     expense.id = randomUUID();
     expense.reportDate = date;
-    expense.category = categoryName;
+    expense.category = categoryName.toLowerCase().trim();
     expense.amount = amount;
     expense.isIncludeInCash = isIncludeInCash;
-    expense.subCategory = subCategory;
+    expense.subCategory = subCategory?.toLowerCase().trim();
     expense.note = note;
     reports[date].expenses.push(expense);
   }
