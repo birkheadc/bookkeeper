@@ -3,7 +3,7 @@ div.transaction-category-settings-row {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 0.5em;
   width: 100%;
 }
 
@@ -13,10 +13,10 @@ div.transaction-categories-section-subsection {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 0.2em;
   border: var(--border-pri);
   border-color: var(--clr-accent-light);
-  padding: 10px;
+  padding: 0.5em;
 }
 
 div.settings-expense-category {
@@ -24,28 +24,32 @@ div.settings-expense-category {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  gap: 5px;
-  padding: 10px 0;
-}
-
-div.settings-expense-category-subcategories {
-  padding-left: 10px;
+  gap: 0.2em;
+  padding: 0.5em 0em;
 }
 
 div.settings-expense-category-subcategories ul {
-  padding: 10px 20px;
-  list-style-type: disc;
+  padding: 0.5em 0em 0.5em 1em;
+  list-style-type: square;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  width: fit-content;
+  gap: 1em;
+  width: 100%;
 }
 
 li.settings-expense-subcategory>div {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  gap: 20px;
+  align-items: stretch;
+  gap: 0.5em;
   width: 100%;
+}
+
+li.settings-expense-subcategory span {
+  word-break: break-all;
+}
+
+li.settings-expense-subcategory button {
+  flex-shrink: 0;
 }

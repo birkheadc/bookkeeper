@@ -12,8 +12,6 @@
  *:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)) {
   all: unset;
   display: revert;
-  min-width: 0;
-  min-height: 0;
 }
 
 /* Preferred box-sizing value */
