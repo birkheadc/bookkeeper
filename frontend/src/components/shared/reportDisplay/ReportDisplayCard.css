@@ -1,6 +1,6 @@
 div.report-display-card-wrapper {
   border: var(--border-pri);
-  padding: 15px;
+  padding: 0.8em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -61,11 +61,4 @@ div.report-display-card-breakdown-row:last-child {
 
 .expense-color {
   color: var(--clr-expense);
-}
-
-@media (max-width: 1320px) {  
-  div.report-display-card-wrapper {
-    font-size: 1.5em;
-    padding: 30px
-  }
 }

@@ -8,7 +8,7 @@ div.browse-summary-wrapper {
   align-items: stretch;
   gap: 10px;
 
-  padding: 30px;
+  padding: 0.5em;
 }
 
 div.browse-summary-header {
@@ -20,7 +20,7 @@ div.browse-summary-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 50px;
+  gap: 1em;
 
   width: 100%;
 }
@@ -33,13 +33,16 @@ table.browse-summary-table tr {
   border-bottom: var(--border-pri);
 }
 
+table.browse-summary-table tbody tr:last-child {
+  border: none;
+}
+
 table.browse-summary-table tr td {
-  padding: 5px;
+  padding: 0.2em;
 }
 
 tr.browse-summary-table-headers {
   text-transform: capitalize;
   font-weight: 700;
-  font-size: 1.3em;
-  
+  font-size: 1.2em;
 }

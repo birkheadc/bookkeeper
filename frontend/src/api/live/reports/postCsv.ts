@@ -43,9 +43,9 @@ async function parseFileForTransactions(file: File): Promise<{ earnings: Earning
 
       return;
     }
-    const note = parameters[3];
+    const note = (parameters[3].trim() === '' ? undefined : parameters[3].toLowerCase().trim());
     const isIncludeInCash = parameters[4].toLowerCase() === 'true';
-    const subCategory = categoryName === 'stock' ? note.toLowerCase().trim() : '';
+    const subCategory = categoryName === 'stock' ? note : parameters[5];
 
     const expense: Expense = new Expense();
     expense.id = uuidv4();
@@ -53,7 +53,7 @@ async function parseFileForTransactions(file: File): Promise<{ earnings: Earning
     expense.category = categoryName.toLowerCase().trim();
     expense.amount = amount;
     expense.isIncludeInCash = isIncludeInCash;
-    expense.subCategory = subCategory.toLowerCase().trim();
+    expense.subCategory = subCategory;
     expense.note = note;
 
     transactions.expenses.push(expense);

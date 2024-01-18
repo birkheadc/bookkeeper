@@ -1,11 +1,10 @@
 div.settings-page-inner-wrapper {
   width: fit-content;
-  max-width: 600px;
   margin: 0 auto;
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5em;
 }
 
 .settings-section {
@@ -14,10 +13,10 @@ div.settings-page-inner-wrapper {
   justify-content: center;
   align-items: center;
 
-  gap: 20px;
+  gap: 1em;
 
   margin: 0 auto;
-  padding: 20px;
+  padding: 1em;
 
   border: var(--border-pri);
   border-width: 2px;
@@ -31,10 +30,10 @@ div.settings-page-inner-wrapper {
   justify-content: center;
   align-items: center;
 
-  gap: 10px;
+  gap: 0.5em;
 
   width: 100%;
-  padding: 10px;
+  padding: 1em 0.5em;
   border: var(--border-pri);
 }
 

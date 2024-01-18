@@ -43,7 +43,7 @@ export default function StandardFormLabeledCurrencyInput(props: IStandardFormLab
           <CurrencyInput className='standard-input' allowDecimals={properties.decimals !== 0} decimalsLimit={properties.decimals} prefix={properties.symbol} allowNegativeValue={false} maxLength={'999999999999999'.length} onValueChange={handleChangeAmount} value={amount}/>
         </div>
       </div>
-      { props.includeCalcButton && <button className='standard-button' type='button' onClick={openCalculator}><CalculatorIcon width={'20px'}/></button>}
+      { props.includeCalcButton && <button className='standard-button' type='button' onClick={openCalculator}><CalculatorIcon width={'1em'}/></button>}
     </>
   );
 }

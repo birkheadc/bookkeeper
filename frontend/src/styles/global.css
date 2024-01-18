@@ -74,9 +74,3 @@ span.center {
 .right-align {
   text-align: right;
 }
-
-@media (max-width: 980px) {
-  :root {
-    font-size: 2rem;
-  }
-}

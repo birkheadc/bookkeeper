@@ -1,6 +1,6 @@
 div.standard-form-labeled-checkbox-outer-wrapper {
   border: var(--border-pri);
-  padding: 10px;
+  padding: 0.5em;
   flex: 1;
 }
 
@@ -19,6 +19,6 @@ div.standard-form-labeled-checkbox-wrapper {
   flex-direction: row;  
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 1em;
   width: 100%;
 }

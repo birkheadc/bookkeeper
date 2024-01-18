@@ -48,7 +48,7 @@ export default function CreatePageControls(props: ICreatePageControlsProps): JSX
   }
 
   return (
-    <div className='create-page-controls-wrapper'>
+    <div className='create-page-controls-wrapper browse-page-controls-wrapper'>
       <form className='browse-date-controls' onSubmit={goToDate}>
         <button className='standard-button' type='button' onClick={goBack}><ArrowLeftIcon width={20} /></button>
         <input className='standard-input' onBlur={goToDate} onChange={changeDate} onSubmit={goToDate} value={date} type='date'></input>

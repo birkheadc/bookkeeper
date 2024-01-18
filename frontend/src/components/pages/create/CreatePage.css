@@ -1,7 +1,7 @@
 div.create-page-alternate-upload-links {
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 2em;
 }
 
 div.create-page-alternate-upload-links a {

@@ -28,7 +28,7 @@ export default function ChangePasswordSection(props: IChangePasswordSectionProps
     <section className='settings-section change-password-section-wrapper'>
       <h2>change password</h2>
       <ResultDisplay result={recentResult} />
-      <ChangePasswordForm submit={submit} />
+      <ChangePasswordForm submit={submit} />  
     </section>
   );
 }

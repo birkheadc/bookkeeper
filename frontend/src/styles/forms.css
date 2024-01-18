@@ -1,12 +1,12 @@
 form.standard-form {
-  padding: 20px;
+  padding: 1em;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  gap: 20px;
+  gap: 1em;
 
   width: fit-content;
   max-width: 100%;
@@ -19,7 +19,7 @@ div.standard-form-row {
   justify-content: center;
   align-items: stretch;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 0.4em;
   width: 100%;
 }
 
@@ -33,7 +33,7 @@ div.standard-form-row.space-between {
 
 .standard-input {
   border: var(--border-pri);
-  padding: 5px 10px;
+  padding: 0.2em 0.4em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,7 +50,7 @@ select.standard-input {
 
 .standard-button {
   border: var(--border-pri);
-  padding: 4px 8px;
+  padding: 0.2em 0.4em;
   /* text-transform: capitalize; */
   cursor:default;
   user-select: none;
@@ -77,7 +77,7 @@ select.standard-input {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 0.2em;
 }
 
 button.hidden-submit-button {
@@ -96,8 +96,8 @@ button.hidden-submit-button {
 }
 
 div.standard-form-labeled-checkbox-wrapper>input {
-  width: 20px;
-  height: 20px;
+  width: 1em;
+  height: 1em;
   border: var(--border-pri);
 }
 

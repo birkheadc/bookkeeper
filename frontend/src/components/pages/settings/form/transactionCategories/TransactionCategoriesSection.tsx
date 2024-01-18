@@ -83,10 +83,10 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
           category =>
             <div key={`earning-category-key-${category.name}`} className='standard-form-row'>
               <StandardFormLabeledCheckbox label={category.name} name={`earning-category-${category.name}`} checked={category.isDefault} handleToggle={() => handleToggle('earning', category.name)} />
-              <button className='standard-button icon-button' type='button' onClick={() => handleDelete('earning', category.name)}><TrashIcon width={'20px'}/> delete</button>
+              <button className='standard-button icon-button' type='button' onClick={() => handleDelete('earning', category.name)}><TrashIcon width={'1em'}/> delete</button>
             </div>
         ) }
-        <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('earning')}><PlusIcon width={'20px'} />new</button>
+        <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('earning')}><PlusIcon width={'1em'} />new</button>
       </div>
       <div className='transaction-categories-section-subsection'>
         <h3>expenses</h3>
@@ -96,7 +96,7 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
             <div key={`expense-category-key-${category.name}`} className='settings-expense-category'>
               <div className="standard-form-row">
                 <StandardFormLabeledCheckbox label={category.name} name={`expense-category-${category.name}`} checked={category.isDefault} handleToggle={() => handleToggle('expense', category.name)} />
-                <button className='standard-button icon-button' type='button' onClick={() => handleDelete('expense', category.name)}><TrashIcon width={'20px'}/> delete</button>
+                <button className='standard-button icon-button' type='button' onClick={() => handleDelete('expense', category.name)}><TrashIcon width={'1em'}/> delete</button>
               </div>
               <div className='settings-expense-category-subcategories'>
                 { category.subCategories &&
@@ -106,17 +106,17 @@ export default function TransactionCategoriesSection(props: ITransactionCategori
                       <li key={`settings-expense-subcategory-key-${subcategory}`} className='settings-expense-subcategory'>
                         <div>
                           <span>{subcategory}</span>
-                          <button type='button' className='standard-button icon-button' onClick={() => handleRemoveSubcategory(category, subcategory)}><TrashIcon width={'20px'} />remove</button>
+                          <button type='button' className='standard-button icon-button' onClick={() => handleRemoveSubcategory(category, subcategory)}><TrashIcon width={'1em'} />remove</button>
                         </div>
                       </li>
                     )}
                   </ul>
                 }
-                <button type='button' className='standard-button icon-button' onClick={() => handleAddSubcategory(category)}><PlusIcon width={'20px'} />add subcategory</button>
+                <button type='button' className='standard-button icon-button' onClick={() => handleAddSubcategory(category)}><PlusIcon width={'1em'} />add subcategory</button>
               </div>
             </div>
         ) }
-        <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('expense')}><PlusIcon width={'20px'} />new</button>
+        <button className='standard-button icon-button' type='button' onClick={() => handleAddNew('expense')}><PlusIcon width={'1em'} />new</button>
       </div>
       
     </section>

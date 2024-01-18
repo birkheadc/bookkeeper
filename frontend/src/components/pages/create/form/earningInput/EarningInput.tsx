@@ -33,7 +33,7 @@ export default function EarningInput(props: IEarningInputProps): JSX.Element | n
     <div className='earning-input-wrapper transaction-input-wrapper'>
       <div className="standard-form-row space-between">
         <h3>{props.earning.category}</h3>
-        <button className='standard-button icon-button' onClick={handleDeleteEarning} type='button'><TrashIcon width={'20px'} /></button>
+        <button className='standard-button icon-button' onClick={handleDeleteEarning} type='button'><TrashIcon width={'1em'} /></button>
       </div>
       <div className='standard-form-row'>
         <StandardFormLabeledCurrencyInput amount={props.earning.amount} includeCalcButton update={handleChangeAmount} />

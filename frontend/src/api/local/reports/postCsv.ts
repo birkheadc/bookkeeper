@@ -16,7 +16,7 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
   const lines = text.split('\r\n');
 
   let wasError = false;
-
+  
   lines.forEach(line => {
     if (line === '') return;
     try {

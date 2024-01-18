@@ -3,23 +3,26 @@ div.browse-page-controls-wrapper {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 0.5em;
 
   margin: 0 auto;
 
   width: fit-content;
+
+  padding: 0.5em;
 }
 
 div.browse-view-mode-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 10px;
+  gap: 0.5em;
   width: 100%;
 }
 
 div.browse-view-mode-buttons>button {
   flex: 1;
+  min-width: fit-content;
   text-align: center;
 }
 
@@ -34,7 +37,7 @@ div.browse-view-mode-buttons>button.active {
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
-  gap: 10px;
+  gap: 0.5em;
 }
 
 .browse-date-controls button {

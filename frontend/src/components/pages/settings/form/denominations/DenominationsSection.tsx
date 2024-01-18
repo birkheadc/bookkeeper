@@ -58,10 +58,10 @@ export default function DenominationsSection(props: IDenominationsSectionProps):
         denomination =>
         <div key={`denomination-key-${denomination.value}`} className='standard-form-row'>
             <StandardFormLabeledCheckbox label={denomination.value.toLocaleString()} name={`denomination-${denomination.value}`} checked={denomination.isDefault} handleToggle={() => handleToggle(denomination.value)} />
-            <button className='standard-button icon-button' type='button' onClick={() => handleDelete(denomination.value)}><TrashIcon width={'20px'}/> delete</button>
+            <button className='standard-button icon-button' type='button' onClick={() => handleDelete(denomination.value)}><TrashIcon width={'1em'}/> delete</button>
           </div>
       )}
-      <button className='standard-button icon-button' type='button' onClick={() => handleAddNew()}><PlusIcon width={'20px'} />new</button>
+      <button className='standard-button icon-button' type='button' onClick={() => handleAddNew()}><PlusIcon width={'1em'} />new</button>
     </section>
   );
 }

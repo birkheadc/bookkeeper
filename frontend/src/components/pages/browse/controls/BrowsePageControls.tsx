@@ -65,9 +65,9 @@ export default function BrowsePageControls(props: IBrowsePageControlsProps): JSX
         <button className={`standard-button${browseOptions.viewMode === 'month' ? ' active' : ''}`} name='month' type='button' onClick={changeViewMode}>month</button>
       </div>
       <form className='browse-date-controls' onSubmit={goToDate}>
-        <button className='standard-button' type='button' onClick={goBack}><ArrowLeftIcon width={20} /></button>
+        <button className='standard-button' type='button' onClick={goBack}><ArrowLeftIcon width={'1em'} /></button>
         <input className='standard-input' onBlur={goToDate} onChange={changeDate} value={date} type='date'></input>
-        <button className='standard-button' type='button' onClick={goForward}><ArrowRightIcon width={20} /></button>
+        <button className='standard-button' type='button' onClick={goForward}><ArrowRightIcon width={'1em'} /></button>
         <button className='hidden-submit-button' type='submit'></button>
       </form>
     </div>

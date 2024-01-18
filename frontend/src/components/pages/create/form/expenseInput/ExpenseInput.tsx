@@ -91,7 +91,7 @@ export default function ExpenseInput(props: IExpenseInputProps): JSX.Element | n
           }
           <option value='new'>create new</option>
         </select>
-        <button className='standard-button icon-button' onClick={handleDeleteExpense} type='button'><TrashIcon width={'20px'} /></button>
+        <button className='standard-button icon-button' onClick={handleDeleteExpense} type='button'><TrashIcon width={'1em'} /></button>
       </div>
       <div className='standard-form-row'>
         <StandardFormLabeledCurrencyInput amount={expense.amount} includeCalcButton update={handleChangeAmount} />
