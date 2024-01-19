@@ -9,6 +9,8 @@ import ResultDisplay from '../../../resultDisplay/ResultDisplay';
 import DetailLineChart from './detailLineChart/DetailLineChart';
 import { SessionContext } from '../../../../app/contexts/session/SessionContext';
 import { SessionStatus } from '../../../../types/session/session';
+import DetailBarChart from './detailBarChart/DetailBarChart';
+import DetailSummary from './detailSummary/DetailSummary';
 
 interface IDetailDisplayProps {
   
@@ -44,6 +46,8 @@ export default function DetailDisplay(props: IDetailDisplayProps): JSX.Element |
   return (
     <div className='detail-display-wrapper'>
       { reports && <DetailLineChart reports={reports} />}
+      { reports && <DetailBarChart reports={reports} /> }
+      { reports && <DetailSummary reports={reports} /> }
     </div>
   );
 }

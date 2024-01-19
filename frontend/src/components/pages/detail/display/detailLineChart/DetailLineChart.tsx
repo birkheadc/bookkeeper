@@ -3,7 +3,6 @@ import './DetailLineChart.css'
 import { Report } from '../../../../../types/report/report';
 import DetailLineChartControls from './controls/DetailLineChartControls';
 import { BrowseViewMode } from '../../../../../types/browse/browseViewMode';
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 interface IDetailLineChartProps {
@@ -48,12 +47,6 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
       pointHitRadius: undefined
     }]
   });
-
-  // Initialize chart-js
-  Chart.register(CategoryScale);
-  Chart.register(LinearScale);
-  Chart.register(PointElement);
-  Chart.register(LineElement);
 
   React.useEffect(() => {
     // The code ahead is a nightmare, turn back now if you value your life.

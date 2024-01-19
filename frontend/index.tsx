@@ -8,6 +8,7 @@ import './src/styles/global.css';
 import './src/styles/forms.css';
 
 import App from './src/app/App';
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 
 Modal.setAppElement('#react-root');
 Modal.defaultStyles.content = {};
@@ -21,6 +22,12 @@ Modal.defaultStyles.overlay = {
   inset: 0,
   zIndex: 5
 };
+
+// Initialize chart-js
+Chart.register(CategoryScale);
+Chart.register(LinearScale);
+Chart.register(PointElement);
+Chart.register(LineElement);
 
 const container = document.getElementById('react-root');
 
