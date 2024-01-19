@@ -11,6 +11,7 @@ import CreatePage from '../../components/pages/create/CreatePage';
 import DetailPage from '../../components/pages/detail/DetailPage';
 import BatchReportPage from '../../components/pages/batchReport/BatchReportPage';
 import CsvPage from '../../components/pages/csv/CsvPage';
+import { useApi } from '../../hooks/useApi/useApi';
 
 interface IAppRoutesProps {
 
@@ -23,8 +24,9 @@ interface IAppRoutesProps {
 export default function AppRoutes(props: IAppRoutesProps): JSX.Element | null {
 
   const { session } = React.useContext(SessionContext);
+  const { api } = useApi();
 
-  if (session.status === SessionStatus.CHECKING) {
+  if (session.status === SessionStatus.CHECKING || api == null) {
     return (
       <Routes>
         <Route path='*' element={<LoadingPage />} />

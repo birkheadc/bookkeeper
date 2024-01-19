@@ -82,6 +82,13 @@ export class ExtendedDate extends Date {
     return !isNaN(this.getDate());
   }
 
+  static fromStringOrNull(s: string | null | undefined): ExtendedDate | null {
+    if (s == null) return null;
+    const date = new ExtendedDate(s);
+    if (date.isValid()) return date;
+    return null;
+  }
+
   static fromStringOrDefault(s: string | null | undefined, def: ExtendedDate): ExtendedDate {
     if (s == null) return def;
     const date = new ExtendedDate(s);
@@ -94,6 +101,28 @@ export class ExtendedDate extends Date {
     const newSearchParams = new URLSearchParams();
     newSearchParams.set('date', date.toSimpleString());
     return { date, newSearchParams };
+  }
+
+  static getRange(from: ExtendedDate | null, to: ExtendedDate | null): ExtendedDate[] | null {
+    if (from == null || to == null || from.valueOf() > to.valueOf()) return null;
+    const dates: ExtendedDate[] = [];
+    let day = from.copy();
+    while (day.isBeforeOrEquals(to)) {
+      dates.push(day.copy());
+      day.setDate(day.getDate() + 1);
+    }
+    return dates;
+  }
+
+  isBeforeOrEquals(date: ExtendedDate): boolean {
+    if (this.getFullYear() < date.getFullYear()) return true;
+    if (this.getFullYear() > date.getFullYear()) return false;
+
+    if (this.getMonth() < date.getMonth()) return true;
+    if (this.getMonth() > date.getMonth()) return false;
+
+    if (this.getDate() <= date.getDate()) return true;
+    return false;
   }
 }
 

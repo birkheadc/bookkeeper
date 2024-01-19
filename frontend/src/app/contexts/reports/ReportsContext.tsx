@@ -53,6 +53,10 @@ export const ReportsProvider = ({ children }: Props) => {
 
   const { api } = useApi();
 
+  React.useEffect(() => {
+    console.log('ReportsContext.reports:', reports);
+  }, [ reports ]);
+
   React.useEffect(function clearCacheOnChangeInSession() {
     setReports({});
   }, [ session ]);
@@ -100,8 +104,7 @@ export const ReportsProvider = ({ children }: Props) => {
         result.body.forEach(report => {
           _reports[report.id.toDto()] = report;
         });
-  
-        setReports(r => ({...r, ..._reports}));
+        setReports(r => ({ ...r, ..._reports }));
         return Result.Succeed().WithBody(_reports);
       }
       return result.OfType();

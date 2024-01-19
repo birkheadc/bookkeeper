@@ -1,5 +1,7 @@
 import * as React from 'react';
 import './DetailPage.css'
+import DetailPageControls from './controls/detailPageControls/DetailPageControls';
+import DetailDisplay from './display/DetailDisplay';
 
 interface IDetailPageProps {
 
@@ -13,7 +15,8 @@ export default function DetailPage(props: IDetailPageProps): JSX.Element | null 
   return (
     <main className='detail-page-wrapper'>
       <h1>detail</h1>
-      <p>Not yet implemented</p>
+      <DetailPageControls />
+      <DetailDisplay />
     </main>
   );
 }
