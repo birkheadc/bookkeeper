@@ -36,7 +36,7 @@ const DEFAULT_DATA: Data = {
   },
   uploadCsv: function (file: any): Promise<Result<any>> {
     throw new Error("Function not implemented.");
-  },
+  },  
   addTransactions: function (transactions: { earnings: Earning[]; expenses: Expense[]; }): Promise<Result<any>> {
     throw new Error("Function not implemented.");
   }
@@ -52,10 +52,6 @@ export const ReportsProvider = ({ children }: Props) => {
   const { refreshSettings } = React.useContext(SettingsContext);
 
   const { api } = useApi();
-
-  React.useEffect(() => {
-    console.log('ReportsContext.reports:', reports);
-  }, [ reports ]);
 
   React.useEffect(function clearCacheOnChangeInSession() {
     setReports({});

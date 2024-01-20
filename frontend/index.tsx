@@ -8,7 +8,7 @@ import './src/styles/global.css';
 import './src/styles/forms.css';
 
 import App from './src/app/App';
-import { Chart, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
 
 Modal.setAppElement('#react-root');
 Modal.defaultStyles.content = {};
@@ -28,6 +28,7 @@ Chart.register(CategoryScale);
 Chart.register(LinearScale);
 Chart.register(PointElement);
 Chart.register(LineElement);
+Chart.register(BarElement);
 
 const container = document.getElementById('react-root');
 

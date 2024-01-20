@@ -176,4 +176,4 @@ export class ReportDto {
   id: ExtendedDateDto = new ExtendedDate().toDto();
   earnings: EarningDto[] = [];
   expenses: ExpenseDto[] = [];
-}
+} 

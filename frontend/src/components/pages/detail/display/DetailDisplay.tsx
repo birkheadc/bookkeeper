@@ -11,6 +11,7 @@ import { SessionContext } from '../../../../app/contexts/session/SessionContext'
 import { SessionStatus } from '../../../../types/session/session';
 import DetailBarChart from './detailBarChart/DetailBarChart';
 import DetailSummary from './detailSummary/DetailSummary';
+import { ReportsSummary } from '../../../../types/report/reportsSummary';
 
 interface IDetailDisplayProps {
   
@@ -26,6 +27,8 @@ export default function DetailDisplay(props: IDetailDisplayProps): JSX.Element |
 
   const [ reports, setReports ] = React.useState<Record<string, Report> | undefined>();
   const { getReports } = React.useContext(ReportsContext);
+
+  const summary = ReportsSummary.fromRecord(reports);
 
   React.useEffect(() => {
     (async function fetchReportsBasedOnSearchParams() {
@@ -45,9 +48,9 @@ export default function DetailDisplay(props: IDetailDisplayProps): JSX.Element |
 
   return (
     <div className='detail-display-wrapper'>
+      { reports && <DetailSummary summary={summary} /> }
       { reports && <DetailLineChart reports={reports} />}
-      { reports && <DetailBarChart reports={reports} /> }
-      { reports && <DetailSummary reports={reports} /> }
+      { reports && <DetailBarChart summary={summary} /> }
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Report } from '../../../../../types/report/report';
 import DetailLineChartControls from './controls/DetailLineChartControls';
 import { BrowseViewMode } from '../../../../../types/browse/browseViewMode';
 import { Line } from 'react-chartjs-2';
+import { ChartData } from 'chart.js';
 
 interface IDetailLineChartProps {
   reports: Record<string, Report>
@@ -19,27 +20,15 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
 
   const [ mode, setMode ] = React.useState<BrowseViewMode>(BrowseViewMode.DAY);
 
-  const [chartData, setChartData] = React.useState<{
-    labels: string[],
-    datasets: {
-      id: string,
-      data: number[],
-      borderColor: string,
-      tension: number,
-      pointStyle: any,
-      pointHitRadius?: number | undefined
-    }[]
-  }>({
+  const [chartData, setChartData] = React.useState<ChartData<'line'>>({
     labels: [],
     datasets: [{
-      id: 'gross',
       data: [],
       borderColor: 'rgba(50, 50, 200, 0.8)',
       tension: 0.3,
       pointStyle: false,
       pointHitRadius: undefined
     }, {
-      id: 'net',
       data: [],
       borderColor: 'rgba(0, 0, 0, 0.8)',
       tension: 0.3,
@@ -84,14 +73,12 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
           labels: labels,
           datasets: [
             {
-              id: 'gross',
               data: grossData,
               borderColor: 'rgba(50, 50, 200, 0.8)',
               tension: 0.3,
               pointStyle: false
             },
             {
-              id: 'net',
               data: netData,
               borderColor: 'rgba(0, 0, 0, 0.8)',
               tension: 0.3,
@@ -129,7 +116,6 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
         labels: labels,
         datasets: [
           {
-            id: 'gross',
             data: grossData,
             borderColor: 'rgba(50, 50, 200, 0.8)',
             tension: 0.3,
@@ -137,7 +123,6 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
             pointHitRadius: 1000
           },
           {
-            id: 'net',
             data: netData,
             borderColor: 'rgba(0, 0, 0, 0.8)',
             tension: 0.3,
@@ -151,6 +136,7 @@ export default function DetailLineChart(props: IDetailLineChartProps): JSX.Eleme
 
   return (
     <div className='detail-line-chart-wrapper'>
+      <h2>sales over time</h2>
       <DetailLineChartControls mode={mode} changeMode={setMode} />
       <div className='detail-chart-wrapper'>
         <Line datasetIdKey="id" data={chartData} options={{ maintainAspectRatio: true }} />

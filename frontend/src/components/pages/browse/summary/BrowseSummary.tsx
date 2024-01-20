@@ -14,15 +14,15 @@ interface IBrowseSummaryProps {
 */
 export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element | null {
   const summary = ReportsSummary.fromRecord(props.reports);
-  const { properties, getActualAmount } = useCurrency();
+  const { properties, format } = useCurrency();
 
   return (
     <div className='browse-summary-wrapper'>
       <div className='browse-summary-row browse-summary-header'>
-        <span>Total</span><span>{properties.symbol}{getActualAmount(summary.total).toLocaleString()}</span>
+        <span>total</span><span>{properties.symbol}{format(summary.totalGross)}</span>
       </div>
       <div className='browse-summary-row browse-summary-header'>
-        <span>Average</span><span>{properties.symbol}{getActualAmount(summary.average).toLocaleString()}</span>
+        <span>average</span><span>{properties.symbol}{format(summary.averageGross)}</span>
       </div>
       <table className='browse-summary-table'>
         <thead>
@@ -37,16 +37,16 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
             earning =>
             <tr key={`browse-summary-earnings-key-${earning.category}`} className='earning-color'>
               <td>{earning.category}</td>
-              <td className='right-align'>{getActualAmount(earning.amount).toLocaleString()}</td>
-              <td className='right-align'>{getActualAmount(earning.average).toLocaleString()}</td>
+              <td className='right-align'>{format(earning.amount)}</td>
+              <td className='right-align'>{format(earning.average)}</td>
             </tr>
           )}
           {summary.expenses.map(
             expense =>
             <tr key={`browse-summary-expenses-key-${expense.category}`} className='expense-color'>
               <td>{expense.category}</td>
-              <td className='right-align'>-{getActualAmount(expense.amount).toLocaleString()}</td>
-              <td className='right-align'>-{getActualAmount(expense.average).toLocaleString()}</td>
+              <td className='right-align'>-{format(expense.amount)}</td>
+              <td className='right-align'>-{format(expense.average)}</td>
             </tr>
           )}
         </tbody>

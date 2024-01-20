@@ -1,24 +1,34 @@
 import { ExtendedDate } from "../date/extendedDate";
+import { Breakdown } from "../detail/breakdown";
 import { Earning, EarningDto, Expense, ExpenseDto, Report } from "./report";
 
 export class ReportsSummary {
 
-  total: number;
-  average: number;
+  totalGross: number;
+  averageGross: number;
+  totalNet: number;
+  averageNet: number;
   earnings: (Omit<EarningDto, 'id' | 'reportDate' > & { average: number })[];
   expenses: (Omit<ExpenseDto, 'isIncludeInCash' | 'id' | 'reportDate' > & { average: number })[];
+  breakdown: Breakdown;
 
   constructor() {
-    this.total = 1_000_000;
-    this.average = 1_000_000;
+    this.totalGross = 0;
+    this.averageGross = 0;
+    this.totalNet = 0;
+    this.averageNet = 0;
     this.earnings = [];
     this.expenses = [];
+    this.breakdown = new Breakdown();
   }
 
-  static fromRecord(reports: Record<string, Report>): ReportsSummary {
+  static fromRecord(reports: Record<string, Report> | undefined): ReportsSummary {
     const summary = new ReportsSummary();
+    console.log(summary);
+    if (reports == null) return summary;
     let numReportsForAverage = 0;
-    let sum = 0;
+    let grossSum = 0;
+    let expenseSum = 0;
     let allEarnings: (Omit<EarningDto, 'id' | 'reportDate'> & { average: number, num: number })[] = [];
     let allExpenses: (Omit<ExpenseDto, 'isIncludeInCash' | 'id' | 'reportDate' > & { average: number, num: number })[] = [];
 
@@ -26,12 +36,13 @@ export class ReportsSummary {
       const report = reports[key];
       if (isDateBeforeToday(report.id)) numReportsForAverage++;
       report.earnings.forEach(earning => {
-        sum += earning.amount;
+        summary.breakdown.addTransaction(earning);
+        grossSum += earning.amount;
         const pre = allEarnings.find(e => e.category === earning.category);
         if (pre) {
           pre.amount += earning.amount;
           pre.num++;
-          pre.average = Math.round(pre.amount / pre.num);
+          pre.average = pre.amount / pre.num;
         } else {
           allEarnings.push({
             category: earning.category,
@@ -42,14 +53,15 @@ export class ReportsSummary {
         }
       });
       report.expenses.forEach(expense => {
+        expenseSum += expense.amount;
         if (expense.isIncludeInCash) {
-          sum += expense.amount;
+          grossSum += expense.amount;
         }
         const pre = allExpenses.find(e => e.category === expense.category);
         if (pre) {
           pre.amount += expense.amount;
           pre.num++;
-          pre.average = Math.round(pre.amount / pre.num);
+          pre.average = pre.amount / pre.num;
         } else {
           allExpenses.push({
             category: expense.category,
@@ -61,8 +73,10 @@ export class ReportsSummary {
       });
     });
 
-    summary.total = sum;
-    summary.average = numReportsForAverage > 0 ? Math.round(sum / numReportsForAverage) : 0;
+    summary.totalGross = grossSum;
+    summary.averageGross = numReportsForAverage > 0 ? grossSum / numReportsForAverage : 0;
+    summary.totalNet = grossSum - expenseSum;
+    summary.averageNet = numReportsForAverage > 0 ? (grossSum - expenseSum) / numReportsForAverage : 0;
     summary.earnings = allEarnings;
     summary.expenses = allExpenses;
 

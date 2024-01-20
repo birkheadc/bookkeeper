@@ -42,11 +42,12 @@ export default function DetailPageControls(props: IDetailPageControlsProps): JSX
 
   return (
     <form className='detail-page-controls-wrapper standard-form' onSubmit={handleSubmit}>
-    <div className='standard-form-row'>
-      <StandardFormLabeledInput type='date' label={'from'} name={'details-page-controls-from'} value={startDate} handleChange={changeStartDate} />
-      <StandardFormLabeledInput type='date' label={'to'} name={'details-page-controls-to'} value={endDate} handleChange={changeEndDate} />
-    </div>
-    <button className='standard-button' type='submit'>submit</button>
+      <h2>choose date range</h2>
+      <div className='standard-form-row'>
+        <StandardFormLabeledInput type='date' label={'from'} name={'details-page-controls-from'} value={startDate} handleChange={changeStartDate} />
+        <StandardFormLabeledInput type='date' label={'to'} name={'details-page-controls-to'} value={endDate} handleChange={changeEndDate} />
+      </div>
+      <button className='standard-button' type='submit'>generate</button>
   </form>
   );
 }

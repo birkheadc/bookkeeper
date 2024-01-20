@@ -1,0 +1,8 @@
+.detail-bar-chart-controls-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  width: 80%;
+  min-width: fit-content;
+  text-wrap: nowrap;
+}

@@ -1,0 +1,9 @@
+div.detail-summary-wrapper {
+  width: fit-content;
+  margin: auto;
+  padding: 1em;
+}
+
+div.detail-summary-wrapper h2 {
+  font-size: 2.0rem;
+}

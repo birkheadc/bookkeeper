@@ -18,11 +18,19 @@ export function useCurrency(): { properties: CurrencyProperties, toDatabaseAmoun
 
   const format = (value: number | null | undefined): string => {
     if (value == null) return '';
-    const s = value.toLocaleString();
+    const rounded = Math.round(value);
+    const s = getActualAmount(rounded).toLocaleString();
     if (properties.decimals === 0) return s;
-    const first = s.substring(0, s.length - properties.decimals);
-    const last = s.substring(s.length - properties.decimals);
-    return first.concat('.').concat(last);
+
+    const split = s.split('.');
+    console.log(split);
+    if (split.length < 2) {
+      split.push('0');
+    }
+
+    split[1] = split[1].padEnd(properties.decimals, '0');
+    console.log(split);
+    return split.join('.');
   }
 
   return { properties, getActualAmount, toDatabaseAmount, format }
