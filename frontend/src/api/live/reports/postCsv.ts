@@ -30,9 +30,9 @@ async function parseFileForTransactions(file: File): Promise<{ earnings: Earning
 
     const date = parseDate(parameters[0]);
     const categoryName = parameters[1];
-    const amount = Math.abs(parseInt(parameters[2]));
+    const amount = parseInt(parameters[2]);
 
-    if (parameters.length === 3) {
+    if (amount >= 0) {
       const earning: Earning = new Earning();
       earning.id = uuidv4();
       earning.reportDate = date;
@@ -51,7 +51,7 @@ async function parseFileForTransactions(file: File): Promise<{ earnings: Earning
     expense.id = uuidv4();
     expense.reportDate = date;
     expense.category = categoryName.toLowerCase().trim();
-    expense.amount = amount;
+    expense.amount = Math.abs(amount);
     expense.isIncludeInCash = isIncludeInCash;
     expense.subCategory = subCategory;
     expense.note = note;
