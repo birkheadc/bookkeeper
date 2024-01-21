@@ -23,13 +23,11 @@ export function useCurrency(): { properties: CurrencyProperties, toDatabaseAmoun
     if (properties.decimals === 0) return s;
 
     const split = s.split('.');
-    console.log(split);
     if (split.length < 2) {
       split.push('0');
     }
 
     split[1] = split[1].padEnd(properties.decimals, '0');
-    console.log(split);
     return split.join('.');
   }
 

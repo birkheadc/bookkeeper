@@ -24,7 +24,6 @@ export class ReportsSummary {
 
   static fromRecord(reports: Record<string, Report> | undefined): ReportsSummary {
     const summary = new ReportsSummary();
-    console.log(summary);
     if (reports == null) return summary;
     let numReportsForAverage = 0;
     let grossSum = 0;

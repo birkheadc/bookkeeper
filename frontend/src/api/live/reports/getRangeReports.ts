@@ -30,9 +30,8 @@ export default async function getReportsByDates(token: string | undefined, dates
     const reports = Report.fromJson(data);
     return Result.Succeed().WithBody(reports);
   } catch (error) {
-    console.log(error)
+    return Result.Fail().WithMessage('error connecting to server');
   } finally {
     clearTimeout(timeout);
   }
-  return Result.Fail().WithMessage('not yet implemented');
 }

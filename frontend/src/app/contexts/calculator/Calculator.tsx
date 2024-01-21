@@ -46,29 +46,6 @@ export default function Calculator(props: ICalculatorProps): JSX.Element | null 
     setSum(newSum);
   }, [ props.prev, values ]);
 
-  // React.useEffect(function addRecenterListeners() {
-
-  //   let height = window.visualViewport?.height ?? 0;
-
-  //   const resizeListener = (event: Event) => {
-  //     const visualViewport = event.currentTarget as VisualViewport | null;
-  //     if (visualViewport == null) return;
-  //     height = visualViewport.height;
-  //   }
-
-  //   const scrollListener = (event: Event) => {
-  //     console.log(event);
-  //   }
-
-  //   window.visualViewport?.addEventListener('resize', resizeListener);
-  //   window.addEventListener('scroll', scrollListener);
-
-  //   return (() => {
-  //     window.visualViewport?.removeEventListener('resize', resizeListener);
-  //     window.removeEventListener('scroll', scrollListener);
-  //   });
-  // }, []);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, denomination: number) => {
     const value = event.currentTarget.value === '' ? 0 : parseInt(event.currentTarget.value);
     if (isNaN(value) || value < 0) return;

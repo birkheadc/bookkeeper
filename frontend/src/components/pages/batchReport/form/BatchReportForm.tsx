@@ -62,7 +62,6 @@ export default function BatchReportForm(props: IBatchReportFormProps): JSX.Eleme
 
 
   const handleUpdate = (type: 'earning' | 'expense', transaction: Earning | Expense) => {
-    // On second thought, `type: 'earning' | 'expense' was not such a good idea after all.
     setTransactions(transactions => {
       if (type === 'earning') {
         const earning = transaction as Earning;
