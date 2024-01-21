@@ -70,7 +70,6 @@ export default function BatchTransactionInput(props: IBatchTransactionInputProps
   }
 
   const handleToggleIsCashInclude = () => {
-    console.log('toggle');
     const newExpense = props.transaction.copy() as Expense;
     newExpense.isIncludeInCash = !newExpense.isIncludeInCash;
     props.update(newExpense);

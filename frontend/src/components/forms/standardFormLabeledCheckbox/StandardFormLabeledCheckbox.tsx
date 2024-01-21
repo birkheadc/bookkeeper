@@ -14,7 +14,7 @@ interface IStandardFormLabeledCheckboxProps {
  */
 export default function StandardFormLabeledCheckbox(props: IStandardFormLabeledCheckboxProps): JSX.Element | null {
   return (
-    <div className='standard-form-labeled-checkbox-outer-wrapper' onClick={props.handleToggle} >
+    <div className='standard-form-labeled-checkbox-outer-wrapper' onClick={props.handleToggle}>
       <div className='standard-form-labeled-checkbox-wrapper'>
         <label>{props.label}</label>
         <input name={props.name} checked={props.checked} type='checkbox' readOnly></input>
