@@ -31,9 +31,9 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
       }
 
       const categoryName = parameters[1];
-      const amount = Math.abs(parseInt(parameters[2]));
+      const amount = parseInt(parameters[2]);
 
-      if (parameters.length === 3) {
+      if (amount >= 0) {
         const earning: Earning = new Earning();
         earning.id = uuidv4();
         earning.reportDate = date;
@@ -48,7 +48,7 @@ export default async function postCsv(token: any, file: File): Promise<Result<Re
         expense.id = uuidv4();
         expense.reportDate = date;
         expense.category = categoryName.toLowerCase().trim();
-        expense.amount = amount;
+        expense.amount = Math.abs(amount);
         expense.isIncludeInCash = isIncludeInCash;
         expense.subCategory = subCategory.toLowerCase().trim();
         expense.note = note;

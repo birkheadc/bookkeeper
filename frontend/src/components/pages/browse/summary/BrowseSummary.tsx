@@ -29,7 +29,7 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
           <tr className='browse-summary-table-headers'>
             <th>category</th>
             <th className='right-align'>total</th>
-            <th className='right-align'>average</th>
+            <th className='right-align'>%</th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
             <tr key={`browse-summary-earnings-key-${earning.category}`} className='earning-color'>
               <td>{earning.category}</td>
               <td className='right-align'>{format(earning.amount)}</td>
-              <td className='right-align'>{format(earning.average)}</td>
+              <td className='right-align'>{((earning.amount / summary.totalGross) * 100).toFixed(2)}</td>
             </tr>
           )}
           {summary.expenses.map(
@@ -46,7 +46,7 @@ export default function BrowseSummary(props: IBrowseSummaryProps): JSX.Element |
             <tr key={`browse-summary-expenses-key-${expense.category}`} className='expense-color'>
               <td>{expense.category}</td>
               <td className='right-align'>-{format(expense.amount)}</td>
-              <td className='right-align'>-{format(expense.average)}</td>
+              <td className='right-align'>{((expense.amount / (summary.totalGross - summary.totalNet)) * 100).toFixed(2)}</td>
             </tr>
           )}
         </tbody>
