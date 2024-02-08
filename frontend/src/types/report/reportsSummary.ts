@@ -33,7 +33,7 @@ export class ReportsSummary {
 
     Object.keys(reports).forEach(key => {
       const report = reports[key];
-      if (report.earnings.length > 0 || report.expenses.length > 0 || isDateBeforeToday(report.id)) numReportsForAverage++;
+      if (shouldReportBeIncludedInAverage(report)) numReportsForAverage++;
       report.earnings.forEach(earning => {
         summary.breakdown.addTransaction(earning);
         grossSum += earning.amount;
@@ -81,6 +81,17 @@ export class ReportsSummary {
 
     return summary;
   }
+}
+
+function shouldReportBeIncludedInAverage(report: Report): boolean {
+  if (isDateBeforeToday(report.id)) return true;
+  for (let i = 0; i < report.earnings.length; i++) {
+    if (report.earnings[i].amount !== 0) return true;
+  }
+  for (let i = 0; i < report.expenses.length; i++) {
+    if (report.expenses[i].amount !== 0) return true;
+  }
+  return false;
 }
 
 function isDateBeforeToday(date: ExtendedDate): boolean {
