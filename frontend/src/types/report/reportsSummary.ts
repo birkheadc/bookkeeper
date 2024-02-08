@@ -1,6 +1,6 @@
 import { ExtendedDate } from "../date/extendedDate";
 import { Breakdown } from "../detail/breakdown";
-import { Earning, EarningDto, Expense, ExpenseDto, Report } from "./report";
+import { EarningDto, ExpenseDto, Report } from "./report";
 
 export class ReportsSummary {
 
@@ -33,7 +33,7 @@ export class ReportsSummary {
 
     Object.keys(reports).forEach(key => {
       const report = reports[key];
-      if (isDateBeforeToday(report.id)) numReportsForAverage++;
+      if (report.earnings.length > 0 || report.expenses.length > 0 || isDateBeforeToday(report.id)) numReportsForAverage++;
       report.earnings.forEach(earning => {
         summary.breakdown.addTransaction(earning);
         grossSum += earning.amount;
