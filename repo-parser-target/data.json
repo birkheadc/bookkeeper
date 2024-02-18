@@ -1,0 +1,56 @@
+{
+  "id": "4d60b3cc-fc5f-4616-a07e-d241a949fc52",
+  "title": "bookkeeper",
+  "site": "https://bookkeeper.birkheadc.me",
+  "source": "https://github.com/birkheadc/bookkeeper",
+  "favoriteLevel": 200,
+  "resumeFavoriteLevel": 700,
+  "descriptions": {
+    "shortDescriptions": [
+      {
+        "language": "en",
+        "content": "An application that facilitates recording of daily sales and expenses."
+      },
+      {
+        "language": "jp",
+        "content": "〜アプリです"
+      }
+    ],
+    "longDescriptions": [
+      {
+        "language": "en",
+        "content": "TODO: WRITE THIS"
+      },
+      {
+        "language": "jp",
+        "content": "TODO: WRITE THIS"
+      }
+    ],
+    "bulletPoints": [
+      {
+        "language": "en",
+        "content": [
+          "1",
+          "2",
+          "3"
+        ]
+      },
+      {
+        "language": "jp",
+        "content": [
+          "一",
+          "二",
+          "三"
+        ]
+      }
+    ]
+  },
+  "technologies": [
+    "CSS",
+    "HTML",
+    "React",
+    "TypeScript",
+    "NestJS",
+    "AWS"
+  ]
+}
