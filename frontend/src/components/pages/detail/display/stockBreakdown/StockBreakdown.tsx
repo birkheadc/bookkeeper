@@ -4,6 +4,7 @@ import { report } from "process";
 
 import "./StockBreakdown.css";
 import { useCurrency } from "../../../../../hooks/useCurrency/useCurrency";
+import { ExtendedDate } from "../../../../../types/date/extendedDate";
 
 interface IStockBreakdownProps {
   reports: Record<string, Report>;
@@ -16,7 +17,7 @@ export default function StockBreakdown(
 
   const reports = props.reports;
 
-  const stockExpenses: Expense[] = [];
+  let stockExpenses: Expense[] = [];
   const totals: Record<string, number> = {};
   let sum = 0;
 
@@ -33,24 +34,32 @@ export default function StockBreakdown(
     });
   });
 
-  stockExpenses.sort((a: Expense, b: Expense) => {
+  stockExpenses = stockExpenses.sort((a: Expense, b: Expense) => {
+    if ((a.subCategory || "") < (b.subCategory || "")) return -1;
     if ((a.subCategory || "") > (b.subCategory || "")) return 1;
-    if ((a.subCategory || "") < (b.subCategory || "")) return 1;
     if (a.reportDate < b.reportDate) return -1;
     return -1;
   });
+
+  const sortedTotals: { category: string; amount: number }[] = Object.entries(
+    totals
+  )
+    .map(([key, value]) => ({ category: key, amount: value }))
+    .sort((a, b) => {
+      return a.category < b.category ? -1 : 1;
+    });
 
   return (
     <div className="stock-breakdown-wrapper">
       <h2>Stock Breakdown</h2>
       <table className="browse-summary-table">
-        {Object.entries(totals).map(([key, value]) => (
+        {sortedTotals.map((total) => (
           <tbody>
             <tr className="stock-breakdown-totals">
-              <td>{key}</td>
+              <td>{total.category}</td>
               <td className="right-align">
                 {properties.symbol}
-                {format(value)}
+                {format(total.amount)}
               </td>
             </tr>
           </tbody>
@@ -61,7 +70,9 @@ export default function StockBreakdown(
           <tbody>
             <tr className="stock-breakdown-all">
               <td>{stockExpense.subCategory}</td>
-              <td>{stockExpense.reportDate.toLocaleDateString()}</td>
+              <td>
+                {new ExtendedDate(stockExpense.reportDate).toSimpleString()}
+              </td>
               <td className="right-align">
                 {properties.symbol}
                 {format(stockExpense.amount)}
