@@ -1,0 +1,11 @@
+.stock-breakdown-wrapper {
+  width: fit-content;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stock-breakdown-wrapper table.browse-summary-table tr td {
+  padding: 0.2em 1em;
+}
