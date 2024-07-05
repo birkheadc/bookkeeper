@@ -3,9 +3,18 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 3rem;
+  max-width: 80%;
+  padding: 1rem 2rem;
+  border: var(--border-pri);
+}
+
+.stock-breakdown-wrapper table.browse-summary-table tr {
+  border: var(--border-pri);
 }
 
 .stock-breakdown-wrapper table.browse-summary-table tr td {
   padding: 0.2em 1em;
+  border-bottom: var(--border-pri);
+  border-top: var(--border-pri);
 }
