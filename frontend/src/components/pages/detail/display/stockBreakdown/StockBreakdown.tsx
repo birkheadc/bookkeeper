@@ -34,6 +34,22 @@ export default function StockBreakdown(
     });
   });
 
+  const downloadCSV = () => {
+    // Create a CSV file and download it
+    const csvContent = stockExpenses
+      .map((expense: Expense) => {
+        const date = new ExtendedDate(expense.reportDate).toSimpleString();
+        return `${date},${expense.subCategory},${expense.amount}`;
+      })
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "stock_breakdown.csv";
+    a.click();
+  };
+
   stockExpenses = stockExpenses.sort((a: Expense, b: Expense) => {
     if ((a.subCategory || "") < (b.subCategory || "")) return -1;
     if ((a.subCategory || "") > (b.subCategory || "")) return 1;
@@ -84,6 +100,11 @@ export default function StockBreakdown(
       <div className="full-width right-align">
         Total: {properties.symbol}
         {format(sum)}
+      </div>
+      <div className="full-width right-align">
+        <button type="button" className="standard-button" onClick={downloadCSV}>
+          Download CSV
+        </button>
       </div>
     </div>
   );
