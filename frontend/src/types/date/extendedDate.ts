@@ -7,7 +7,9 @@ export class ExtendedDate extends Date {
   }
 
   toSimpleString(): string {
-    return this.toISOString().substring(0, 10);
+    const m = (this.getMonth() + 1).toString().padStart(2, '0');
+    const d = this.getDate().toString().padStart(2, '0');
+    return `${this.getFullYear()}-${m}-${d}`;
   }
 
   toDto(): ExtendedDateDto {
