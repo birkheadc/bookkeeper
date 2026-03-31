@@ -1,4 +1,3 @@
-import { OmitProperties } from "ts-essentials";
 import { BrowseViewMode } from "../browse/browseViewMode";
 
 export class ExtendedDate extends Date {
@@ -21,16 +20,11 @@ export class ExtendedDate extends Date {
   }
 
   static fromDto(dto: ExtendedDateDto): ExtendedDate {
-    const yearString = dto.substring(0, 4);
-    const monthString = dto.substring(4, 6);
-    const dayString = dto.substring(6);
+    const year = parseInt(dto.substring(0, 4));
+    const month = parseInt(dto.substring(4, 6)) - 1;
+    const day = parseInt(dto.substring(6));
 
-    const date = new ExtendedDate();
-    date.setFullYear(parseInt(yearString));
-    date.setMonth(parseInt(monthString) - 1);
-    date.setDate(parseInt(dayString));
-
-    return date;
+    return new ExtendedDate(year, month, day);
   }
 
   addBrowseViewMode(viewMode: BrowseViewMode, n: number) {
@@ -41,9 +35,13 @@ export class ExtendedDate extends Date {
       case BrowseViewMode.WEEK:
         this.setDate(this.getDate() + (n * 7));
         break;
-      case BrowseViewMode.MONTH:
-        this.setMonth(this.getMonth() + n);
+      case BrowseViewMode.MONTH: {
+        const targetMonth = this.getMonth() + n;
+        const lastDayOfTargetMonth = new Date(this.getFullYear(), targetMonth + 1, 0).getDate();
+        this.setDate(Math.min(this.getDate(), lastDayOfTargetMonth));
+        this.setMonth(targetMonth);
         break;
+      }
     }
   }
 
@@ -59,7 +57,7 @@ export class ExtendedDate extends Date {
       day.setDate(day.getDate() + i);
       week.push(day);
     }
-    
+
     return week;
   }
 
