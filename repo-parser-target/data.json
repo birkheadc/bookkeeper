@@ -12,7 +12,7 @@
         "content": "An application that facilitates recording of daily sales and expenses."
       },
       {
-        "language": "jp",
+        "language": "ja",
         "content": "日々の売上と経費の記録を簿記するためのアプリケーション"
       }
     ],
@@ -22,7 +22,7 @@
         "content": "Facilitates creating, updating, and viewing information regarding daily sales and expenses.\n\nAutomatically calculates and displays average earnings, breakdowns of expenses, and net profit.\n\nGenerates graphs showing sales trends."
       },
       {
-        "language": "jp",
+        "language": "ja",
         "content": "日々の売上と経費に関する情報の作成、更新、閲覧を促進します。\n\n平均収益、経費の内訳、純利益を自動的に計算して表示します。\n\n売上のトレンドを示すグラフも生成します。"
       }
     ],
@@ -35,7 +35,7 @@
         ]
       },
       {
-        "language": "jp",
+        "language": "ja",
         "content": [
           "日々の売上と経費に関する情報の作成、更新、閲覧を容易にするアプリケーション",
           "売上のトレンドを示すグラフを生成し、ビジネスのパフォーマンス分析や成長の機会の発見を促進する"
